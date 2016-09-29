@@ -1,0 +1,13 @@
+.classpath
+.project
+.settings
+tmp
+bin
+build
+*.*~
+*~
+.DS_Store
+Plafile.yml
+build.properties
+libs
+*/dist/modules
