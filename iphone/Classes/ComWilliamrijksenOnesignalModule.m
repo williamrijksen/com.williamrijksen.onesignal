@@ -82,4 +82,13 @@
     [OneSignal sendTag:key value:value];
 }
 
+- (void)deleteTag:(id)args
+{
+    ENSURE_UI_THREAD_1_ARG(args);
+    ENSURE_SINGLE_ARG(args, NSDictionary);
+
+    NSString *key = [TiUtils stringValue:[args objectForKey:@"key"]];
+    [OneSignal deleteTag:key];
+}
+
 @end
