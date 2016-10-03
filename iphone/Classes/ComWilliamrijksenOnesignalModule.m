@@ -29,22 +29,23 @@
 
 #pragma mark Lifecycle
 
--(void)startup
+- (void)startup
 {
 	// this method is called when the module is first loaded
 	// you *must* call the superclass
 	[super startup];
-	NSLog(@"[INFO] %@ loaded",self);
+	NSLog(@"[INFO] %@ loaded", self);
 }
 
-+(void)load
++ (void)load
 {
+	NSLog(@"LOAD OneSignal", self);
     NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
     //Add this line. Replace '5eb5a37e-b458-11e3-ac11-000c2940e62c' with your OneSignal App ID.
     [OneSignal initWithLaunchOptions:[[TiApp app] launchOptions] appId:OneSignalAppID];
 }
 
--(void)shutdown:(id)sender
+- (void)shutdown:(id)sender
 {
 	// this method is called when the module is being unloaded
 	// typically this is during shutdown. make sure you don't do too
@@ -71,44 +72,14 @@
 	[super didReceiveMemoryWarning:notification];
 }
 
-#pragma mark Listener Notifications
-
--(void)_listenerAdded:(NSString *)type count:(int)count
+- (void)sendTag:(id)args
 {
-	if (count == 1 && [type isEqualToString:@"my_event"])
-	{
-		// the first (of potentially many) listener is being added
-		// for event named 'my_event'
-	}
-}
+    ENSURE_UI_THREAD_1_ARG(args);
+    ENSURE_SINGLE_ARG(args, NSDictionary);
 
--(void)_listenerRemoved:(NSString *)type count:(int)count
-{
-	if (count == 0 && [type isEqualToString:@"my_event"])
-	{
-		// the last listener called for event named 'my_event' has
-		// been removed, we can optionally clean up any resources
-		// since no body is listening at this point for that event
-	}
-}
-
-#pragma Public APIs
-
--(id)example:(id)args
-{
-	// example method
-	return @"hello world";
-}
-
--(id)exampleProp
-{
-	// example property getter
-	return @"hello world";
-}
-
--(void)setExampleProp:(id)value
-{
-	// example property setter
+    NSString *key = [TiUtils stringValue:[args objectForKey:@"key"]];
+    NSString *value = [TiUtils stringValue:[args objectForKey:@"value"]];
+    [OneSignal sendTag:key value:value];
 }
 
 @end
