@@ -31,15 +31,8 @@
 
 - (void)startup
 {
-	// this method is called when the module is first loaded
-	// you *must* call the superclass
 	[super startup];
-	NSLog(@"[INFO] %@ loaded", self);
-}
-
-+ (void)load
-{
-	NSLog(@"LOAD OneSignal", self);
+	[[TiApp app] setRemoteNotificationDelegate:self];
     NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
     //Add this line. Replace '5eb5a37e-b458-11e3-ac11-000c2940e62c' with your OneSignal App ID.
     [OneSignal initWithLaunchOptions:[[TiApp app] launchOptions] appId:OneSignalAppID];
@@ -47,11 +40,6 @@
 
 - (void)shutdown:(id)sender
 {
-	// this method is called when the module is being unloaded
-	// typically this is during shutdown. make sure you don't do too
-	// much processing here or the app will be quit forceably
-
-	// you *must* call the superclass
 	[super shutdown:sender];
 }
 
