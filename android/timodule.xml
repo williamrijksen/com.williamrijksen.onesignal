@@ -36,9 +36,14 @@
             <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
             <uses-permission android:name="com.huawei.android.launcher.permission.READ_SETTINGS" />
             <uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS" />
+            <uses-permission android:name="${tiapp.properties['id']}.permission.MAPS_RECEIVE"/>
+            <permission android:name="${tiapp.properties['id']}.permission.MAPS_RECEIVE" android:protectionLevel="signature"/>
+            <permission android:name="${tiapp.properties['id']}.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+            <uses-permission android:name="${tiapp.properties['id']}.permission.C2D_MESSAGE" />
             <!-- End: ShortcutBadger -->
             <!-- ##END## OneSignal Permissions -->
             <application>
+                <meta-data android:name="com.google.android.gms.version" android:value="7571000"/>
                 <!-- Application tag requirements below for OneSignal -->
                 <!-- ##START## OneSignal -->
                 <receiver android:name="com.onesignal.NotificationOpenedReceiver" />
@@ -56,6 +61,14 @@
                     <intent-filter>
                         <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
                     </intent-filter>
+                </receiver>
+                <receiver
+                        android:name="com.onesignal.GcmBroadcastReceiver"
+                        android:permission="com.google.android.c2dm.permission.SEND" >
+                  <intent-filter>
+                    <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                    <category android:name="${tiapp.properties['id']}" />
+                  </intent-filter>
                 </receiver>
                 <!-- ##END## OneSignal -->
             </application>
