@@ -59,7 +59,7 @@
     [OneSignal deleteTag:key];
 }
 
-- (id)getTags:(id)value
+- (void)getTags:(id)value
 {
     ENSURE_UI_THREAD(getTags, value);
     ENSURE_SINGLE_ARG(value, KrollCallback);
@@ -90,12 +90,18 @@
     }];
 }
 
-- (void)setLogLevel:(id)value
+- (void)setLogLevel:(id)args
 {
-    ENSURE_UI_THREAD(setLogLevel, value);
-    ENSURE_SINGLE_ARG(value, NSNumber);
+    ENSURE_UI_THREAD(setLogLevel, args);
+    ENSURE_SINGLE_ARG(args, NSDictionary);
     
-    [OneSignal setLogLevel:[TiUtils intValue:value] visualLevel:[TiUtils intValue:value]];
+    id logLevel = [args objectForKey:@"logLevel"];
+    id visualLevel = [args objectForKey:@"visualLevel"];
+    
+    ENSURE_TYPE(logLevel, NSNumber);
+    ENSURE_TYPE(visualLevel, NSNumber);
+
+    [OneSignal setLogLevel:[TiUtils intValue:logLevel] visualLevel:[TiUtils intValue:visualLevel]];
 }
 
 MAKE_SYSTEM_PROP(LOG_LEVEL_NONE, ONE_S_LL_NONE);

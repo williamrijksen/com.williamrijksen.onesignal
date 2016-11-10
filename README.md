@@ -44,15 +44,15 @@ This module gives you the possibility to integrate OneSignal into you're Appcele
    
    ```js
        onesignal.sendTag({ key: 'foo', value: 'bar' });
-   ```js
+   ```
 1. Delete tag:
    
-   ```
+   ```js
        onesignal.deleteTag({ key: 'foo' });
    ```
-1. Get tags (iOS only for now):
+1. Get tags (iOS-only for now):
 
-    ```
+    ```js
         onesignal.getTags(function(e) {
             if (!e.success) {
                 Ti.API.error("Error: " + e.error);
@@ -62,5 +62,12 @@ This module gives you the possibility to integrate OneSignal into you're Appcele
             Ti.API.info(e.results);
         });
     ```   
+1. Set log level (iOS-only for now):
 
+    ```js
+        onesignal.setLogLevel({
+            logLevel: onesignal.LOG_LEVEL_DEBUG,
+            visualLevel: onesignal.ONE_S_LL_NONE
+        });
+    ```   
 Cheers!

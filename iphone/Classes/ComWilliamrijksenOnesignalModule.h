@@ -14,7 +14,7 @@ typedef void(^TagsResultHandler)(NSDictionary*, NSError*);
 
 - (void)sendTag:(id)args;
 - (void)deleteTag:(id)args;
-- (id)getTags:(id)value;
-- (void)setLogLevel:(id)value;
+- (void)getTags:(id)value;
+- (void)setLogLevel:(id)args;
 
 @end
