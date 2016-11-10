@@ -67,7 +67,7 @@ This module gives you the possibility to integrate OneSignal into you're Appcele
     ```js
         onesignal.setLogLevel({
             logLevel: onesignal.LOG_LEVEL_DEBUG,
-            visualLevel: onesignal.ONE_S_LL_NONE
+            visualLevel: onesignal.LOG_LEVEL_NONE
         });
     ```   
 Cheers!
