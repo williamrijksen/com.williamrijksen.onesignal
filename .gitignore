@@ -11,3 +11,4 @@ Plafile.yml
 build.properties
 libs
 */dist/modules
+*.xcuserdatad
