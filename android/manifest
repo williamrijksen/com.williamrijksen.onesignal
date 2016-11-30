@@ -2,13 +2,13 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 1.0.0
+version: 1.0.1
 apiversion: 2
 architectures: armeabi armeabi-v7a x86
 description: com.williamrijksen.onesignal
-author: Your Name
+author: William Rijksen
 license: Specify your license
-copyright: Copyright (c) 2016 by Your Company
+copyright: Copyright (c) 2016 by William Rijksen
 
 # these should not be edited
 name: com.williamrijksen.onesignal

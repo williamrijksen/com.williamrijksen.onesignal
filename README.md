@@ -75,4 +75,35 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
             visualLevel: onesignal.LOG_LEVEL_NONE
         });
     ```   
+1. Receive notifications callback (Android-only for now):   
+Opened:   
+    ```js
+        onesignal.addEventListener("OneSignalNotificationOpened",function(evt){
+           if(evt){
+              var title = '';
+              var content = '';
+              var data = {};
+
+              if(evt.title){
+                 title = evt.title;
+              }
+
+              if(evt.body){
+                 content = evt.body;
+              }
+
+              if(evt.additionalData){
+                 data = JSON.parse(evt.additionalData);
+              }
+
+              alert("Notification opened! title: " + title + ', content: ' + content + ', data: ' + evt.additionalData);
+           }
+        });
+    ```   
+Received:   
+    ```js
+        onesignal.addEventListener("OneSignalNotificationReceived",function(evt){
+           console.log(' ***** Received! ' + JSON.stringify(evt));
+        });
+    ```   
 Cheers!
