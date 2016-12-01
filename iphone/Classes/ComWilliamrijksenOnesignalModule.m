@@ -35,7 +35,52 @@
     [[TiApp app] setRemoteNotificationDelegate:self];
 
     NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
-    [OneSignal initWithLaunchOptions:[[TiApp app] launchOptions] appId:OneSignalAppID];
+	[OneSignal initWithLaunchOptions:[[TiApp app] launchOptions] appId:OneSignalAppID handleNotificationReceived:^(OSNotification *notification) {
+		OSNotificationPayload* payload = notification.payload;
+
+		NSString* title = @"";
+		NSString* body = @"";
+		NSDictionary* additionalData = [[NSDictionary alloc] init];
+
+		if(payload.title) {
+			title = payload.title;
+		}
+
+		if (payload.body) {
+			body = [payload.body copy];
+		}
+
+		if (payload.additionalData) {
+			additionalData = payload.additionalData;
+		}
+
+		NSDictionary* notificationData = @{@"title": title, @"body": body, @"additionalData": additionalData};
+		[self fireEvent:@"OneSignalNotificationReceived" withObject:notificationData];
+
+    } handleNotificationAction:^(OSNotificationOpenedResult *result) {
+		OSNotificationPayload* payload = result.notification.payload;
+
+		NSString* title = @"";
+		NSString* body = @"";
+		NSDictionary* additionalData = [[NSDictionary alloc] init];
+
+		if(payload.title) {
+			title = payload.title;
+		}
+
+		if (payload.body) {
+			body = [payload.body copy];
+		}
+
+		if (payload.additionalData) {
+			additionalData = payload.additionalData;
+		}
+
+		NSDictionary* notificationData = @{@"title": title, @"body": body, @"additionalData": additionalData};
+		[self fireEvent:@"OneSignalNotificationOpened" withObject:notificationData];
+
+    } settings:@{kOSSettingsKeyInFocusDisplayOption : @(OSNotificationDisplayTypeNone), kOSSettingsKeyAutoPrompt : @YES}];
+	//TODO these settings should be configurable from the Titanium App on module initialization
 }
 
 #pragma mark Public API's
@@ -63,13 +108,13 @@
 {
     ENSURE_UI_THREAD(getTags, value);
     ENSURE_SINGLE_ARG(value, KrollCallback);
-        
+
     // Unifies the results (success) and error blocks to fire a single callback
     TagsResultHandler resultsBlock = ^(NSDictionary *results, NSError* error) {
         NSMutableDictionary *propertiesDict = [NSMutableDictionary dictionaryWithDictionary:@{
             @"success": NUMBOOL(error == nil),
         }];
-        
+
         if (!error) {
             // Are all keys and values Kroll-save? If not, we need a validation utility
             [propertiesDict setObject:results ?: @[] forKey:@"results"];
@@ -77,12 +122,12 @@
             [propertiesDict setObject:[error localizedDescription] forKey:@"error"];
             [propertiesDict setObject:NUMINTEGER([error code]) forKey:@"code"];
         }
-        
+
         NSArray *invocationArray = [[NSArray alloc] initWithObjects:&propertiesDict count:1];
         [value call:invocationArray thisObject:self];
         [invocationArray release];
     };
-    
+
     [OneSignal getTags:^(NSDictionary *results) {
         resultsBlock(results, nil);
     } onFailure:^(NSError *error) {
@@ -94,10 +139,10 @@
 {
     ENSURE_UI_THREAD(setLogLevel, args);
     ENSURE_SINGLE_ARG(args, NSDictionary);
-    
+
     id logLevel = [args objectForKey:@"logLevel"];
     id visualLevel = [args objectForKey:@"visualLevel"];
-    
+
     ENSURE_TYPE(logLevel, NSNumber);
     ENSURE_TYPE(visualLevel, NSNumber);
 

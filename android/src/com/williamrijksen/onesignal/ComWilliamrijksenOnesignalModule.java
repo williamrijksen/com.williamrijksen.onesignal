@@ -31,8 +31,10 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		.startInit(appContext)
 		.setNotificationReceivedHandler(new NotificationReceivedHandler())
 		.setNotificationOpenedHandler(new NotificationOpenedHandler())
+		.inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
 		.init();
 	}
+	//TODO inFocusDisplaying should be configurable from Titanium App module initialization
 
 	@Kroll.onAppCreate
 	public static void onAppCreate(TiApplication app)

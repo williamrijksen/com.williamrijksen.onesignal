@@ -75,29 +75,35 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
             visualLevel: onesignal.LOG_LEVEL_NONE
         });
     ```   
-1. Receive notifications callback (Android-only for now):   
+1. Receive notifications callback:   
+(does not work on iOS when the app is closed (swiped away). But works fine when the app is running on background)   
 Opened:   
     ```js
         onesignal.addEventListener("OneSignalNotificationOpened",function(evt){
-           if(evt){
-              var title = '';
-              var content = '';
-              var data = {};
+            alert(evt);
+            if(evt){
+                var title = '';
+                var content = '';
+                var data = {};
 
-              if(evt.title){
-                 title = evt.title;
-              }
+                if(evt.title){
+                    title = evt.title;
+                }
 
-              if(evt.body){
-                 content = evt.body;
-              }
+                if(evt.body){
+                    content = evt.body;
+                }
 
-              if(evt.additionalData){
-                 data = JSON.parse(evt.additionalData);
-              }
-
-              alert("Notification opened! title: " + title + ', content: ' + content + ', data: ' + evt.additionalData);
-           }
+                if(evt.additionalData){
+                    if(Ti.Platform.osname === 'android'){
+                        //Android receives it as a JSON string
+                        data = JSON.parse(evt.additionalData);
+                    }else{
+                        data = evt.additionalData;
+                    }
+                }
+            }
+            alert("Notification opened! title: " + title + ', content: ' + content + ', data: ' + evt.additionalData);
         });
     ```   
 Received:   

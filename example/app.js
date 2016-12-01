@@ -1,39 +1,58 @@
-// This is a test harness for your module
-// You should do something interesting in this harness
-// to test out the module and to provide instructions
-// to users on how to use it by example.
-
-
 // open a single window
 var win = Ti.UI.createWindow({
 	backgroundColor:'white'
 });
-var label = Ti.UI.createLabel();
-win.add(label);
+
+var onesignal = require('com.williamrijksen.onesignal');
+
+var addTag = Ti.UI.createButton({
+  title:'Add a tag',
+  width:Ti.UI.FILL,
+  height:Ti.UI.FILL,
+  color:'black',
+  opacity:0.8,
+  backgroundColor:'transparent',
+  borderColor:'#4ee47f',
+  top:60
+});
+
+addTag.addEventListener('click',function(e){
+   onesignal.sendTag({key:'tag1', value:true});
+   alert('Tag added');
+});
+win.add(addTag);
+
+
+onesignal.addEventListener("OneSignalNotificationOpened",function(evt){
+	alert(evt);
+   if(evt){
+      var title = '';
+      var content = '';
+      var data = {};
+
+      if(evt.title){
+         title = evt.title;
+      }
+
+      if(evt.body){
+         content = evt.body;
+      }
+
+      if(evt.additionalData){
+			if(Ti.Platform.osname === 'android'){
+				//Android receives it as a JSON string
+				data = JSON.parse(evt.additionalData);
+			}else{
+				data = evt.additionalData;
+			}
+      }
+
+      alert("Notification opened! title: " + title + ', content: ' + content + ', data: ' + evt.additionalData);
+   }
+});
+
+onesignal.addEventListener("OneSignalNotificationReceived",function(evt){
+   alert(' ***** Received! ' + JSON.stringify(evt));
+});
+
 win.open();
-
-// TODO: write your module tests here
-var com_williamrijksen_onesignal = require('com.williamrijksen.onesignal');
-Ti.API.info("module is => " + com_williamrijksen_onesignal);
-
-label.text = com_williamrijksen_onesignal.example();
-
-Ti.API.info("module exampleProp is => " + com_williamrijksen_onesignal.exampleProp);
-com_williamrijksen_onesignal.exampleProp = "This is a test value";
-
-if (Ti.Platform.name == "android") {
-	var proxy = com_williamrijksen_onesignal.createExample({
-		message: "Creating an example Proxy",
-		backgroundColor: "red",
-		width: 100,
-		height: 100,
-		top: 100,
-		left: 150
-	});
-
-	proxy.printMessage("Hello world!");
-	proxy.message = "Hi world!.  It's me again.";
-	proxy.printMessage("Hello world!");
-	win.add(proxy);
-}
-
