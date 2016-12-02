@@ -26,7 +26,7 @@ addTag.addEventListener('click', function(e) {
 win.add(addTag);
 
 
-onesignal.addEventListener("OneSignalNotificationOpened", function(evt) {
+onesignal.addEventListener("notificationOpened", function(evt) {
     alert(evt);
     if (evt) {
         var title = '';
@@ -54,7 +54,7 @@ onesignal.addEventListener("OneSignalNotificationOpened", function(evt) {
     }
 });
 
-onesignal.addEventListener("OneSignalNotificationReceived", function(evt) {
+onesignal.addEventListener("notificationReceived", function(evt) {
     alert(' ***** Received! ' + JSON.stringify(evt));
 });
 

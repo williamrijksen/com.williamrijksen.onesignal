@@ -42,7 +42,7 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
 1. Register device for Push Notifications
    
    ```js
-   	    // This registers your device automatically into OneSignal
+        // This registers your device automatically into OneSignal
        var onesignal = require('com.williamrijksen.onesignal');
    ```
 1. To add the possibility to target people for notifications, send a tag:
@@ -75,41 +75,44 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
             visualLevel: onesignal.LOG_LEVEL_NONE
         });
     ```   
-1. Receive notifications callback:   
-(does not work on iOS when the app is closed (swiped away). But works fine when the app is running on background)   
-Opened:   
+1. Receive notifications callback: (does not work on iOS when the app is closed (swiped away). But works fine when the app is running on background)
+   Opened:
+
     ```js
-        onesignal.addEventListener("OneSignalNotificationOpened",function(evt){
-            alert(evt);
-            if(evt){
-                var title = '';
-                var content = '';
-                var data = {};
+    onesignal.addEventListener('notificationOpened', function (evt) {
+        alert(evt);
+        if (evt) {
+            var title = '';
+            var content = '';
+            var data = {};
 
-                if(evt.title){
-                    title = evt.title;
-                }
+            if (evt.title) {
+                title = evt.title;
+            }
 
-                if(evt.body){
-                    content = evt.body;
-                }
+            if (evt.body) {
+                content = evt.body;
+            }
 
-                if(evt.additionalData){
-                    if(Ti.Platform.osname === 'android'){
-                        //Android receives it as a JSON string
-                        data = JSON.parse(evt.additionalData);
-                    }else{
-                        data = evt.additionalData;
-                    }
+            if (evt.additionalData) {
+                if (Ti.Platform.osname === 'android') {
+                    // Android receives it as a JSON string
+                    data = JSON.parse(evt.additionalData);
+                } else {
+                    data = evt.additionalData;
                 }
             }
-            alert("Notification opened! title: " + title + ', content: ' + content + ', data: ' + evt.additionalData);
-        });
-    ```   
-Received:   
-    ```js
-        onesignal.addEventListener("OneSignalNotificationReceived",function(evt){
-           console.log(' ***** Received! ' + JSON.stringify(evt));
-        });
-    ```   
+        }
+        alert("Notification opened! title: " + title + ', content: ' + content + ', data: ' + evt.additionalData);
+    });
+    ```
+
+1. Received:
+
+   ```js
+   onesignal.addEventListener('notificationReceived', function(evt) {
+       console.log(' ***** Received! ' + JSON.stringify(evt));
+   });
+   ```
+
 Cheers!

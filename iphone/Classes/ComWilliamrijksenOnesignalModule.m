@@ -55,7 +55,7 @@
 		}
 
 		NSDictionary* notificationData = @{@"title": title, @"body": body, @"additionalData": additionalData};
-		[self fireEvent:@"OneSignalNotificationReceived" withObject:notificationData];
+		[self fireEvent:@"notificationReceived" withObject:notificationData];
 
     } handleNotificationAction:^(OSNotificationOpenedResult *result) {
 		OSNotificationPayload* payload = result.notification.payload;
@@ -77,7 +77,7 @@
 		}
 
 		NSDictionary* notificationData = @{@"title": title, @"body": body, @"additionalData": additionalData};
-		[self fireEvent:@"OneSignalNotificationOpened" withObject:notificationData];
+		[self fireEvent:@"notificationOpened" withObject:notificationData];
 
     } settings:@{kOSSettingsKeyInFocusDisplayOption : @(OSNotificationDisplayTypeNone), kOSSettingsKeyAutoPrompt : @YES}];
 	//TODO these settings should be configurable from the Titanium App on module initialization

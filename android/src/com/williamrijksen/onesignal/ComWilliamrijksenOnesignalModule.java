@@ -80,7 +80,7 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 				String payload = additionalData.toString();
 				kd.put("additionalData", payload);
 			}
-			fireEvent("OneSignalNotificationOpened", kd);
+			fireEvent("notificationOpened", kd);
 		}
 	}
 
@@ -92,7 +92,7 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 				String payload = additionalData.toString();
 				HashMap<String, Object> kd = new HashMap<String, Object>();
 				kd.put("additionalData", payload);
-				fireEvent("OneSignalNotificationReceived", kd);
+				fireEvent("notificationReceived", kd);
 			}else{
 				Log.d(LCAT, "No additionalData on notification payload =/");
 			}
