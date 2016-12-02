@@ -25,6 +25,6 @@
 //
 // IMPORTANT NOTE: always use $(inherited) in your overrides
 // 
-FRAMEWORK_SEARCH_PATHS=$(SRCROOT)/../../modules/iphone/com.williamrijksen.onesignal/1.1.0/platform
+FRAMEWORK_SEARCH_PATHS=$(SRCROOT)/../../modules/iphone/com.williamrijksen.onesignal/1.2.0/platform
 OTHER_LDFLAGS=$(inherited) -framework OneSignal
 LD_RUNPATH_SEARCH_PATHS= $(inherited) "@executable_path/Frameworks" $(FRAMEWORK_SEARCH_PATHS)
