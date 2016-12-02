@@ -1,6 +1,7 @@
 language: objective-c
+osx_image: xcode7.1
 env:
-global:
+ global:
     - "MODULE_NAME=com.williamrijksen.onesignal"
 before_install:
     - MODULE_ROOT=$PWD
