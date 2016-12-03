@@ -3,6 +3,8 @@ language: objective-c
 osx_image: xcode7.3
 
 env:
+  global:
+    secure: KcICxBp33Swd8EKRccaL/YYpLOhod+pN4qnYg153QCsgI+5W5gV/S+t8FALU7hSh0ZFM3NlhMNAnl9sKIRxGwUKcpq6xnN/kk80gH07XZkpr/ILdI2SvlgMnwBFTF+8+9z6gfAXQWIDKEbBrm2Wr0Azbi9fBL1b7Od15rs1tRlAmqHmLzQT3aS4zvZil3hsG1Rw4MTh7y4w+RwAXIPXdrrW12cFYISTPduNRg90cuhHidZUfMcCoV1paR+AqdumlHsv4t5PbOQbNU7Y/KVpO3+5CBi/ygO5U3LPargoAYenzrBL8KQ61DUuFGZVHIRVKCb/0DMVkydaAzs+BToCdDCj6yP+d3fq6RFp2F2HML8R2jGhPrUhv56p5TfUl3H6SRrCElNq7yWtGC5m/2/AjVQx6c3FrdfHUM8VDrJ15k1e0StvcDQMmauKQNfsQyDs4xlc2zZXgr7pBa58FMtLPOQuJu2JtxXfUT0eyqVK2iMJ+JgEocfXy9cEx/saMlir1UZP0j7zN/ts05H1nonzA7I1lNZ8+xCkQAMRCIVs9NwRDYYpGmRiKnIBJ+kcChajIr3PNw+cUxht7qTSKQy2N2U0aR95d9dupaNXLx2LBSTDb8QXEFSWaXUSiN2TlNadpwydvPGrjR9nH5rzk3BFjtvRvVsBOWZeVkrewpcbt9oQ=
 
 global:
     - "MODULE_NAME=com.williamrijksen.onesignal"
@@ -28,8 +30,8 @@ deploy:
   provider: releases
   api_key: "CCFn93CpuV6PjOsjTYMU5raoR682mMaJo/lp2iFL3pHVOkz9eGmviEkIhdXsFwi9ppJv3NZPZQHzlBbFzTp02xDV6kNikBcyBVjxCcz8/MbaR4sp0f4M+GKdzHtQc5EgLgImTzMyNmV3dARx9H6SkPJN8YnCVCOPTOdEgAMTtipfcIL2WvYcl19BVwTJT29X+1tQGmmPZcesnTG86ovC6iUd27JLl4kZrK7IPOUCQytb5sZr0yND2MBRxyy252ptyEA5+7DCT1P55Ieg2/kihLGzPrerFvIVwx5ZA/OXOcbRmS9m5+gZ1WqZiK5Ntiu/Hn1xCCO7QYs2TYypPLZMQdxW4zvbzr5zUaPZcyIDJirotZc3lXh0xLtEe9bc9Sc/9HUwMzQxHuh5RtXOMDA7q8cFfMa1eRhzuTTB8jVILBKY/8cfDFEtpIj0L/1sKtEe0Q3mAYP+oHzf7THg0kIbSkTouMrE9m/H/E23URQLvfA/+TI1sLfAz+utL4eC2t0zAQMPNo4zQXRUl5pv4K7WD16Yhr8rYZDZyif6Pqabowr5pzBDYAOnDqxrIG2ATygx+PZIqWQs34OLuNBCOmO7CejinSeghIoQeXTK66u9jb4nGbVqOb4y8jmTgEBytNAZ7f+m1IIoH2TeXMTFUoIV846nUSCMYQkRM9q3CALw7Gg="
   file:
-    - "FILE 1"
-    - "FILE 2"
+    - "android/dist/*.zip"
+    - "ios/*.zip"
   skip_cleanup: true
   on:
     tags: true
