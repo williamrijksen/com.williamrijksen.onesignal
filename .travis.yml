@@ -29,8 +29,8 @@ deploy:
   api_key:
     secure: CR7C6WsEVoFF85tIZNm+4cfNKituRab0TtDMPP+n418O/WwE7ZVV19n9uELemdyQflw3sPPyzTdr/0hg7CnDL+dVMCscZPnqkTJszq8WnNYUOGPn1Mismx7SzzCF2KXIQBui0mObQrBh+ii/aTgoVYVjC80dNbsNkzOKShloZgr/51OfKY9rqkkeUW8uMY/A/5Tq2k4X7idz+F/Ndr78wP3d2Z3SGHoq51g7fvnKAsaWJ4CqSVWl23ne8Aqft0o8SfV3Uo3pjPMzs28jGk3jW7PNyHezNNxbvDJdex0E6QSndI6MR0JNJrBp4LskuzdhprsDiwSHnL7jhywwVULhobpRSVltJAwvnkv515rfKuogCuh9WZLhR34d63FZ/JX4q/1t+YBsaUbaTRgoM4/i0+S9YEeCWTo+B8DCZjordHEF3fg4Eevq/eMMijEO6/NCY5aHQJtNkUOJCS1JdYmxmBRkLTHIF+zwN0JvNVMrWOrpImz3V37EL9Fy5EAmJGRATtpn7r63p8jCQuxE5jW6zR8usFAzxJCposRt007KyrRvdQ5odKxgaMm2RORkiAcam1Y1PCmWR5wnTkJGB1D3uVtBZ8+e2eX4UkHAAg3dRMogg9v6tjCyTVkQvkabXxP98Ckdo9Jg1trBC+QVRy76ibb20Sr+ISploRwpwPPjyuY=
   file:
-    - $MODULE_ROOT/android/dist/com.williamrijksen.onesignal-android-${TRAVIS_TAG:1}.zip
-    - $MODULE_ROOT/ios/com.williamrijksen.onesignal-iphone-${TRAVIS_TAG:1}.zip
+    - $MODULE_ROOT/android/dist/com.williamrijksen.onesignal-android-${TRAVIS_TAG}.zip
+    - $MODULE_ROOT/ios/com.williamrijksen.onesignal-iphone-${TRAVIS_TAG}.zip
   on:
     repo: williamrijksen/com.williamrijksen.onesignal
     tags: true
