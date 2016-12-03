@@ -10,9 +10,8 @@ global:
     - "MODULE_NAME=com.williamrijksen.onesignal"
 
 cache:
-  bundler: true
   directories:
-    - build
+    - ~/Library/Application Support/Titanium
     - node_modules
 
 before_install:
@@ -38,8 +37,8 @@ deploy:
   provider: releases
   api_key: "CCFn93CpuV6PjOsjTYMU5raoR682mMaJo/lp2iFL3pHVOkz9eGmviEkIhdXsFwi9ppJv3NZPZQHzlBbFzTp02xDV6kNikBcyBVjxCcz8/MbaR4sp0f4M+GKdzHtQc5EgLgImTzMyNmV3dARx9H6SkPJN8YnCVCOPTOdEgAMTtipfcIL2WvYcl19BVwTJT29X+1tQGmmPZcesnTG86ovC6iUd27JLl4kZrK7IPOUCQytb5sZr0yND2MBRxyy252ptyEA5+7DCT1P55Ieg2/kihLGzPrerFvIVwx5ZA/OXOcbRmS9m5+gZ1WqZiK5Ntiu/Hn1xCCO7QYs2TYypPLZMQdxW4zvbzr5zUaPZcyIDJirotZc3lXh0xLtEe9bc9Sc/9HUwMzQxHuh5RtXOMDA7q8cFfMa1eRhzuTTB8jVILBKY/8cfDFEtpIj0L/1sKtEe0Q3mAYP+oHzf7THg0kIbSkTouMrE9m/H/E23URQLvfA/+TI1sLfAz+utL4eC2t0zAQMPNo4zQXRUl5pv4K7WD16Yhr8rYZDZyif6Pqabowr5pzBDYAOnDqxrIG2ATygx+PZIqWQs34OLuNBCOmO7CejinSeghIoQeXTK66u9jb4nGbVqOb4y8jmTgEBytNAZ7f+m1IIoH2TeXMTFUoIV846nUSCMYQkRM9q3CALw7Gg="
   file:
-    - "android/dist/*.zip"
-    - "ios/*.zip"
+    - $TRAVIS_BUILD_DIR/dist/*.zip
+    - $TRAVIS_BUILD_DIR/ios/*.zip
   skip_cleanup: true
-  on:
-    tags: true
+#  on:
+#    tags: true
