@@ -1,8 +1,12 @@
 language: objective-c
+
 osx_image: xcode7.3
+
 env:
+
 global:
     - "MODULE_NAME=com.williamrijksen.onesignal"
+
 before_install:
     - MODULE_ROOT=$PWD
     - brew update
@@ -10,13 +14,22 @@ before_install:
     - nvm install 4
     - npm config delete prefix
     - nvm use --delete-prefix v4.4.7 4
+
 install:
     - cd $MODULE_ROOT
     - curl -o install.sh https://raw.githubusercontent.com/sgtcoolguy/ci/v8/travis/install.sh #change this to appcelerator-modules once PR has been merged
     - source install.sh -s "--branch master"
+
 script:
     - curl -o script.sh https://raw.githubusercontent.com/sgtcoolguy/ci/v8/travis/script.sh
     - source script.sh
-after_success: # and this only on success
-    - curl -o deploy.sh https://raw.githubusercontent.com/appcelerator-modules/ci/master/travis/deploy.sh
-    - source deploy.sh
+
+deploy:
+  provider: releases
+  api_key: "CCFn93CpuV6PjOsjTYMU5raoR682mMaJo/lp2iFL3pHVOkz9eGmviEkIhdXsFwi9ppJv3NZPZQHzlBbFzTp02xDV6kNikBcyBVjxCcz8/MbaR4sp0f4M+GKdzHtQc5EgLgImTzMyNmV3dARx9H6SkPJN8YnCVCOPTOdEgAMTtipfcIL2WvYcl19BVwTJT29X+1tQGmmPZcesnTG86ovC6iUd27JLl4kZrK7IPOUCQytb5sZr0yND2MBRxyy252ptyEA5+7DCT1P55Ieg2/kihLGzPrerFvIVwx5ZA/OXOcbRmS9m5+gZ1WqZiK5Ntiu/Hn1xCCO7QYs2TYypPLZMQdxW4zvbzr5zUaPZcyIDJirotZc3lXh0xLtEe9bc9Sc/9HUwMzQxHuh5RtXOMDA7q8cFfMa1eRhzuTTB8jVILBKY/8cfDFEtpIj0L/1sKtEe0Q3mAYP+oHzf7THg0kIbSkTouMrE9m/H/E23URQLvfA/+TI1sLfAz+utL4eC2t0zAQMPNo4zQXRUl5pv4K7WD16Yhr8rYZDZyif6Pqabowr5pzBDYAOnDqxrIG2ATygx+PZIqWQs34OLuNBCOmO7CejinSeghIoQeXTK66u9jb4nGbVqOb4y8jmTgEBytNAZ7f+m1IIoH2TeXMTFUoIV846nUSCMYQkRM9q3CALw7Gg="
+  file:
+    - "FILE 1"
+    - "FILE 2"
+  skip_cleanup: true
+  on:
+    tags: true
