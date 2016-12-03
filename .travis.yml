@@ -1,5 +1,7 @@
 language: objective-c
 osx_image: xcode8.1
+node_js:
+  - "4.6.1"
 env:
  global:
     - "MODULE_NAME=com.williamrijksen.onesignal"
