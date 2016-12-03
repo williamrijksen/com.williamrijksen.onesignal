@@ -1,22 +1,37 @@
-language: objective-c
-osx_image: xcode7.3
+os: osx
 env:
-global:
-    - "MODULE_NAME=com.williamrijksen.onesignal"
+  global:
+  - MODULE_NAME=com.williamrijksen.onesignal
+cache:
+  directories:
+  - node_modules
+  - $HOME/android-ndk-r11c
 before_install:
-    - MODULE_ROOT=$PWD
-    - brew update
-    - brew install nvm
-    - nvm install 4
-    - npm config delete prefix
-    - nvm use --delete-prefix v4.4.7 4
+- MODULE_ROOT=$PWD
+- brew update
+- brew install nvm
+- nvm install 4
+- npm config delete prefix
+- nvm use --delete-prefix v4.4.7 4
 install:
-    - cd $MODULE_ROOT
-    - curl -o install.sh https://raw.githubusercontent.com/sgtcoolguy/ci/v8/travis/install.sh #change this to appcelerator-modules once PR has been merged
-    - source install.sh -s "--branch master"
+- cd $MODULE_ROOT
+- curl -o install.sh https://raw.githubusercontent.com/sgtcoolguy/ci/v8/travis/install.sh
+- source install.sh -s "--branch master"
+- rvm get head
+before_script:
+- curl -o script.sh https://raw.githubusercontent.com/sgtcoolguy/ci/v8/travis/script.sh
+- chmod +x script.sh
 script:
-    - curl -o script.sh https://raw.githubusercontent.com/sgtcoolguy/ci/v8/travis/script.sh
-    - source script.sh
-after_success: # and this only on success
-    - curl -o deploy.sh https://raw.githubusercontent.com/appcelerator-modules/ci/master/travis/deploy.sh
-    - source deploy.sh
+- MODULE_ROOT=$MODULE_ROOT bash script.sh
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key:
+    secure: CR7C6WsEVoFF85tIZNm+4cfNKituRab0TtDMPP+n418O/WwE7ZVV19n9uELemdyQflw3sPPyzTdr/0hg7CnDL+dVMCscZPnqkTJszq8WnNYUOGPn1Mismx7SzzCF2KXIQBui0mObQrBh+ii/aTgoVYVjC80dNbsNkzOKShloZgr/51OfKY9rqkkeUW8uMY/A/5Tq2k4X7idz+F/Ndr78wP3d2Z3SGHoq51g7fvnKAsaWJ4CqSVWl23ne8Aqft0o8SfV3Uo3pjPMzs28jGk3jW7PNyHezNNxbvDJdex0E6QSndI6MR0JNJrBp4LskuzdhprsDiwSHnL7jhywwVULhobpRSVltJAwvnkv515rfKuogCuh9WZLhR34d63FZ/JX4q/1t+YBsaUbaTRgoM4/i0+S9YEeCWTo+B8DCZjordHEF3fg4Eevq/eMMijEO6/NCY5aHQJtNkUOJCS1JdYmxmBRkLTHIF+zwN0JvNVMrWOrpImz3V37EL9Fy5EAmJGRATtpn7r63p8jCQuxE5jW6zR8usFAzxJCposRt007KyrRvdQ5odKxgaMm2RORkiAcam1Y1PCmWR5wnTkJGB1D3uVtBZ8+e2eX4UkHAAg3dRMogg9v6tjCyTVkQvkabXxP98Ckdo9Jg1trBC+QVRy76ibb20Sr+ISploRwpwPPjyuY=
+  file:
+    - $MODULE_ROOT/android/dist/com.williamrijksen.onesignal-android-${TRAVIS_TAG:1}.zip
+    - $MODULE_ROOT/ios/com.williamrijksen.onesignal-iphone-${TRAVIS_TAG:1}.zip
+  on:
+    repo: williamrijksen/com.williamrijksen.onesignal
+    tags: true
+
