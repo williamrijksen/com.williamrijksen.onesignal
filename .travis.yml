@@ -9,6 +9,12 @@ env:
 global:
     - "MODULE_NAME=com.williamrijksen.onesignal"
 
+cache:
+  bundler: true
+  directories:
+    - build
+    - node_modules
+
 before_install:
     - MODULE_ROOT=$PWD
     - brew update
@@ -21,6 +27,8 @@ install:
     - cd $MODULE_ROOT
     - curl -o install.sh https://raw.githubusercontent.com/sgtcoolguy/ci/v8/travis/install.sh #change this to appcelerator-modules once PR has been merged
     - source install.sh -s "--branch master"
+    # Fix for "shell_session_update: command not found"
+    - rvm get head
 
 script:
     - curl -o script.sh https://raw.githubusercontent.com/sgtcoolguy/ci/v8/travis/script.sh
