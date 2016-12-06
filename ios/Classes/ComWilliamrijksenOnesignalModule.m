@@ -1,8 +1,8 @@
 /**
  * com.williamrijksen.onesignal
  *
- * Created by Your Name
- * Copyright (c) 2016 Your Company. All rights reserved.
+ * Created by William Rijksen
+ * Copyright (c) 2016 Enrise. All rights reserved.
  */
 
 #import "ComWilliamrijksenOnesignalModule.h"
@@ -26,8 +26,61 @@
 {
 	return @"com.williamrijksen.onesignal";
 }
-
+    
 #pragma mark Lifecycle
+
+- (void) receivedHandler:(OSNotification *)notification {
+    OSNotificationPayload* payload = notification.payload;
+        
+    NSString* title = @"";
+    NSString* body = @"";
+    NSDictionary* additionalData = [[NSDictionary alloc] init];
+
+    if(payload.title) {
+        title = payload.title;
+    }
+
+    if (payload.body) {
+        body = [payload.body copy];
+    }
+
+    if (payload.additionalData) {
+        additionalData = payload.additionalData;
+    }
+
+    NSDictionary* notificationData = @{
+                                        @"title": title,
+                                        @"body": body,
+                                        @"additionalData": additionalData
+                                        };
+    [self fireEvent:@"notificationReceived" withObject:notificationData];
+};
+    
+- (void) actionHandler:(OSNotificationOpenedResult *)result {
+    OSNotificationPayload* payload = result.notification.payload;
+
+    NSString* title = @"";
+    NSString* body = @"";
+    NSDictionary* additionalData = [[NSDictionary alloc] init];
+
+    if(payload.title) {
+        title = payload.title;
+    }
+
+    if (payload.body) {
+        body = [payload.body copy];
+    }
+
+    if (payload.additionalData) {
+        additionalData = payload.additionalData;
+    }
+
+    NSDictionary* notificationData = @{
+                                       @"title": title,
+                                       @"body": body,
+                                       @"additionalData": additionalData};
+    [self fireEvent:@"notificationOpened" withObject:notificationData];
+}
 
 - (void)startup
 {
@@ -35,58 +88,26 @@
     [[TiApp app] setRemoteNotificationDelegate:self];
 
     NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
-	[OneSignal initWithLaunchOptions:[[TiApp app] launchOptions] appId:OneSignalAppID handleNotificationReceived:^(OSNotification *notification) {
-		OSNotificationPayload* payload = notification.payload;
-
-		NSString* title = @"";
-		NSString* body = @"";
-		NSDictionary* additionalData = [[NSDictionary alloc] init];
-
-		if(payload.title) {
-			title = payload.title;
-		}
-
-		if (payload.body) {
-			body = [payload.body copy];
-		}
-
-		if (payload.additionalData) {
-			additionalData = payload.additionalData;
-		}
-
-		NSDictionary* notificationData = @{@"title": title, @"body": body, @"additionalData": additionalData};
-		[self fireEvent:@"notificationReceived" withObject:notificationData];
-
-    } handleNotificationAction:^(OSNotificationOpenedResult *result) {
-		OSNotificationPayload* payload = result.notification.payload;
-
-		NSString* title = @"";
-		NSString* body = @"";
-		NSDictionary* additionalData = [[NSDictionary alloc] init];
-
-		if(payload.title) {
-			title = payload.title;
-		}
-
-		if (payload.body) {
-			body = [payload.body copy];
-		}
-
-		if (payload.additionalData) {
-			additionalData = payload.additionalData;
-		}
-
-		NSDictionary* notificationData = @{@"title": title, @"body": body, @"additionalData": additionalData};
-		[self fireEvent:@"notificationOpened" withObject:notificationData];
-
-    } settings:@{kOSSettingsKeyInFocusDisplayOption : @(OSNotificationDisplayTypeNone), kOSSettingsKeyAutoPrompt : @YES}];
+	[OneSignal initWithLaunchOptions:[[TiApp app] launchOptions]
+                               appId:OneSignalAppID
+          handleNotificationReceived:^(OSNotification *notification) {
+              [self receivedHandler:notification];
+          }
+            handleNotificationAction:^(OSNotificationOpenedResult *result) {
+                [self actionHandler:result];
+            }
+                            settings:@{
+                 kOSSettingsKeyInFocusDisplayOption: @(OSNotificationDisplayTypeNone),
+                 kOSSettingsKeyAutoPrompt: @YES}
+     ];
 	//TODO these settings should be configurable from the Titanium App on module initialization
 }
 
 #pragma mark Public API's
 
-- (void)sendTag:(id)args
+- (void)sendTag:(id)arguments
 {
+    id args = arguments;
     ENSURE_UI_THREAD_1_ARG(args);
     ENSURE_SINGLE_ARG(args, NSDictionary);
 
@@ -95,8 +116,9 @@
     [OneSignal sendTag:key value:value];
 }
 
-- (void)deleteTag:(id)args
+- (void)deleteTag:(id)arguments
 {
+    id args = arguments;
     ENSURE_UI_THREAD_1_ARG(args);
     ENSURE_SINGLE_ARG(args, NSDictionary);
 
@@ -104,8 +126,9 @@
     [OneSignal deleteTag:key];
 }
 
-- (void)getTags:(id)value
+- (void)getTags:(id)args
 {
+    id value = args;
     ENSURE_UI_THREAD(getTags, value);
     ENSURE_SINGLE_ARG(value, KrollCallback);
 
@@ -115,12 +138,12 @@
             @"success": NUMBOOL(error == nil),
         }];
 
-        if (!error) {
-            // Are all keys and values Kroll-save? If not, we need a validation utility
-            [propertiesDict setObject:results ?: @[] forKey:@"results"];
+        if (error == nil) {
+            propertiesDict[@"error"] = [error localizedDescription];
+            propertiesDict[@"code"] = NUMINTEGER([error code]);
         } else {
-            [propertiesDict setObject:[error localizedDescription] forKey:@"error"];
-            [propertiesDict setObject:NUMINTEGER([error code]) forKey:@"code"];
+            // Are all keys and values Kroll-save? If not, we need a validation utility
+            propertiesDict[@"results"] = results ?: @[];
         }
 
         NSArray *invocationArray = [[NSArray alloc] initWithObjects:&propertiesDict count:1];
@@ -135,8 +158,9 @@
     }];
 }
 
-- (void)setLogLevel:(id)args
+- (void)setLogLevel:(id)arguments
 {
+    id args = arguments;
     ENSURE_UI_THREAD(setLogLevel, args);
     ENSURE_SINGLE_ARG(args, NSDictionary);
 
