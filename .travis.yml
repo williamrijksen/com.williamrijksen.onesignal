@@ -1,11 +1,14 @@
 os: osx
+
 env:
   global:
   - MODULE_NAME=com.williamrijksen.onesignal
+
 cache:
   directories:
   - node_modules
   - $HOME/android-ndk-r11c
+
 before_install:
 - MODULE_ROOT=$PWD
 - brew update
@@ -18,17 +21,20 @@ before_install:
 - brew install oclint
 - oclint -version
 - rvm get head
+
 install:
 - cd $MODULE_ROOT
 - curl -o install.sh https://raw.githubusercontent.com/sgtcoolguy/ci/v8/travis/install.sh
-- chmod +x install.sh
-- MODULE_ROOT=$MODULE_ROOT bash install.sh
+- source install.sh -s "--branch master"
+
 before_script:
 - curl -o script.sh https://raw.githubusercontent.com/sgtcoolguy/ci/v8/travis/script.sh
 - chmod +x script.sh
+
 script:
 - MODULE_ROOT=$MODULE_ROOT bash script.sh
 - sh -c 'cd ios && xcodebuild -dry-run | tee xcodebuild.log && oclint-xcodebuild && oclint-json-compilation-database'
+
 deploy:
   skip_cleanup: true
   provider: releases
