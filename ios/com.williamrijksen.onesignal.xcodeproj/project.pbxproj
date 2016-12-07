@@ -24,8 +24,6 @@
 /* Begin PBXBuildFile section */
 		24DD6CF91134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DD6CF71134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h */; };
 		24DD6CFA1134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m */; };
-		24DE9E1111C5FE74003F90F6 /* ComWilliamrijksenOnesignalModuleAssets.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DE9E0F11C5FE74003F90F6 /* ComWilliamrijksenOnesignalModuleAssets.h */; };
-		24DE9E1211C5FE74003F90F6 /* ComWilliamrijksenOnesignalModuleAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DE9E1011C5FE74003F90F6 /* ComWilliamrijksenOnesignalModuleAssets.m */; };
 		AA747D9F0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 		E7E33C0C1D9D823200810B7E /* OneSignal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E33C0B1D9D823200810B7E /* OneSignal.framework */; };
@@ -45,8 +43,6 @@
 		24DD6CF71134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComWilliamrijksenOnesignalModule.h; path = Classes/ComWilliamrijksenOnesignalModule.h; sourceTree = "<group>"; };
 		24DD6CF81134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ComWilliamrijksenOnesignalModule.m; path = Classes/ComWilliamrijksenOnesignalModule.m; sourceTree = "<group>"; };
 		24DD6D1B1134B66800162E58 /* titanium.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = titanium.xcconfig; sourceTree = "<group>"; };
-		24DE9E0F11C5FE74003F90F6 /* ComWilliamrijksenOnesignalModuleAssets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComWilliamrijksenOnesignalModuleAssets.h; path = Classes/ComWilliamrijksenOnesignalModuleAssets.h; sourceTree = "<group>"; };
-		24DE9E1011C5FE74003F90F6 /* ComWilliamrijksenOnesignalModuleAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ComWilliamrijksenOnesignalModuleAssets.m; path = Classes/ComWilliamrijksenOnesignalModuleAssets.m; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComWilliamrijksenOnesignal_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libComWilliamrijksenOnesignal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComWilliamrijksenOnesignal.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -97,8 +93,6 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				24DE9E0F11C5FE74003F90F6 /* ComWilliamrijksenOnesignalModuleAssets.h */,
-				24DE9E1011C5FE74003F90F6 /* ComWilliamrijksenOnesignalModuleAssets.m */,
 				24DD6CF71134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h */,
 				24DD6CF81134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m */,
 			);
@@ -123,7 +117,6 @@
 			files = (
 				AA747D9F0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch in Headers */,
 				24DD6CF91134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h in Headers */,
-				24DE9E1111C5FE74003F90F6 /* ComWilliamrijksenOnesignalModuleAssets.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,7 +191,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				24DD6CFA1134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m in Sources */,
-				24DE9E1211C5FE74003F90F6 /* ComWilliamrijksenOnesignalModuleAssets.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
