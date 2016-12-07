@@ -1,8 +1,8 @@
 /**
  * com.williamrijksen.onesignal
  *
- * Created by Your Name
- * Copyright (c) 2016 Your Company. All rights reserved.
+ * Created by William Rijksen
+ * Copyright (c) 2016 Enrise. All rights reserved.
  */
 
 #import "TiModule.h"
