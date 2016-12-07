@@ -13,7 +13,6 @@ before_install:
 - nvm install 4
 - npm config delete prefix
 - nvm use --delete-prefix v4.4.7 4
-- brew cask uninstall oclint
 - brew tap oclint/formulae
 - brew install oclint
 - oclint -version
