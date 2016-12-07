@@ -1,4 +1,4 @@
-# Titanium OneSignal
+# Titanium OneSignal [![Build Status](https://travis-ci.org/williamrijksen/com.williamrijksen.onesignal.svg?branch=master)](https://travis-ci.org/williamrijksen/com.williamrijksen.onesignal)
 
 This module gives you the possibility to integrate OneSignal into you're Appcelerator Android or iOS-application. It's even possible to target people by registering tags.
 
