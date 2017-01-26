@@ -138,12 +138,12 @@
             @"success": NUMBOOL(error == nil),
         }];
 
-        if (error == nil) {
-            propertiesDict[@"error"] = [error localizedDescription];
-            propertiesDict[@"code"] = NUMINTEGER([error code]);
-        } else {
-            // Are all keys and values Kroll-save? If not, we need a validation utility
+		if (error == nil) {
+			// Are all keys and values Kroll-save? If not, we need a validation utility
             propertiesDict[@"results"] = results ?: @[];
+        } else {
+			propertiesDict[@"error"] = [error localizedDescription];
+            propertiesDict[@"code"] = NUMINTEGER([error code]);
         }
 
         NSArray *invocationArray = [[NSArray alloc] initWithObjects:&propertiesDict count:1];
@@ -156,6 +156,40 @@
     } onFailure:^(NSError *error) {
         resultsBlock(nil, error);
     }];
+}
+
+- (void)idsAvailable:(id)args
+{
+	id value = args;
+    ENSURE_UI_THREAD(idsAvailable, value);
+    ENSURE_SINGLE_ARG(value, KrollCallback);
+
+	[OneSignal IdsAvailable:^(NSString* userId, NSString* pushToken) {
+		NSMutableDictionary *idsDict = [NSMutableDictionary dictionaryWithDictionary:@{
+			@"userId" : userId ?: @[],
+         	@"pushToken" :pushToken ?: @[]
+     	}];
+		NSArray *invocationArray = [[NSArray alloc] initWithObjects:&idsDict count:1];
+        [value call:invocationArray thisObject:self];
+        [invocationArray release];
+	}];
+}
+
+- (void)postNotification:(id)arguments
+{
+	id args = arguments;
+    ENSURE_UI_THREAD_1_ARG(args);
+    ENSURE_SINGLE_ARG(args, NSDictionary);
+
+	NSString *message = [TiUtils stringValue:[args objectForKey:@"message"]];
+	NSArray *playerIds = [args valueForKey:@"playerIds"];
+
+	if(([message length] != 0) && ([playerIds count] != 0)){
+		[OneSignal postNotification:@{
+			@"contents" : @{@"en": message},
+	   		@"include_player_ids": playerIds
+		}];
+	}
 }
 
 - (void)setLogLevel:(id)arguments
