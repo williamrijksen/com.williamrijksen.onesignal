@@ -18,5 +18,6 @@ typedef void(^TagsResultHandler)(NSDictionary*, NSError*);
 - (void)setLogLevel:(id)args;
 - (void)idsAvailable:(id)args;
 - (void)postNotification:(id)arguments;
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo;
 
 @end
