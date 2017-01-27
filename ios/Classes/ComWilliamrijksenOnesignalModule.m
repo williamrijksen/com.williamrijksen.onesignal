@@ -28,19 +28,9 @@
 	return @"com.williamrijksen.onesignal";
 }
 
-+(ComWilliamrijksenOnesignalModule*)sharedInstance {
-    static ComWilliamrijksenOnesignalModule *sharedInstance;
-    @synchronized(self) {
-        if (!sharedInstance) {
-            sharedInstance = [[self alloc]init];
-        }
-    }
-    return sharedInstance;
-}
-
 #pragma mark Lifecycle
 
-+ (void) receivedHandler:(OSNotification *)notification {
+- (void) receivedHandler:(OSNotification *)notification {
     OSNotificationPayload* payload = notification.payload;
         
     NSString* title = @"";
@@ -64,10 +54,10 @@
                                         @"body": body,
                                         @"additionalData": additionalData
                                         };
-    [[ComWilliamrijksenOnesignalModule sharedInstance]  fireEvent:@"notificationReceived" withObject:notificationData];
+    [self fireEvent:@"notificationReceived" withObject:notificationData];
 };
     
-+ (void) actionHandler:(OSNotificationOpenedResult *)result {
+- (void) actionHandler:(OSNotificationOpenedResult *)result {
     OSNotificationPayload* payload = result.notification.payload;
 
     NSString* title = @"";
@@ -90,42 +80,33 @@
                                        @"title": title,
                                        @"body": body,
                                        @"additionalData": additionalData};
-    [[ComWilliamrijksenOnesignalModule sharedInstance] fireEvent:@"notificationOpened" withObject:notificationData];
+    [self fireEvent:@"notificationOpened" withObject:notificationData];
 }
 
 #pragma mark Lifecycle
 
-+ (void)load {
-    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-    [center addObserver:self
-           selector:@selector(applicationDidFinishLaunching:)
-               name:@"UIApplicationDidFinishLaunchingNotification"
-             object:nil];
-}
 
+- (void)startup
+{
+    [super startup];
+    [[TiApp app] setRemoteNotificationDelegate:self];
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo {
-    // Fixes crash in Titanium
-}
-
-+ (void)applicationDidFinishLaunching:(NSNotification *)userInfo {
     // Titanium forwards application:didReceiveRemoteNotification:fetchCompletionHandler: to
     // application:didReceiveRemoteNotification:, however that method is not defined. We will
     // add the method if missing.
     id delegate = [UIApplication sharedApplication].delegate;
     if (delegate && ![delegate respondsToSelector:@selector(application:didReceiveRemoteNotification:)]) {
+        Method delegateMethod = class_getInstanceMethod([ComWilliamrijksenOnesignalModule class],
+                                                        @selector(application:didReceiveRemoteNotification:));
 
-        Method delegateMethod = class_getInstanceMethod([ComWilliamrijksenOnesignalModule class], @selector(application:didReceiveRemoteNotification:));
-
-        BOOL swizzled = class_addMethod([delegate class],
-                                        @selector(application:didReceiveRemoteNotification:),
-                                        method_getImplementation(delegateMethod),
-                                        method_getTypeEncoding(delegateMethod));
+        class_addMethod([delegate class],
+                        @selector(application:didReceiveRemoteNotification:),
+                        method_getImplementation(delegateMethod),
+                        method_getTypeEncoding(delegateMethod));
     }
 
-    NSDictionary *launchOptions = [TiApp app].launchOptions;
     NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
-	[OneSignal initWithLaunchOptions:[[TiApp app] launchOptions]
+    [OneSignal initWithLaunchOptions:[[TiApp app] launchOptions]
                                appId:OneSignalAppID
           handleNotificationReceived:^(OSNotification *notification) {
               [self receivedHandler:notification];
@@ -134,10 +115,15 @@
                 [self actionHandler:result];
             }
                             settings:@{
-                 kOSSettingsKeyInFocusDisplayOption: @(OSNotificationDisplayTypeNone),
-                 kOSSettingsKeyAutoPrompt: @YES}
+                                       kOSSettingsKeyInFocusDisplayOption: @(OSNotificationDisplayTypeNone),
+                                       kOSSettingsKeyAutoPrompt: @YES}
      ];
-	//TODO these settings should be configurable from the Titanium App on module initialization
+    //TODO these settings should be configurable from the Titanium App on module initialization
+}
+
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo {
+    // Fixes crash in Titanium
 }
 
 #pragma mark Public API's
