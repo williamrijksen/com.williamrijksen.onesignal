@@ -8,6 +8,8 @@ cache:
   directories:
   - node_modules
   - $HOME/android-ndk-r11c
+  - $HOME/Library/Caches/Homebrew
+  - $HOME/Library/Application Support/Titanium
 
 before_install:
 - MODULE_ROOT=$PWD

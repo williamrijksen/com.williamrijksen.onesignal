@@ -24,7 +24,7 @@
 //
 //
 // IMPORTANT NOTE: always use $(inherited) in your overrides
-//
-FRAMEWORK_SEARCH_PATHS=$(SRCROOT)/../../modules/iphone/com.williamrijksen.onesignal/1.3.1/platform "~/Library/Application\ Support/Titanium/modules/iphone/com.williamrijksen.onesignal/1.3.1/platform"
+// 
+FRAMEWORK_SEARCH_PATHS=$(SRCROOT)/../../modules/iphone/com.williamrijksen.onesignal/1.4.0/platform "~/Library/Application\ Support/Titanium/modules/iphone/com.williamrijksen.onesignal/1.4.0/platform"
 OTHER_LDFLAGS=$(inherited) -framework OneSignal
 LD_RUNPATH_SEARCH_PATHS= $(inherited) "@executable_path/Frameworks" $(FRAMEWORK_SEARCH_PATHS)
