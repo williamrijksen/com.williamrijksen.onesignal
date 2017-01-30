@@ -10,7 +10,6 @@
 #import "TiHost.h"
 #import "TiUtils.h"
 #import "TiApp.h"
-#import <objc/runtime.h>
 
 @implementation ComWilliamrijksenOnesignalModule
 
@@ -83,30 +82,13 @@
     [self fireEvent:@"notificationOpened" withObject:notificationData];
 }
 
-#pragma mark Lifecycle
-
-
 - (void)startup
 {
     [super startup];
     [[TiApp app] setRemoteNotificationDelegate:self];
 
-    // Titanium forwards application:didReceiveRemoteNotification:fetchCompletionHandler: to
-    // application:didReceiveRemoteNotification:, however that method is not defined. We will
-    // add the method if missing.
-    id delegate = [UIApplication sharedApplication].delegate;
-    if (delegate && ![delegate respondsToSelector:@selector(application:didReceiveRemoteNotification:)]) {
-        Method delegateMethod = class_getInstanceMethod([ComWilliamrijksenOnesignalModule class],
-                                                        @selector(application:didReceiveRemoteNotification:));
-
-        class_addMethod([delegate class],
-                        @selector(application:didReceiveRemoteNotification:),
-                        method_getImplementation(delegateMethod),
-                        method_getTypeEncoding(delegateMethod));
-    }
-
     NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
-    [OneSignal initWithLaunchOptions:[[TiApp app] launchOptions]
+	[OneSignal initWithLaunchOptions:[[TiApp app] launchOptions]
                                appId:OneSignalAppID
           handleNotificationReceived:^(OSNotification *notification) {
               [self receivedHandler:notification];
@@ -115,15 +97,10 @@
                 [self actionHandler:result];
             }
                             settings:@{
-                                       kOSSettingsKeyInFocusDisplayOption: @(OSNotificationDisplayTypeNone),
-                                       kOSSettingsKeyAutoPrompt: @YES}
+                 kOSSettingsKeyInFocusDisplayOption: @(OSNotificationDisplayTypeNone),
+                 kOSSettingsKeyAutoPrompt: @YES}
      ];
-    //TODO these settings should be configurable from the Titanium App on module initialization
-}
-
-
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo {
-    // Fixes crash in Titanium
+	//TODO these settings should be configurable from the Titanium App on module initialization
 }
 
 #pragma mark Public API's
