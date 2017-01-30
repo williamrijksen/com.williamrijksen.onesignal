@@ -67,6 +67,23 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
             Ti.API.info(Ti.Platform.osname === "iphone"? e.results : JSON.parse(e.results));
         });
     ```   
+1. IdsAvailable (iOS-only for now):
+
+    ```js
+        onesignal.idsAvailable(function(e) {
+            //pushToken will be nil if the user did not accept push notifications
+            alert(e);
+        });
+    ```   
+1. postNotification (iOS-only for now):
+
+    ```js
+        //You can use idsAvailable for retrieving a playerId
+        onesignal.postNotification({
+            message:'Titanium test message',
+            playerIds:["00000000-0000-0000-0000-000000000000"]
+        });
+    ```   
 1. Set log level (iOS-only for now):
 
     ```js

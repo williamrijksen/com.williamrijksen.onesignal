@@ -10,6 +10,7 @@
 #import "TiHost.h"
 #import "TiUtils.h"
 #import "TiApp.h"
+#import <objc/runtime.h>
 
 @implementation ComWilliamrijksenOnesignalModule
 
@@ -26,7 +27,7 @@
 {
 	return @"com.williamrijksen.onesignal";
 }
-    
+
 #pragma mark Lifecycle
 
 - (void) receivedHandler:(OSNotification *)notification {
@@ -82,13 +83,30 @@
     [self fireEvent:@"notificationOpened" withObject:notificationData];
 }
 
+#pragma mark Lifecycle
+
+
 - (void)startup
 {
     [super startup];
     [[TiApp app] setRemoteNotificationDelegate:self];
 
+    // Titanium forwards application:didReceiveRemoteNotification:fetchCompletionHandler: to
+    // application:didReceiveRemoteNotification:, however that method is not defined. We will
+    // add the method if missing.
+    id delegate = [UIApplication sharedApplication].delegate;
+    if (delegate && ![delegate respondsToSelector:@selector(application:didReceiveRemoteNotification:)]) {
+        Method delegateMethod = class_getInstanceMethod([ComWilliamrijksenOnesignalModule class],
+                                                        @selector(application:didReceiveRemoteNotification:));
+
+        class_addMethod([delegate class],
+                        @selector(application:didReceiveRemoteNotification:),
+                        method_getImplementation(delegateMethod),
+                        method_getTypeEncoding(delegateMethod));
+    }
+
     NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
-	[OneSignal initWithLaunchOptions:[[TiApp app] launchOptions]
+    [OneSignal initWithLaunchOptions:[[TiApp app] launchOptions]
                                appId:OneSignalAppID
           handleNotificationReceived:^(OSNotification *notification) {
               [self receivedHandler:notification];
@@ -97,10 +115,15 @@
                 [self actionHandler:result];
             }
                             settings:@{
-                 kOSSettingsKeyInFocusDisplayOption: @(OSNotificationDisplayTypeNone),
-                 kOSSettingsKeyAutoPrompt: @YES}
+                                       kOSSettingsKeyInFocusDisplayOption: @(OSNotificationDisplayTypeNone),
+                                       kOSSettingsKeyAutoPrompt: @YES}
      ];
-	//TODO these settings should be configurable from the Titanium App on module initialization
+    //TODO these settings should be configurable from the Titanium App on module initialization
+}
+
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo {
+    // Fixes crash in Titanium
 }
 
 #pragma mark Public API's
@@ -138,12 +161,12 @@
             @"success": NUMBOOL(error == nil),
         }];
 
-        if (error == nil) {
-            propertiesDict[@"error"] = [error localizedDescription];
-            propertiesDict[@"code"] = NUMINTEGER([error code]);
-        } else {
-            // Are all keys and values Kroll-save? If not, we need a validation utility
+		if (error == nil) {
+			// Are all keys and values Kroll-save? If not, we need a validation utility
             propertiesDict[@"results"] = results ?: @[];
+        } else {
+			propertiesDict[@"error"] = [error localizedDescription];
+            propertiesDict[@"code"] = NUMINTEGER([error code]);
         }
 
         NSArray *invocationArray = [[NSArray alloc] initWithObjects:&propertiesDict count:1];
@@ -156,6 +179,40 @@
     } onFailure:^(NSError *error) {
         resultsBlock(nil, error);
     }];
+}
+
+- (void)idsAvailable:(id)args
+{
+	id value = args;
+    ENSURE_UI_THREAD(idsAvailable, value);
+    ENSURE_SINGLE_ARG(value, KrollCallback);
+
+	[OneSignal IdsAvailable:^(NSString* userId, NSString* pushToken) {
+		NSMutableDictionary *idsDict = [NSMutableDictionary dictionaryWithDictionary:@{
+			@"userId" : userId ?: @[],
+         	@"pushToken" :pushToken ?: @[]
+     	}];
+		NSArray *invocationArray = [[NSArray alloc] initWithObjects:&idsDict count:1];
+        [value call:invocationArray thisObject:self];
+        [invocationArray release];
+	}];
+}
+
+- (void)postNotification:(id)arguments
+{
+	id args = arguments;
+    ENSURE_UI_THREAD_1_ARG(args);
+    ENSURE_SINGLE_ARG(args, NSDictionary);
+
+	NSString *message = [TiUtils stringValue:[args objectForKey:@"message"]];
+	NSArray *playerIds = [args valueForKey:@"playerIds"];
+
+	if(([message length] != 0) && ([playerIds count] != 0)){
+		[OneSignal postNotification:@{
+			@"contents" : @{@"en": message},
+	   		@"include_player_ids": playerIds
+		}];
+	}
 }
 
 - (void)setLogLevel:(id)arguments
