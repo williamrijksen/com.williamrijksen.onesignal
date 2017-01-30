@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
+import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.common.TiConfig;
 import org.appcelerator.titanium.TiApplication;
@@ -35,6 +36,9 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		.init();
 	}
 	//TODO inFocusDisplaying should be configurable from Titanium App module initialization
+	
+	//variable to store the received call back function for the getTags method call
+	private KrollFunction getTagsCallback = null;
 
 	@Kroll.onAppCreate
 	public static void onAppCreate(TiApplication app)
@@ -57,6 +61,32 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		HashMap <String, Object> dict = (HashMap <String, Object>) tag;
 		String key = TiConvert.toString(dict, "key");
 		OneSignal.deleteTag(key);
+	}
+	
+	@Kroll.method
+	public void getTags(KrollFunction handler)
+	{
+		getTagsCallback = handler;
+		OneSignal.getTags(new GetTagsHandler());
+	}
+	
+	private class GetTagsHandler implements OneSignal.GetTagsHandler {
+		@Override
+		public void tagsAvailable(JSONObject tags) {
+			HashMap<String, Object> dict = new HashMap<String, Object>();
+			try {
+				dict.put("success", true);
+				dict.put("error", false);
+				dict.put("response", tags.toString());
+			} catch (Exception e) {
+				dict.put("success", false);
+				dict.put("error", true);
+				e.printStackTrace();
+				Log.d("error:", e.toString());
+			}
+
+			getTagsCallback.call(getKrollObject(), dict);
+		}
 	}
 
 	private class NotificationOpenedHandler implements OneSignal.NotificationOpenedHandler {
