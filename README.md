@@ -55,7 +55,7 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
    ```js
        onesignal.deleteTag({ key: 'foo' });
    ```
-1. Get tags (iOS-only for now):
+1. Get tags:
 
     ```js
         onesignal.getTags(function(e) {
@@ -63,8 +63,8 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
                 Ti.API.error("Error: " + e.error);
                 return
             }
-
-            Ti.API.info(e.results);
+            
+            Ti.API.info(Ti.Platform.osname === "iphone"? e.results : JSON.parse(e.results));
         });
     ```   
 1. Set log level (iOS-only for now):
