@@ -77,7 +77,7 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 			try {
 				dict.put("success", true);
 				dict.put("error", false);
-				dict.put("response", tags.toString());
+				dict.put("results", tags.toString());
 			} catch (Exception e) {
 				dict.put("success", false);
 				dict.put("error", true);
