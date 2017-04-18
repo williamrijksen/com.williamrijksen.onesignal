@@ -36,7 +36,7 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		.init();
 	}
 	//TODO inFocusDisplaying should be configurable from Titanium App module initialization
-	
+
 	//variable to store the received call back function for the getTags method call
 	private KrollFunction getTagsCallback = null;
 
@@ -62,14 +62,14 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		String key = TiConvert.toString(dict, "key");
 		OneSignal.deleteTag(key);
 	}
-	
+
 	@Kroll.method
 	public void getTags(KrollFunction handler)
 	{
 		getTagsCallback = handler;
 		OneSignal.getTags(new GetTagsHandler());
 	}
-	
+
 	private class GetTagsHandler implements OneSignal.GetTagsHandler {
 		@Override
 		public void tagsAvailable(JSONObject tags) {
@@ -93,24 +93,31 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		// This fires when a notification is opened by tapping on it.
 		@Override
 		public void notificationOpened(OSNotificationOpenResult result) {
-			String title = result.notification.payload.title;
-			String body = result.notification.payload.body;
-			JSONObject additionalData = result.notification.payload.additionalData;
+			try {
+				JSONObject json = result.toJSONObject();
+				HashMap<String, Object> kd = new HashMap<String, Object>();
 
-			HashMap<String, Object> kd = new HashMap<String, Object>();
-			if(title != null){
-				kd.put("title", title);
-			}
+				if (json.has("notification") && json.getJSONObject("notification").has("payload")) {
+					JSONObject payload = json.getJSONObject("notification").getJSONObject("payload");
 
-			if(body != null){
-				kd.put("body", body);
-			}
+					if (payload.has("title")) {
+						kd.put("title", payload.getString("title"));
+					}
 
-			if(additionalData != null){
-				String payload = additionalData.toString();
-				kd.put("additionalData", payload);
+					if (payload.has("body")) {
+						kd.put("body", payload.getString("body"));
+					}
+
+					if (payload.has("additionlData")) {
+						String additional = payload.getJSONObject("additionalData").toString();
+						kd.put("additionalData", additional);
+					}
+				}
+				fireEvent("notificationOpened", kd);
 			}
-			fireEvent("notificationOpened", kd);
+			catch (Throwable t) {
+				Log.d(LCAT, "Notification result could not be converted to JSON");
+			}
 		}
 	}
 
