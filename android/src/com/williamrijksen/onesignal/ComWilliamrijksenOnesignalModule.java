@@ -40,6 +40,8 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 	//variable to store the received call back function for the getTags method call
 	private KrollFunction getTagsCallback = null;
 
+	private KrollFunction idsAvailableCallback = null;
+
 	@Kroll.onAppCreate
 	public static void onAppCreate(TiApplication app)
 	{
@@ -70,6 +72,13 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		OneSignal.getTags(new GetTagsHandler());
 	}
 
+	@Kroll.method
+	public void idsAvailable(KrollFunction handler)
+	{
+		idsAvailableCallback = handler;
+		OneSignal.idsAvailable(new IdsAvailableHandler());
+	}
+
 	private class GetTagsHandler implements OneSignal.GetTagsHandler {
 		@Override
 		public void tagsAvailable(JSONObject tags) {
@@ -86,6 +95,22 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 			}
 
 			getTagsCallback.call(getKrollObject(), dict);
+		}
+	}
+
+	private class IdsAvailableHandler implements OneSignal.IdsAvailableHandler {
+		@Override
+		public void idsAvailable(String userId, String registrationId)
+		{
+			HashMap<String, Object> dict = new HashMap<String, Object>();
+			try {
+				dict.put("userId", userId);
+				dict.put("pushToken", registrationId);
+			} catch (Exception e) {
+				Log.d("error:", e.toString());
+			}
+
+			idsAvailableCallback.call(getKrollObject(), dict);
 		}
 	}
 
