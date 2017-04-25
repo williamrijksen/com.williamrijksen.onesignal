@@ -17,7 +17,7 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
     
     ```xml
     <modules>
-      <module platform="iphone" version="1.5.0">com.williamrijksen.onesignal</module>
+      <module platform="iphone" version="1.6.0">com.williamrijksen.onesignal</module>
       <module platform="android" version="1.5.0">com.williamrijksen.onesignal</module>
     </modules>
     ```
@@ -37,6 +37,10 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
     <meta-data android:name="onesignal_google_project_number"
                    android:value="str:[Google project id]" />
     ```
+1. To use rich notifications on iOS 10 you need to add an extension to your app.
+   To do so see:
+   - https://documentation.onesignal.com/docs/ios-sdk-setup#section-1-add-notification-service-extension
+   - http://docs.appcelerator.com/platform/latest/#!/guide/Creating_iOS_Extensions_-_Siri_Intents
 
 ### Usage
 1. Register device for Push Notifications
