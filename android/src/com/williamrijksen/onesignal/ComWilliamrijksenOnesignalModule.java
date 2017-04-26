@@ -1,6 +1,6 @@
 package com.williamrijksen.onesignal;
 
-import android.content.Context;
+import android.app.Activity;
 
 import com.onesignal.OneSignal;
 import com.onesignal.OSNotification;
@@ -23,27 +23,48 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 {
 	private static final String LCAT = "ComWilliamrijksenOnesignalModule";
 	private static final boolean DBG = TiConfig.LOGD;
+	private boolean oneSignalInitDone;
 
 	public ComWilliamrijksenOnesignalModule()
 	{
 		super();
-		TiApplication appContext = TiApplication.getInstance();
+		initOneSignal(TiApplication.getInstance().getCurrentActivity());
+	}
+
+	private void initOneSignal(Activity activity)
+	{
+		if (activity == null || oneSignalInitDone) {
+			return;
+		}
+
+		oneSignalInitDone = true;
+
 		OneSignal
-		.startInit(appContext)
-		.setNotificationReceivedHandler(new NotificationReceivedHandler())
-		.setNotificationOpenedHandler(new NotificationOpenedHandler())
-		.inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
-		.init();
+				.startInit(activity)
+				.setNotificationReceivedHandler(new NotificationReceivedHandler())
+				.setNotificationOpenedHandler(new NotificationOpenedHandler())
+				.inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
+				.init();
 	}
 	//TODO inFocusDisplaying should be configurable from Titanium App module initialization
 
 	//variable to store the received call back function for the getTags method call
 	private KrollFunction getTagsCallback = null;
 
+	private KrollFunction idsAvailableCallback = null;
+
 	@Kroll.onAppCreate
 	public static void onAppCreate(TiApplication app)
 	{
 		Log.d(LCAT, "inside onAppCreate");
+	}
+
+	@Override
+	public void onResume(Activity activity)
+	{
+		super.onResume(activity);
+		Log.d(LCAT, "Trying to initialize OneSignal if necessary");
+		initOneSignal(activity);
 	}
 
 	@Kroll.method
@@ -70,6 +91,13 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		OneSignal.getTags(new GetTagsHandler());
 	}
 
+	@Kroll.method
+	public void idsAvailable(KrollFunction handler)
+	{
+		idsAvailableCallback = handler;
+		OneSignal.idsAvailable(new IdsAvailableHandler());
+	}
+
 	private class GetTagsHandler implements OneSignal.GetTagsHandler {
 		@Override
 		public void tagsAvailable(JSONObject tags) {
@@ -86,6 +114,22 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 			}
 
 			getTagsCallback.call(getKrollObject(), dict);
+		}
+	}
+
+	private class IdsAvailableHandler implements OneSignal.IdsAvailableHandler {
+		@Override
+		public void idsAvailable(String userId, String registrationId)
+		{
+			HashMap<String, Object> dict = new HashMap<String, Object>();
+			try {
+				dict.put("userId", userId);
+				dict.put("pushToken", registrationId);
+			} catch (Exception e) {
+				Log.d("error:", e.toString());
+			}
+
+			idsAvailableCallback.call(getKrollObject(), dict);
 		}
 	}
 
