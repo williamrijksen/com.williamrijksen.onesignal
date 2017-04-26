@@ -23,7 +23,6 @@
 
 /* Begin PBXBuildFile section */
 		1F9396FF1EAF8ADB0076FF5A /* OneSignal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F9396FE1EAF8ADB0076FF5A /* OneSignal.framework */; };
-		1F9397011EAF8BFA0076FF5A /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F9397001EAF8BFA0076FF5A /* UserNotifications.framework */; };
 		24DD6CF91134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DD6CF71134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h */; };
 		24DD6CFA1134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m */; };
 		AA747D9F0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch */; };
@@ -42,7 +41,6 @@
 
 /* Begin PBXFileReference section */
 		1F9396FE1EAF8ADB0076FF5A /* OneSignal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OneSignal.framework; path = platform/OneSignal.framework; sourceTree = "<group>"; };
-		1F9397001EAF8BFA0076FF5A /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		24DD6CF71134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComWilliamrijksenOnesignalModule.h; path = Classes/ComWilliamrijksenOnesignalModule.h; sourceTree = "<group>"; };
 		24DD6CF81134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ComWilliamrijksenOnesignalModule.m; path = Classes/ComWilliamrijksenOnesignalModule.m; sourceTree = "<group>"; };
 		24DD6D1B1134B66800162E58 /* titanium.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = titanium.xcconfig; sourceTree = "<group>"; };
@@ -56,7 +54,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F9397011EAF8BFA0076FF5A /* UserNotifications.framework in Frameworks */,
 				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
 				1F9396FF1EAF8ADB0076FF5A /* OneSignal.framework in Frameworks */,
 			);
@@ -87,7 +84,6 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				1F9397001EAF8BFA0076FF5A /* UserNotifications.framework */,
 				1F9396FE1EAF8ADB0076FF5A /* OneSignal.framework */,
 				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
 			);
