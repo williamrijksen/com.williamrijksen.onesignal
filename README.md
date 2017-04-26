@@ -18,7 +18,7 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
     ```xml
     <modules>
       <module platform="iphone" version="1.6.0">com.williamrijksen.onesignal</module>
-      <module platform="android" version="1.5.1">com.williamrijksen.onesignal</module>
+      <module platform="android" version="1.6.0">com.williamrijksen.onesignal</module>
     </modules>
     ```
 1. Configure your app into the App Settings panel for the right Platform (Android and/or iOS).
@@ -71,7 +71,7 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
             Ti.API.info(Ti.Platform.osname === "iphone"? e.results : JSON.parse(e.results));
         });
     ```
-1. IdsAvailable (iOS-only for now):
+1. IdsAvailable:
 
     ```js
         onesignal.idsAvailable(function(e) {
