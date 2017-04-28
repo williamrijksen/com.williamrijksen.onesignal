@@ -23,7 +23,6 @@ before_install:
 - brew tap oclint/formulae
 - brew install oclint
 - oclint -version
-- rvm get head
 
 install:
 - cd $MODULE_ROOT
