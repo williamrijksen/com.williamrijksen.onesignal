@@ -168,15 +168,25 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 	private class NotificationReceivedHandler implements OneSignal.NotificationReceivedHandler {
 		@Override
 		public void notificationReceived(OSNotification notification) {
+			HashMap<String, Object> kd = new HashMap<String, Object>();
+
+			String title = notification.payload.title;
+			if (title != null) {
+				kd.put("title", title);
+			}
+
+			String body = notification.payload.body;
+			if (body != null) {
+				kd.put("body", body);
+			}
+
 			JSONObject additionalData = notification.payload.additionalData;
 			if(additionalData != null){
-				String payload = additionalData.toString();
-				HashMap<String, Object> kd = new HashMap<String, Object>();
-				kd.put("additionalData", payload);
-				fireEvent("notificationReceived", kd);
-			}else{
-				Log.d(LCAT, "No additionalData on notification payload =/");
+				String additional = additionalData.toString();
+				kd.put("additionalData", additional);
 			}
+
+			fireEvent("notificationReceived", kd);
 		}
 	}
 }
