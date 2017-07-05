@@ -30,77 +30,89 @@
 #pragma mark Lifecycle
 
 - (void) receivedHandler:(OSNotification *)notification {
-    OSNotificationPayload* payload = notification.payload;
-        
-    NSString* title = @"";
-    NSString* body = @"";
-    NSDictionary* additionalData = [[NSDictionary alloc] init];
+    if ([self _hasListeners:@"notificationReceived"]) {
+        OSNotificationPayload* payload = notification.payload;
 
-    if(payload.title) {
-        title = payload.title;
-    }
+        NSString* title = @"";
+        NSString* body = @"";
+        NSDictionary* additionalData = [[NSDictionary alloc] init];
 
-    if (payload.body) {
-        body = [payload.body copy];
-    }
+        if(payload.title) {
+            title = payload.title;
+        }
 
-    if (payload.additionalData) {
-        additionalData = payload.additionalData;
-    }
+        if (payload.body) {
+            body = [payload.body copy];
+        }
 
-    NSDictionary* notificationData = @{
-                                        @"title": title,
-                                        @"body": body,
-                                        @"additionalData": additionalData
+        if (payload.additionalData) {
+            additionalData = payload.additionalData;
+        }
+
+        NSDictionary* notificationData = @{
+                                            @"title": title,
+                                            @"body": body,
+                                            @"additionalData": additionalData
                                         };
-    [self fireEvent:@"notificationReceived" withObject:notificationData];
+        [self fireEvent:@"notificationReceived" withObject:notificationData];
+    }
 };
     
 - (void) actionHandler:(OSNotificationOpenedResult *)result {
-    OSNotificationPayload* payload = result.notification.payload;
+    if ([self _hasListeners:@"notificationOpened"]) {
+        OSNotificationPayload* payload = result.notification.payload;
 
-    NSString* title = @"";
-    NSString* body = @"";
-    NSDictionary* additionalData = [[NSDictionary alloc] init];
+        NSString* title = @"";
+        NSString* body = @"";
+        NSDictionary* additionalData = [[NSDictionary alloc] init];
 
-    if(payload.title) {
-        title = payload.title;
-    }
+        if(payload.title) {
+            title = payload.title;
+        }
 
-    if (payload.body) {
-        body = [payload.body copy];
-    }
+        if (payload.body) {
+            body = [payload.body copy];
+        }
 
-    if (payload.additionalData) {
-        additionalData = payload.additionalData;
-    }
+        if (payload.additionalData) {
+            additionalData = payload.additionalData;
+        }
 
-    NSDictionary* notificationData = @{
+        NSDictionary* notificationData = @{
                                        @"title": title,
                                        @"body": body,
                                        @"additionalData": additionalData};
-    [self fireEvent:@"notificationOpened" withObject:notificationData];
+        [self fireEvent:@"notificationOpened" withObject:notificationData];
+    }
 }
 
 - (void)startup
 {
-    [super startup];
-    [[TiApp app] setRemoteNotificationDelegate:self];
+   [OneSignal promptForPushNotificationsWithUserResponse:^(BOOL accepted) {
+        NSLog(@"User accepted notifications: %d", accepted);
+   }];
+}
 
++(void)onAppCreate:(NSNotification *)notification
+{
+    NSLog(@"[DEBUG] com.williamrijksen.onesignal onAppCreate");
+    NSDictionary *userInfo = [notification userInfo];
+    NSDictionary *launchOptions = [userInfo valueForKey:@"UIApplicationLaunchOptionsRemoteNotificationKey"];
     NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
-	[OneSignal initWithLaunchOptions:[[TiApp app] launchOptions]
+    [OneSignal initWithLaunchOptions:launchOptions
                                appId:OneSignalAppID
-          handleNotificationReceived:^(OSNotification *notification) {
-              [self receivedHandler:notification];
-          }
             handleNotificationAction:^(OSNotificationOpenedResult *result) {
-                [self actionHandler:result];
-            }
-                            settings:@{
-                 kOSSettingsKeyInFocusDisplayOption: @(OSNotificationDisplayTypeNone),
-                 kOSSettingsKeyAutoPrompt: @YES}
-     ];
-	//TODO these settings should be configurable from the Titanium App on module initialization
+                NSLog(@"User opened notification");
+                                    }
+                            settings:@{kOSSettingsKeyAutoPrompt: @false}
+    ];
+}
+
++ (void)load
+{
+    NSLog(@"Starting com.williamrijksen.onesignal");
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAppCreate:)
+                                                 name:@"UIApplicationDidFinishLaunchingNotification" object:nil];
 }
 
 #pragma mark Public API's
