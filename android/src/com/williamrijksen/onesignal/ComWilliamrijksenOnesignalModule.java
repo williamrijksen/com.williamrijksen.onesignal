@@ -23,48 +23,42 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 {
 	private static final String LCAT = "ComWilliamrijksenOnesignalModule";
 	private static final boolean DBG = TiConfig.LOGD;
-	private boolean oneSignalInitDone;
+	private static final String ModuleName = "ComWilliamrijksenOnesignal";
 
 	public ComWilliamrijksenOnesignalModule()
 	{
-		super();
-		initOneSignal(TiApplication.getInstance().getCurrentActivity());
+		super(ModuleName);
 	}
 
-	private void initOneSignal(Activity activity)
-	{
-		if (activity == null || oneSignalInitDone) {
-			return;
-		}
-
-		oneSignalInitDone = true;
-
-		OneSignal
-				.startInit(activity)
-				.setNotificationReceivedHandler(new NotificationReceivedHandler())
-				.setNotificationOpenedHandler(new NotificationOpenedHandler())
-				.inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
-				.init();
-	}
-	//TODO inFocusDisplaying should be configurable from Titanium App module initialization
-
-	//variable to store the received call back function for the getTags method call
 	private KrollFunction getTagsCallback = null;
-
 	private KrollFunction idsAvailableCallback = null;
 
 	@Kroll.onAppCreate
 	public static void onAppCreate(TiApplication app)
 	{
 		Log.d(LCAT, "inside onAppCreate");
+		OneSignal
+				.startInit(TiApplication.getInstance())
+				.setNotificationReceivedHandler(new NotificationReceivedHandler())
+				.setNotificationOpenedHandler(new NotificationOpenedHandler())
+				.inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
+				.init();
+	}
+
+	private static ComWilliamrijksenOnesignalModule getModule() {
+		TiApplication appContext = TiApplication.getInstance();
+		ComWilliamrijksenOnesignalModule onesignalModule = (ComWilliamrijksenOnesignalModule)appContext.getModuleByName(ModuleName);
+	
+		if (onesignalModule == null) {
+			Log.w(LCAT,"OneSignal module not currently loaded");
+		}
+		return onesignalModule;
 	}
 
 	@Override
 	public void onResume(Activity activity)
 	{
 		super.onResume(activity);
-		Log.d(LCAT, "Trying to initialize OneSignal if necessary");
-		initOneSignal(activity);
 	}
 
 	@Kroll.method
@@ -133,48 +127,52 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		}
 	}
 
-	private class NotificationOpenedHandler implements OneSignal.NotificationOpenedHandler {
+	private static class NotificationOpenedHandler implements OneSignal.NotificationOpenedHandler {
 		// This fires when a notification is opened by tapping on it.
 		@Override
 		public void notificationOpened(OSNotificationOpenResult result) {
-			try {
-				JSONObject json = result.toJSONObject();
-				HashMap<String, Object> kd = new HashMap<String, Object>();
+			ComWilliamrijksenOnesignalModule onesignalModule = getModule();
+			if (onesignalModule != null) {
+				try {
+					JSONObject json = result.toJSONObject();
+					HashMap<String, Object> kd = new HashMap<String, Object>();
 
-				if (json.has("notification") && json.getJSONObject("notification").has("payload")) {
-					JSONObject payload = json.getJSONObject("notification").getJSONObject("payload");
+					if (json.has("notification") && json.getJSONObject("notification").has("payload")) {
+						JSONObject payload = json.getJSONObject("notification").getJSONObject("payload");
 
-					if (payload.has("title")) {
-						kd.put("title", payload.getString("title"));
+						if (payload.has("title")) {
+							kd.put("title", payload.getString("title"));
+						}
+
+						if (payload.has("body")) {
+							kd.put("body", payload.getString("body"));
+						}
+
+						if (payload.has("additionlData")) {
+							String additional = payload.getJSONObject("additionalData").toString();
+							kd.put("additionalData", additional);
+						}
 					}
-
-					if (payload.has("body")) {
-						kd.put("body", payload.getString("body"));
-					}
-
-					if (payload.has("additionlData")) {
-						String additional = payload.getJSONObject("additionalData").toString();
-						kd.put("additionalData", additional);
-					}
+					onesignalModule.fireEvent("notificationOpened", kd);
 				}
-				fireEvent("notificationOpened", kd);
-			}
-			catch (Throwable t) {
-				Log.d(LCAT, "Notification result could not be converted to JSON");
+				catch (Throwable t) {
+					Log.d(LCAT, "Notification result could not be converted to JSON");
+				}
 			}
 		}
 	}
 
-	private class NotificationReceivedHandler implements OneSignal.NotificationReceivedHandler {
+	private static class NotificationReceivedHandler implements OneSignal.NotificationReceivedHandler {
 		@Override
 		public void notificationReceived(OSNotification notification) {
 			JSONObject additionalData = notification.payload.additionalData;
-			if(additionalData != null){
+			ComWilliamrijksenOnesignalModule onesignalModule = getModule();
+			if (onesignalModule != null && additionalData != null){
 				String payload = additionalData.toString();
 				HashMap<String, Object> kd = new HashMap<String, Object>();
 				kd.put("additionalData", payload);
-				fireEvent("notificationReceived", kd);
-			}else{
+				onesignalModule.fireEvent("notificationReceived", kd);
+			} else {
 				Log.d(LCAT, "No additionalData on notification payload =/");
 			}
 		}
