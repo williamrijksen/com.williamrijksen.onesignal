@@ -29,6 +29,8 @@
 
 #pragma mark Lifecycle
 
+static ComWilliamrijksenOnesignalModule* instance;
+
 - (void) receivedHandler:(OSNotification *)notification {
     if ([self _hasListeners:@"notificationReceived"]) {
         OSNotificationPayload* payload = notification.payload;
@@ -88,9 +90,16 @@
 
 - (void)startup
 {
+   [super startup];
+   instance = self;
    [OneSignal promptForPushNotificationsWithUserResponse:^(BOOL accepted) {
         NSLog(@"User accepted notifications: %d", accepted);
    }];
+}
+
++(ComWilliamrijksenOnesignalModule*) instance
+{
+    return instance;
 }
 
 +(void)onAppCreate:(NSNotification *)notification
@@ -101,9 +110,18 @@
     NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
     [OneSignal initWithLaunchOptions:launchOptions
                                appId:OneSignalAppID
-            handleNotificationAction:^(OSNotificationOpenedResult *result) {
-                NSLog(@"User opened notification");
+          handleNotificationReceived:^(OSNotification *notification) {
+                                    NSLog(@"User received notification");
+                                    if ([ComWilliamrijksenOnesignalModule instance]) {
+                                        [[ComWilliamrijksenOnesignalModule instance] receivedHandler:notification];
                                     }
+                                }
+            handleNotificationAction:^(OSNotificationOpenedResult *result) {
+                                    NSLog(@"User opened notification");
+                                    if ([ComWilliamrijksenOnesignalModule instance]) {
+                                        [[ComWilliamrijksenOnesignalModule instance] actionHandler:result];
+                                    }
+                                }
                             settings:@{kOSSettingsKeyAutoPrompt: @false}
     ];
 }
@@ -113,6 +131,15 @@
     NSLog(@"Starting com.williamrijksen.onesignal");
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAppCreate:)
                                                  name:@"UIApplicationDidFinishLaunchingNotification" object:nil];
+}
+
+#pragma mark Cleanup 
+
+-(void)dealloc
+{
+    instance = nil;
+    // release any resources that have been retained by the module
+    [super dealloc];
 }
 
 #pragma mark Public API's
