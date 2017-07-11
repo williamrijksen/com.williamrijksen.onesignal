@@ -13,93 +13,120 @@
 
 @implementation ComWilliamrijksenOnesignalModule
 
+NSString * const TiNotificationReceived = @"notificationReceived";
+NSString * const TiNotificationOpened = @"notificationOpened";
+
 #pragma mark Internal
 
 // this is generated for your module, please do not change it
--(id)moduleGUID
+- (id)moduleGUID
 {
 	return @"67065763-fd5e-4069-a877-6c7fd328f877";
 }
 
 // this is generated for your module, please do not change it
--(NSString*)moduleId
+- (NSString*)moduleId
 {
 	return @"com.williamrijksen.onesignal";
 }
 
+static NSMutableDictionary*_queuedBootEvents = nil;
+
 #pragma mark Lifecycle
 
-static ComWilliamrijksenOnesignalModule* instance;
-
-- (void) receivedHandler:(OSNotification *)notification {
-    if ([self _hasListeners:@"notificationReceived"]) {
-        OSNotificationPayload* payload = notification.payload;
-
-        NSString* title = @"";
-        NSString* body = @"";
-        NSDictionary* additionalData = [[NSDictionary alloc] init];
-
-        if(payload.title) {
-            title = payload.title;
-        }
-
-        if (payload.body) {
-            body = [payload.body copy];
-        }
-
-        if (payload.additionalData) {
-            additionalData = payload.additionalData;
-        }
-
-        NSDictionary* notificationData = @{
-                                            @"title": title,
-                                            @"body": body,
-                                            @"additionalData": additionalData
-                                        };
-        [self fireEvent:@"notificationReceived" withObject:notificationData];
-    }
-};
+static ComWilliamrijksenOnesignalModule* _instance = nil;
++ (ComWilliamrijksenOnesignalModule*) instance
+{
+    return _instance;
+}
     
-- (void) actionHandler:(OSNotificationOpenedResult *)result {
-    if ([self _hasListeners:@"notificationOpened"]) {
-        OSNotificationPayload* payload = result.notification.payload;
++ (void) receivedHandler:(OSNotification *)notification {
+    OSNotificationPayload* payload = notification.payload;
 
-        NSString* title = @"";
-        NSString* body = @"";
-        NSDictionary* additionalData = [[NSDictionary alloc] init];
+    NSString* title = @"";
+    NSString* body = @"";
+    NSDictionary* additionalData = [[NSDictionary alloc] init];
 
-        if(payload.title) {
-            title = payload.title;
-        }
-
-        if (payload.body) {
-            body = [payload.body copy];
-        }
-
-        if (payload.additionalData) {
-            additionalData = payload.additionalData;
-        }
-
-        NSDictionary* notificationData = @{
-                                       @"title": title,
-                                       @"body": body,
-                                       @"additionalData": additionalData};
-        [self fireEvent:@"notificationOpened" withObject:notificationData];
+    if (payload.title) {
+        title = payload.title;
     }
+
+    if (payload.body) {
+        body = [payload.body copy];
+    }
+
+    if (payload.additionalData) {
+        additionalData = payload.additionalData;
+    }
+
+    NSDictionary* notificationData = @{
+                                        @"title": title,
+                                        @"body": body,
+                                        @"additionalData": additionalData
+                                    };
+    [self tryToPostNotification:notificationData withNotificationName:TiNotificationReceived];
+}
+
++ (void) actionHandler:(OSNotificationOpenedResult *)result {
+    OSNotificationPayload* payload = result.notification.payload;
+
+    NSString* title = @"";
+    NSString* body = @"";
+    NSDictionary* additionalData = [[NSDictionary alloc] init];
+
+    if(payload.title) {
+        title = payload.title;
+    }
+
+    if (payload.body) {
+        body = [payload.body copy];
+    }
+
+    if (payload.additionalData) {
+        additionalData = payload.additionalData;
+    }
+
+    NSDictionary* notificationData = @{
+                                    @"title": title,
+                                    @"body": body,
+                                    @"additionalData": additionalData};
+    [self tryToPostNotification:notificationData withNotificationName:TiNotificationOpened];
 }
 
 - (void)startup
 {
-   [super startup];
-   instance = self;
-   [OneSignal promptForPushNotificationsWithUserResponse:^(BOOL accepted) {
-        NSLog(@"User accepted notifications: %d", accepted);
-   }];
+    [super startup];
+    NSLog(@"[INFO] started %@", self);
+    _instance = self;
+//    [self performSelector:@selector(handleQueuedBootEvents) withObject:self afterDelay:10.0];
 }
 
-+(ComWilliamrijksenOnesignalModule*) instance
+-(void)shutdown:(id)sender
 {
-    return instance;
+    [self releaseQueuedBootEvents];
+    _instance = nil;
+
+    [super shutdown:sender];
+}
+
+-(void)releaseQueuedBootEvents
+{
+    if (_queuedBootEvents != nil) {
+        [_queuedBootEvents removeAllObjects];
+        [_queuedBootEvents release];
+        _queuedBootEvents = nil;
+    }
+}
+
+- (void)launch:(id)args
+{
+    if (_queuedBootEvents != nil) {
+        for (NSString *notificationName in _queuedBootEvents) {
+            NSLog(@"[DEBUG] com.williamrijksen.onesignal Fire event from startup %@", notificationName);
+            [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:self userInfo:[_queuedBootEvents objectForKey:notificationName]];
+        }
+    }
+    [self releaseQueuedBootEvents];
 }
 
 +(void)onAppCreate:(NSNotification *)notification
@@ -111,16 +138,12 @@ static ComWilliamrijksenOnesignalModule* instance;
     [OneSignal initWithLaunchOptions:launchOptions
                                appId:OneSignalAppID
           handleNotificationReceived:^(OSNotification *notification) {
-                                    NSLog(@"User received notification");
-                                    if ([ComWilliamrijksenOnesignalModule instance]) {
-                                        [[ComWilliamrijksenOnesignalModule instance] receivedHandler:notification];
-                                    }
+                                    NSLog(@"[DEBUG] com.williamrijksen.onesignal notification");
+                                    [self receivedHandler:notification];
                                 }
             handleNotificationAction:^(OSNotificationOpenedResult *result) {
-                                    NSLog(@"User opened notification");
-                                    if ([ComWilliamrijksenOnesignalModule instance]) {
-                                        [[ComWilliamrijksenOnesignalModule instance] actionHandler:result];
-                                    }
+                                    NSLog(@"[DEBUG] com.williamrijksen.onesignal User opened notification");
+                                    [self actionHandler:result];
                                 }
                             settings:@{kOSSettingsKeyAutoPrompt: @false}
     ];
@@ -128,21 +151,69 @@ static ComWilliamrijksenOnesignalModule* instance;
 
 + (void)load
 {
-    NSLog(@"Starting com.williamrijksen.onesignal");
+    NSLog(@"[DEBUG] com.williamrijksen.onesignal load");
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAppCreate:)
                                                  name:@"UIApplicationDidFinishLaunchingNotification" object:nil];
 }
 
-#pragma mark Cleanup 
-
--(void)dealloc
+-(void)_listenerAdded:(NSString*)type count:(int)count
 {
-    instance = nil;
-    // release any resources that have been retained by the module
-    [super dealloc];
+    if (count == 1 && [type isEqual:TiNotificationOpened]) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationOpened:) name:TiNotificationOpened object:nil];
+    }
+    if (count == 1 && [type isEqual:TiNotificationReceived]) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationReceived:) name:TiNotificationReceived object:nil];
+    }
+}
+
+
+-(void)_listenerRemoved:(NSString*)type count:(int)count
+{
+    if (count == 0 && [type isEqual:TiNotificationOpened]) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:TiNotificationOpened object:nil];
+    }
+    if (count == 0 && [type isEqual:TiNotificationReceived]) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:TiNotificationReceived object:nil];
+    }
+}
+
+-(void)notificationOpened:(NSNotification*)info
+{
+    NSLog(@"[DEBUG] com.williamrijksen.onesignal notificationOpened");
+    if (_instance != nil) {
+        NSMutableDictionary *event = [[NSMutableDictionary alloc] initWithDictionary: @{
+                                                                                        @"title" : [[info userInfo] valueForKey:@"title"],
+                                                                                        @"body" : [[info userInfo] valueForKey:@"body"],
+                                                                                        @"additionalData" : [[info userInfo] valueForKey:@"additionalData"]
+                                                                                        }];
+        [_instance fireEvent:TiNotificationOpened withObject:event];
+        RELEASE_TO_NIL(event);
+    }
+}
+
+-(void)notificationReceived:(NSNotification*)info
+{
+    NSLog(@"[DEBUG] com.williamrijksen.onesignal notificationReceived");
+    if (_instance != nil) {
+        NSMutableDictionary *event = [[NSMutableDictionary alloc] initWithDictionary: @{
+                                                                                        @"title" : [[info userInfo] valueForKey:@"title"],
+                                                                                        @"body" : [[info userInfo] valueForKey:@"body"],
+                                                                                        @"additionalData" : [[info userInfo] valueForKey:@"additionalData"]
+                                                                                        }];
+        [_instance fireEvent:TiNotificationReceived withObject:event];
+        RELEASE_TO_NIL(event);
+    }
 }
 
 #pragma mark Public API's
+
+- (void)promptForPushNotificationsWithUserResponse:(id)args
+{
+    ENSURE_UI_THREAD_1_ARG(args);
+    [OneSignal promptForPushNotificationsWithUserResponse:^(BOOL accepted) {
+        NSLog(@"[DEBUG] com.williamrijksen.onesignal User accepted notifications: %d", accepted);
+    }];
+}
 
 - (void)sendTag:(id)arguments
 {
@@ -244,6 +315,21 @@ static ComWilliamrijksenOnesignalModule* instance;
     ENSURE_TYPE(visualLevel, NSNumber);
 
     [OneSignal setLogLevel:[TiUtils intValue:logLevel] visualLevel:[TiUtils intValue:visualLevel]];
+}
+
+#pragma mark Helper Methods
+
++ (void)tryToPostNotification:(NSDictionary *)_notification withNotificationName:(NSString *)_notificationName
+{
+    if ([self instance] != nil) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:_notificationName object:self userInfo:_notification];
+        return;
+    }
+    
+    if (_queuedBootEvents == nil) {
+        _queuedBootEvents = [[NSMutableDictionary alloc] init];
+    }
+    [_queuedBootEvents setObject:_notification forKey:_notificationName];
 }
 
 MAKE_SYSTEM_PROP(LOG_LEVEL_NONE, ONE_S_LL_NONE);
