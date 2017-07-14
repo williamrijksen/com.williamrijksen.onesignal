@@ -12,7 +12,6 @@
 
 typedef void(^TagsResultHandler)(NSDictionary*, NSError*);
 
-- (void)launch:(id)args;
 - (void)promptForPushNotificationsWithUserResponse:(id)args;
 - (void)sendTag:(id)args;
 - (void)deleteTag:(id)args;
