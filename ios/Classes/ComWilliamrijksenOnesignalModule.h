@@ -7,8 +7,10 @@
 
 #import "TiModule.h"
 #import <OneSignal/OneSignal.h>
+#import "OneSignalManager.h"
+#import "OneSignalDelegate.h"
 
-@interface ComWilliamrijksenOnesignalModule : TiModule {}
+@interface ComWilliamrijksenOnesignalModule : TiModule<OneSignalDelegate> {}
 
 typedef void(^TagsResultHandler)(NSDictionary*, NSError*);
 
