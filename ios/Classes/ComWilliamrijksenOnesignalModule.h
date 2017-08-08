@@ -8,7 +8,6 @@
 #import "TiModule.h"
 #import <OneSignal/OneSignal.h>
 #import "OneSignalManager.h"
-#import "OneSignalDelegate.h"
 
 @interface ComWilliamrijksenOnesignalModule : TiModule<OneSignalDelegate> {}
 
