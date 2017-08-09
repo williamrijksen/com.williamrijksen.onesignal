@@ -104,8 +104,8 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
     ```
 1. Opened listener:
    The returned content is matching the available payload on OneSignal:
-   - [https://documentation.onesignal.com/docs/ios-native-sdk#section--osnotificationpayload-](iOS)
-   - [https://documentation.onesignal.com/docs/android-native-sdk#section--osnotificationpayload-](Android)
+   - [iOS](https://documentation.onesignal.com/docs/ios-native-sdk#section--osnotificationpayload-])
+   - [Android](https://documentation.onesignal.com/docs/android-native-sdk#section--osnotificationpayload-])
 
     ```js
     onesignal.addEventListener('notificationOpened', function (evt) {
@@ -138,8 +138,8 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
 
 1. Received listener:
     The returned content is matching the available payload on OneSignal:
-   - [https://documentation.onesignal.com/docs/ios-native-sdk#section--osnotificationpayload-](iOS)
-   - [https://documentation.onesignal.com/docs/android-native-sdk#section--osnotificationpayload-](Android)
+   - [iOS](https://documentation.onesignal.com/docs/ios-native-sdk#section--osnotificationpayload-)
+   - [Android](https://documentation.onesignal.com/docs/android-native-sdk#section--osnotificationpayload-])
 
    ```js
    onesignal.addEventListener('notificationReceived', function(evt) {
