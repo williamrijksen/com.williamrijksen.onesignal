@@ -6,10 +6,12 @@ import com.onesignal.OneSignal;
 import com.onesignal.OSNotification;
 import com.onesignal.OSNotificationAction;
 import com.onesignal.OSNotificationOpenResult;
+import com.onesignal.OSNotificationPayload;
 
 import java.util.HashMap;
 
 import org.appcelerator.kroll.KrollModule;
+import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.common.Log;
@@ -23,11 +25,18 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 {
 	private static final String LCAT = "ComWilliamrijksenOnesignalModule";
 	private static final boolean DBG = TiConfig.LOGD;
-	private static final String ModuleName = "ComWilliamrijksenOnesignal";
+	private static ComWilliamrijksenOnesignalModule module;
+	private static OSNotificationOpenResult openNotification;
 
 	public ComWilliamrijksenOnesignalModule()
 	{
-		super(ModuleName);
+		super();
+		module = this;
+	}
+
+	public static ComWilliamrijksenOnesignalModule getModuleInstance()
+	{
+		return module;
 	}
 
 	private KrollFunction getTagsCallback = null;
@@ -36,7 +45,8 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 	@Kroll.onAppCreate
 	public static void onAppCreate(TiApplication app)
 	{
-		Log.d(LCAT, "inside onAppCreate");
+		Log.d(LCAT, "com.williamrijksen.onesignal inside onAppCreate");
+
 		OneSignal
 				.startInit(TiApplication.getInstance())
 				.setNotificationReceivedHandler(new NotificationReceivedHandler())
@@ -45,20 +55,19 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 				.init();
 	}
 
-	private static ComWilliamrijksenOnesignalModule getModule() {
-		TiApplication appContext = TiApplication.getInstance();
-		ComWilliamrijksenOnesignalModule onesignalModule = (ComWilliamrijksenOnesignalModule)appContext.getModuleByName(ModuleName);
-	
-		if (onesignalModule == null) {
-			Log.w(LCAT,"OneSignal module not currently loaded");
-		}
-		return onesignalModule;
-	}
-
-	@Override
-	public void onResume(Activity activity)
+	public void listenerAdded(String type, int count, KrollProxy proxy)
 	{
-		super.onResume(activity);
+		Log.d(LCAT,"com.williamrijksen.onesignal added listener " + type);
+		if (type.equals("notificationOpened") && count == 1 && openNotification instanceof OSNotificationOpenResult) {
+			Log.d(LCAT,"com.williamrijksen.onesignal fire delayed event");
+			try {
+				OSNotificationPayload payload = openNotification.notification.payload;
+				proxy.fireEvent("notificationOpened", payload.toJSONObject());
+			} catch (Throwable t) {
+				Log.d(LCAT, "com.williamrijksen.onesignal OSNotificationOpenResult could not be converted to JSON");
+			}
+			openNotification = null;
+		}
 	}
 
 	@Kroll.method
@@ -92,9 +101,11 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		OneSignal.idsAvailable(new IdsAvailableHandler());
 	}
 
-	private class GetTagsHandler implements OneSignal.GetTagsHandler {
+	private class GetTagsHandler implements OneSignal.GetTagsHandler
+	{
 		@Override
-		public void tagsAvailable(JSONObject tags) {
+		public void tagsAvailable(JSONObject tags)
+		{
 			HashMap<String, Object> dict = new HashMap<String, Object>();
 			try {
 				dict.put("success", true);
@@ -111,7 +122,8 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		}
 	}
 
-	private class IdsAvailableHandler implements OneSignal.IdsAvailableHandler {
+	private class IdsAvailableHandler implements OneSignal.IdsAvailableHandler
+	{
 		@Override
 		public void idsAvailable(String userId, String registrationId)
 		{
@@ -127,53 +139,46 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		}
 	}
 
-	private static class NotificationOpenedHandler implements OneSignal.NotificationOpenedHandler {
+	private static class NotificationOpenedHandler implements OneSignal.NotificationOpenedHandler
+	{
 		// This fires when a notification is opened by tapping on it.
 		@Override
-		public void notificationOpened(OSNotificationOpenResult result) {
-			ComWilliamrijksenOnesignalModule onesignalModule = getModule();
-			if (onesignalModule != null) {
+		public void notificationOpened(OSNotificationOpenResult result)
+		{
+			Log.d(LCAT, "com.williamrijksen.onesignal Notification opened handler");
+			if (getModuleInstance() != null) {
 				try {
-					JSONObject json = result.toJSONObject();
-					HashMap<String, Object> kd = new HashMap<String, Object>();
+					OSNotificationPayload payload = result.notification.payload;
 
-					if (json.has("notification") && json.getJSONObject("notification").has("payload")) {
-						JSONObject payload = json.getJSONObject("notification").getJSONObject("payload");
-
-						if (payload.has("title")) {
-							kd.put("title", payload.getString("title"));
-						}
-
-						if (payload.has("body")) {
-							kd.put("body", payload.getString("body"));
-						}
-
-						if (payload.has("additionlData")) {
-							String additional = payload.getJSONObject("additionalData").toString();
-							kd.put("additionalData", additional);
-						}
+					if (getModuleInstance().hasListeners("notificationOpened") && payload != null) {
+						getModuleInstance().fireEvent("notificationOpened", payload.toJSONObject());
 					}
-					onesignalModule.fireEvent("notificationOpened", kd);
+				} catch (Throwable t) {
+					Log.d(LCAT, "com.williamrijksen.onesignal OSNotificationOpenResult could not be converted to JSON");
 				}
-				catch (Throwable t) {
-					Log.d(LCAT, "Notification result could not be converted to JSON");
-				}
+			} else {
+				// save the notification for later processing
+				openNotification = result;
 			}
 		}
 	}
 
-	private static class NotificationReceivedHandler implements OneSignal.NotificationReceivedHandler {
+	private static class NotificationReceivedHandler implements OneSignal.NotificationReceivedHandler
+	{
 		@Override
-		public void notificationReceived(OSNotification notification) {
-			JSONObject additionalData = notification.payload.additionalData;
-			ComWilliamrijksenOnesignalModule onesignalModule = getModule();
-			if (onesignalModule != null && additionalData != null){
-				String payload = additionalData.toString();
-				HashMap<String, Object> kd = new HashMap<String, Object>();
-				kd.put("additionalData", payload);
-				onesignalModule.fireEvent("notificationReceived", kd);
-			} else {
-				Log.d(LCAT, "No additionalData on notification payload =/");
+		public void notificationReceived(OSNotification notification)
+		{
+			Log.d(LCAT, "com.williamrijksen.onesignal Notification received handler");
+			if (getModuleInstance() != null) {
+				try {
+					OSNotificationPayload payload = notification.payload;
+
+					if (getModuleInstance().hasListeners("notificationReceived") && payload != null) {
+						getModuleInstance().fireEvent("notificationReceived", payload.toJSONObject());
+					}
+				} catch (Throwable t) {
+					Log.d(LCAT, "com.williamrijksen.onesignal OSNotification could not be converted to JSON");
+				}
 			}
 		}
 	}
