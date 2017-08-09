@@ -104,9 +104,21 @@ static OneSignalManager* _oneSignalManager = nil;
 
 - (void)promptForPushNotificationsWithUserResponse:(id)args
 {
-    ENSURE_UI_THREAD_1_ARG(args);
+    ENSURE_UI_THREAD(promptForPushNotificationsWithUserResponse, args);
+    ENSURE_SINGLE_ARG(args, KrollCallback);
+
+    if([args isKindOfClass:[KrollCallback class]]) {
+        [self replaceValue:args forKey:@"callback" notification:NO];
+    }
+
     [OneSignal promptForPushNotificationsWithUserResponse:^(BOOL accepted) {
         NSLog(@"[DEBUG] com.williamrijksen.onesignal User accepted notifications: %d", accepted);
+        if ([args isKindOfClass:[KrollCallback class]]) {
+            NSDictionary* event = @{
+                @"accepted": NUMBOOL(accepted)
+            };
+            [self fireCallback:@"callback" withArg:event withSource:self];
+        }
     }];
 }
 
