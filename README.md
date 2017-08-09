@@ -17,8 +17,8 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
 
     ```xml
     <modules>
-      <module platform="iphone" version="1.6.0">com.williamrijksen.onesignal</module>
-      <module platform="android" version="1.6.0">com.williamrijksen.onesignal</module>
+      <module platform="iphone" version="1.7.0">com.williamrijksen.onesignal</module>
+      <module platform="android" version="1.7.0">com.williamrijksen.onesignal</module>
     </modules>
     ```
 1. Configure your app into the App Settings panel for the right Platform (Android and/or iOS).
@@ -46,8 +46,14 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
 1. Register device for Push Notifications
 
    ```js
-        // This registers your device automatically into OneSignal
+       // This registers your device automatically into OneSignal
        var onesignal = require('com.williamrijksen.onesignal');
+   ```
+1. On iOS you'll need to request permission to use notifications:
+   ```js
+       oneSignal.promptForPushNotificationsWithUserResponse(function(obj) {
+           alert(JSON.stringify(obj));
+       });
    ```
 1. To add the possibility to target people for notifications, send a tag:
 
@@ -96,8 +102,10 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
             visualLevel: onesignal.LOG_LEVEL_NONE
         });
     ```
-1. Receive notifications callback: (does not work on iOS when the app is closed (swiped away). But works fine when the app is running on background)
-   Opened:
+1. Opened listener:
+   The returned content is matching the available payload on OneSignal:
+   - [https://documentation.onesignal.com/docs/ios-native-sdk#section--osnotificationpayload-](iOS)
+   - [https://documentation.onesignal.com/docs/android-native-sdk#section--osnotificationpayload-](Android)
 
     ```js
     onesignal.addEventListener('notificationOpened', function (evt) {
@@ -128,7 +136,10 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
     });
     ```
 
-1. Received:
+1. Received listener:
+    The returned content is matching the available payload on OneSignal:
+   - [https://documentation.onesignal.com/docs/ios-native-sdk#section--osnotificationpayload-](iOS)
+   - [https://documentation.onesignal.com/docs/android-native-sdk#section--osnotificationpayload-](Android)
 
    ```js
    onesignal.addEventListener('notificationReceived', function(evt) {

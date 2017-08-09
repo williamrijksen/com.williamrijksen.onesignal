@@ -7,11 +7,13 @@
 
 #import "TiModule.h"
 #import <OneSignal/OneSignal.h>
+#import "OneSignalManager.h"
 
-@interface ComWilliamrijksenOnesignalModule : TiModule {}
+@interface ComWilliamrijksenOnesignalModule : TiModule<OneSignalDelegate> {}
 
 typedef void(^TagsResultHandler)(NSDictionary*, NSError*);
 
+- (void)promptForPushNotificationsWithUserResponse:(id)args;
 - (void)sendTag:(id)args;
 - (void)deleteTag:(id)args;
 - (void)getTags:(id)value;

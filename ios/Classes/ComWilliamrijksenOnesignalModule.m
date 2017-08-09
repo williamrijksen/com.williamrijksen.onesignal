@@ -6,6 +6,7 @@
  */
 
 #import "ComWilliamrijksenOnesignalModule.h"
+#import "OneSignalPayload.h"
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
@@ -13,97 +14,113 @@
 
 @implementation ComWilliamrijksenOnesignalModule
 
+NSString * const TiNotificationReceived = @"notificationReceived";
+NSString * const TiNotificationOpened = @"notificationOpened";
+
+static OneSignalManager* _oneSignalManager = nil;
+
 #pragma mark Internal
 
 // this is generated for your module, please do not change it
--(id)moduleGUID
+- (id)moduleGUID
 {
 	return @"67065763-fd5e-4069-a877-6c7fd328f877";
 }
 
 // this is generated for your module, please do not change it
--(NSString*)moduleId
+- (NSString*)moduleId
 {
 	return @"com.williamrijksen.onesignal";
 }
 
 #pragma mark Lifecycle
 
-- (void) receivedHandler:(OSNotification *)notification {
-    OSNotificationPayload* payload = notification.payload;
-        
-    NSString* title = @"";
-    NSString* body = @"";
-    NSDictionary* additionalData = [[NSDictionary alloc] init];
-
-    if(payload.title) {
-        title = payload.title;
-    }
-
-    if (payload.body) {
-        body = [payload.body copy];
-    }
-
-    if (payload.additionalData) {
-        additionalData = payload.additionalData;
-    }
-
-    NSDictionary* notificationData = @{
-                                        @"title": title,
-                                        @"body": body,
-                                        @"additionalData": additionalData
-                                        };
-    [self fireEvent:@"notificationReceived" withObject:notificationData];
-};
-    
-- (void) actionHandler:(OSNotificationOpenedResult *)result {
-    OSNotificationPayload* payload = result.notification.payload;
-
-    NSString* title = @"";
-    NSString* body = @"";
-    NSDictionary* additionalData = [[NSDictionary alloc] init];
-
-    if(payload.title) {
-        title = payload.title;
-    }
-
-    if (payload.body) {
-        body = [payload.body copy];
-    }
-
-    if (payload.additionalData) {
-        additionalData = payload.additionalData;
-    }
-
-    NSDictionary* notificationData = @{
-                                       @"title": title,
-                                       @"body": body,
-                                       @"additionalData": additionalData};
-    [self fireEvent:@"notificationOpened" withObject:notificationData];
-}
-
 - (void)startup
 {
     [super startup];
-    [[TiApp app] setRemoteNotificationDelegate:self];
 
-    NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
-	[OneSignal initWithLaunchOptions:[[TiApp app] launchOptions]
-                               appId:OneSignalAppID
-          handleNotificationReceived:^(OSNotification *notification) {
-              [self receivedHandler:notification];
-          }
-            handleNotificationAction:^(OSNotificationOpenedResult *result) {
-                [self actionHandler:result];
-            }
-                            settings:@{
-                 kOSSettingsKeyInFocusDisplayOption: @(OSNotificationDisplayTypeNone),
-                 kOSSettingsKeyAutoPrompt: @YES}
-     ];
-	//TODO these settings should be configurable from the Titanium App on module initialization
+    [_oneSignalManager setDelegate:self];
+    NSLog(@"[INFO] started %@", self);
+}
+
+-(void)shutdown:(id)sender
+{
+    _oneSignalManager = nil;
+
+    [super shutdown:sender];
+}
+
++(void)initOneSignal:(NSNotification *)notification
+{
+    NSLog(@"[DEBUG] com.williamrijksen.onesignal init initOnesignal?");
+    if (!_oneSignalManager) {
+        _oneSignalManager = [[OneSignalManager alloc] initWithNSNotification:notification];
+    }
+}
+
++ (void)load
+{
+    NSLog(@"[DEBUG] com.williamrijksen.onesignal load");
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initOneSignal:)
+                                                 name:@"UIApplicationDidFinishLaunchingNotification" object:nil];
+}
+
+#pragma mark Listeners
+
+- (void)_listenerAdded:(NSString*)type count:(int)count
+{
+    NSLog(@"[DEBUG] com.williamrijksen.onesignal add listener %@", type);
+    if (count == 1 && [type isEqual:TiNotificationOpened]) {
+        NSDictionary* userInfo = [[[TiApp app] launchOptions] objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        if (userInfo) {
+            OneSignalPayload *payload = [[OneSignalPayload alloc] initWithRawMessage:userInfo];
+            NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE cold boot TiNotificationOpened");
+            [self fireEvent:TiNotificationOpened withObject:[payload toDictionary]];
+        }
+    }
+}
+
+-(void)notificationOpened:(NSDictionary*)info
+{
+    OneSignalPayload *payload = [[OneSignalPayload alloc] initWithRawMessage:info];
+
+    if ([self _hasListeners:TiNotificationOpened]) {
+        NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE TiNotificationOpened");
+        [self fireEvent:TiNotificationOpened withObject:[payload toDictionary]];
+    }
+}
+
+-(void)notificationReceived:(NSDictionary*)info
+{
+    OneSignalPayload *payload = [[OneSignalPayload alloc] initWithRawMessage:info];
+
+    if ([self _hasListeners:TiNotificationReceived]) {
+        NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE TiNotificationReceived");
+        [self fireEvent:TiNotificationReceived withObject:[payload toDictionary]];
+    }
 }
 
 #pragma mark Public API's
+
+- (void)promptForPushNotificationsWithUserResponse:(id)args
+{
+    ENSURE_UI_THREAD(promptForPushNotificationsWithUserResponse, args);
+    ENSURE_SINGLE_ARG(args, KrollCallback);
+
+    if([args isKindOfClass:[KrollCallback class]]) {
+        [self replaceValue:args forKey:@"callback" notification:NO];
+    }
+
+    [OneSignal promptForPushNotificationsWithUserResponse:^(BOOL accepted) {
+        NSLog(@"[DEBUG] com.williamrijksen.onesignal User accepted notifications: %d", accepted);
+        if ([args isKindOfClass:[KrollCallback class]]) {
+            NSDictionary* event = @{
+                @"accepted": NUMBOOL(accepted)
+            };
+            [self fireCallback:@"callback" withArg:event withSource:self];
+        }
+    }];
+}
 
 - (void)sendTag:(id)arguments
 {
