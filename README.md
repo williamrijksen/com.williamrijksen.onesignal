@@ -18,7 +18,7 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
     ```xml
     <modules>
       <module platform="iphone" version="1.7.0">com.williamrijksen.onesignal</module>
-      <module platform="android" version="1.7.0">com.williamrijksen.onesignal</module>
+      <module platform="android" version="1.7.1">com.williamrijksen.onesignal</module>
     </modules>
     ```
 1. Configure your app into the App Settings panel for the right Platform (Android and/or iOS).
@@ -30,8 +30,6 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
 1. To use OneSignal on Android devices, register some meta-data as well:
 
     ```xml
-    <meta-data android:name="com.google.android.gms.version"
-                   android:value="@integer/google_play_services_version" />
     <meta-data android:name="onesignal_app_id"
                    android:value="[App-id]" />
     <meta-data android:name="onesignal_google_project_number"
