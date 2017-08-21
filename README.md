@@ -40,6 +40,24 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
    - [https://documentation.onesignal.com/docs/ios-sdk-setup#section-1-add-notification-service-extension](https://documentation.onesignal.com/docs/ios-sdk-setup#section-1-add-notification-service-extension)
    - [http://docs.appcelerator.com/platform/latest/#!/guide/Creating_iOS_Extensions_-_Siri_Intents](http://docs.appcelerator.com/platform/latest/#!/guide/Creating_iOS_Extensions_-_Siri_Intents)
 
+### Android Google Play Services
+
+If for some reason you need to change the used Google Play Services version, execute the following actions:
+1. Install the Google Play Services on your system:
+
+   ```bash
+   sdkmanager "extras;google;m2repository"
+   ```
+1. Fetch the 4 needed *.aar files from the SDK path `extras/google/m2repository/com/google/android/gms`
+   - base
+   - gcm
+   - idd
+   - location
+
+   For the version you want use.
+1. Extract the *.aar file, and rename the `classes.jar` to `google-play-services-<part>.jar`.
+1. Update the used jars in the `lib` folder.
+
 ### Usage
 1. Register device for Push Notifications
 
