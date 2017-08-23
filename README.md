@@ -40,24 +40,6 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
    - [https://documentation.onesignal.com/docs/ios-sdk-setup#section-1-add-notification-service-extension](https://documentation.onesignal.com/docs/ios-sdk-setup#section-1-add-notification-service-extension)
    - [http://docs.appcelerator.com/platform/latest/#!/guide/Creating_iOS_Extensions_-_Siri_Intents](http://docs.appcelerator.com/platform/latest/#!/guide/Creating_iOS_Extensions_-_Siri_Intents)
 
-### Android Google Play Services
-
-If for some reason you need to change the used Google Play Services version, execute the following actions:
-1. Install the Google Play Services on your system:
-
-   ```bash
-   sdkmanager "extras;google;m2repository"
-   ```
-1. Fetch the 4 needed *.aar files from the SDK path `extras/google/m2repository/com/google/android/gms`
-   - base
-   - gcm
-   - idd
-   - location
-
-   For the version you want use.
-1. Extract the *.aar file, and rename the `classes.jar` to `google-play-services-<part>.jar`.
-1. Update the used jars in the `lib` folder.
-
 ### Usage
 1. Register device for Push Notifications
 
@@ -164,3 +146,37 @@ If for some reason you need to change the used Google Play Services version, exe
    ```
 
 Cheers!
+
+## Build yourself
+
+### iOS
+
+If you already have Titanium installed, skip the first 2 steps, if not let's install Titanium locally.
+
+1. `brew install yarn --without-node` to install yarn without relying on a specific Node version
+1. In the ios directory execute `yarn install`
+1. Alter the `titanium.xcconfig` to build with the preferred SDK
+1. To build the module execute `rm -rf build && ./node_modules/.bin/ti build -p ios --build-only`
+
+### Android
+
+1. Copy `build.properties.dist` to `build.properties` and edit to match your environment
+1. To build the module execute `rm -rf build && mkdir -p build/docs && ant`
+
+#### Google Play Services
+
+If for some reason you need to change the used Google Play Services version, execute the following actions:
+1. Install the Google Play Services on your system:
+
+   ```bash
+   sdkmanager "extras;google;m2repository"
+   ```
+1. Fetch the 4 needed *.aar files from the SDK path `extras/google/m2repository/com/google/android/gms`
+   - base
+   - gcm
+   - idd
+   - location
+
+   For the version you want use.
+1. Extract the *.aar file, and rename the `classes.jar` to `google-play-services-<part>.jar`.
+1. Update the used jars in the `lib` folder.
