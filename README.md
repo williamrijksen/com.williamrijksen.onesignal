@@ -17,7 +17,7 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
 
     ```xml
     <modules>
-      <module platform="iphone" version="1.7.0">com.williamrijksen.onesignal</module>
+      <module platform="iphone" version="1.7.1">com.williamrijksen.onesignal</module>
       <module platform="android" version="1.7.1">com.williamrijksen.onesignal</module>
     </modules>
     ```
