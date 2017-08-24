@@ -1,6 +1,7 @@
 .classpath
 .project
 .settings
+.idea
 tmp
 bin
 build
@@ -12,3 +13,4 @@ build.properties
 libs
 */dist/modules
 *.xcuserdatad
+node_modules
