@@ -43,7 +43,7 @@
             <!-- End: ShortcutBadger -->
             <!-- ##END## OneSignal Permissions -->
             <application>
-                <meta-data android:name="com.google.android.gms.version" android:value="7571000"/>
+                <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
                 <!-- Application tag requirements below for OneSignal -->
                 <!-- ##START## OneSignal -->
                 <receiver android:name="com.onesignal.NotificationOpenedReceiver" />
