@@ -173,6 +173,7 @@ If for some reason you need to change the used Google Play Services version, exe
    ```
 1. Fetch the 4 needed *.aar files from the SDK path `extras/google/m2repository/com/google/android/gms`
    - base
+   - basement
    - gcm
    - idd
    - location
@@ -180,3 +181,4 @@ If for some reason you need to change the used Google Play Services version, exe
    For the version you want use.
 1. Extract the *.aar file, and rename the `classes.jar` to `google-play-services-<part>.jar`.
 1. Update the used jars in the `lib` folder.
+1. Update the res folder with the one from the `google-play-services-basement.jar`
