@@ -146,7 +146,7 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		public void notificationOpened(OSNotificationOpenResult result)
 		{
 			Log.d(LCAT, "com.williamrijksen.onesignal Notification opened handler");
-			if (getModuleInstance() != null) {
+			if (TiApplication.getAppCurrentActivity() != null && getModuleInstance() != null) {
 				try {
 					OSNotificationPayload payload = result.notification.payload;
 
@@ -174,7 +174,7 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		public void notificationReceived(OSNotification notification)
 		{
 			Log.d(LCAT, "com.williamrijksen.onesignal Notification received handler");
-			if (getModuleInstance() != null) {
+			if (TiApplication.getAppCurrentActivity() != null && getModuleInstance() != null) {
 				try {
 					OSNotificationPayload payload = notification.payload;
 
