@@ -146,12 +146,17 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		public void notificationOpened(OSNotificationOpenResult result)
 		{
 			Log.d(LCAT, "com.williamrijksen.onesignal Notification opened handler");
-			if (getModuleInstance() != null) {
+			if (TiApplication.getAppCurrentActivity() != null && getModuleInstance() != null) {
 				try {
 					OSNotificationPayload payload = result.notification.payload;
 
-					if (getModuleInstance().hasListeners("notificationOpened") && payload != null) {
-						getModuleInstance().fireEvent("notificationOpened", payload.toJSONObject());
+					if (payload != null) {
+						if (getModuleInstance().hasListeners("notificationOpened")) {
+							getModuleInstance().fireEvent("notificationOpened", payload.toJSONObject());
+						} else {
+							// save the notification for later processing
+							openNotification = result;
+						}
 					}
 				} catch (Throwable t) {
 					Log.d(LCAT, "com.williamrijksen.onesignal OSNotificationOpenResult could not be converted to JSON");
@@ -169,7 +174,7 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		public void notificationReceived(OSNotification notification)
 		{
 			Log.d(LCAT, "com.williamrijksen.onesignal Notification received handler");
-			if (getModuleInstance() != null) {
+			if (TiApplication.getAppCurrentActivity() != null && getModuleInstance() != null) {
 				try {
 					OSNotificationPayload payload = notification.payload;
 
