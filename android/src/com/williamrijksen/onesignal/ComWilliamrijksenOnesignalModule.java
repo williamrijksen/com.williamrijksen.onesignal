@@ -150,8 +150,13 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 				try {
 					OSNotificationPayload payload = result.notification.payload;
 
-					if (getModuleInstance().hasListeners("notificationOpened") && payload != null) {
-						getModuleInstance().fireEvent("notificationOpened", payload.toJSONObject());
+					if (payload != null) {
+						if (getModuleInstance().hasListeners("notificationOpened")) {
+							getModuleInstance().fireEvent("notificationOpened", payload.toJSONObject());
+						} else {
+							// save the notification for later processing
+							openNotification = result;
+						}
 					}
 				} catch (Throwable t) {
 					Log.d(LCAT, "com.williamrijksen.onesignal OSNotificationOpenResult could not be converted to JSON");
