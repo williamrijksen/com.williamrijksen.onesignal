@@ -14,6 +14,7 @@ import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.KrollFunction;
+import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.common.TiConfig;
 import org.appcelerator.titanium.TiApplication;
@@ -27,6 +28,14 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 	private static final boolean DBG = TiConfig.LOGD;
 	private static ComWilliamrijksenOnesignalModule module;
 	private static OSNotificationOpenResult openNotification;
+
+	public static final OneSignal.LOG_LEVEL LOG_LEVEL_NONE = OneSignal.LOG_LEVEL.NONE;
+	public static final OneSignal.LOG_LEVEL LOG_LEVEL_DEBUG = OneSignal.LOG_LEVEL.DEBUG;
+	public static final OneSignal.LOG_LEVEL LOG_LEVEL_INFO = OneSignal.LOG_LEVEL.INFO;
+	public static final OneSignal.LOG_LEVEL LOG_LEVEL_WARN = OneSignal.LOG_LEVEL.WARN;
+	public static final OneSignal.LOG_LEVEL LOG_LEVEL_ERROR = OneSignal.LOG_LEVEL.ERROR;
+	public static final OneSignal.LOG_LEVEL LOG_LEVEL_FATAL = OneSignal.LOG_LEVEL.FATAL;
+	public static final OneSignal.LOG_LEVEL LOG_LEVEL_VERBOSE = OneSignal.LOG_LEVEL.VERBOSE;
 
 	public ComWilliamrijksenOnesignalModule()
 	{
@@ -51,8 +60,11 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 				.startInit(TiApplication.getInstance())
 				.setNotificationReceivedHandler(new NotificationReceivedHandler())
 				.setNotificationOpenedHandler(new NotificationOpenedHandler())
+				.unsubscribeWhenNotificationsAreDisabled(true)
 				.inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
 				.init();
+
+		// OneSignal.setLogLevel(LOG_LEVEL_VERBOSE, LOG_LEVEL_VERBOSE);
 	}
 
 	public void listenerAdded(String type, int count, KrollProxy proxy)
@@ -61,8 +73,11 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		if (type.equals("notificationOpened") && count == 1 && openNotification instanceof OSNotificationOpenResult) {
 			Log.d(LCAT,"com.williamrijksen.onesignal fire delayed event");
 			try {
-				OSNotificationPayload payload = openNotification.notification.payload;
-				proxy.fireEvent("notificationOpened", payload.toJSONObject());
+				if (openNotification.notification.payload != null) {
+					JSONObject payload = openNotification.notification.payload.toJSONObject();
+					payload.put("foreground", openNotification.notification.isAppInFocus);
+					proxy.fireEvent("notificationOpened", payload);
+				}
 			} catch (Throwable t) {
 				Log.d(LCAT, "com.williamrijksen.onesignal OSNotificationOpenResult could not be converted to JSON");
 			}
@@ -88,6 +103,12 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 	}
 
 	@Kroll.method
+	public void setSubscription(boolean enable)
+	{
+		OneSignal.setSubscription(enable);
+	}
+
+	@Kroll.method
 	public void getTags(KrollFunction handler)
 	{
 		getTagsCallback = handler;
@@ -99,6 +120,24 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 	{
 		idsAvailableCallback = handler;
 		OneSignal.idsAvailable(new IdsAvailableHandler());
+	}
+
+	@Kroll.method
+	public void setLogLevel(HashMap args)
+	{
+		OneSignal.LOG_LEVEL logLevel = LOG_LEVEL_NONE;
+		OneSignal.LOG_LEVEL visualLevel = LOG_LEVEL_NONE;
+
+		Object level = args.get("logLevel");
+		if(level instanceof OneSignal.LOG_LEVEL) {
+			logLevel = (OneSignal.LOG_LEVEL) level;
+		}
+
+		level = args.get("visualLevel");
+		if(level instanceof OneSignal.LOG_LEVEL) {
+			visualLevel = (OneSignal.LOG_LEVEL) level;
+		}
+    OneSignal.setLogLevel(logLevel, visualLevel);
 	}
 
 	private class GetTagsHandler implements OneSignal.GetTagsHandler
@@ -146,12 +185,18 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		public void notificationOpened(OSNotificationOpenResult result)
 		{
 			Log.d(LCAT, "com.williamrijksen.onesignal Notification opened handler");
-			if (getModuleInstance() != null) {
+			if (TiApplication.getAppCurrentActivity() != null && getModuleInstance() != null) {
 				try {
-					OSNotificationPayload payload = result.notification.payload;
+					if (result.notification.payload != null) {
+						JSONObject payload = result.notification.payload.toJSONObject();
+						payload.put("foreground", result.notification.isAppInFocus);
 
-					if (getModuleInstance().hasListeners("notificationOpened") && payload != null) {
-						getModuleInstance().fireEvent("notificationOpened", payload.toJSONObject());
+						if (getModuleInstance().hasListeners("notificationOpened")) {
+							getModuleInstance().fireEvent("notificationOpened", payload);
+						} else {
+							// save the notification for later processing
+							openNotification = result;
+						}
 					}
 				} catch (Throwable t) {
 					Log.d(LCAT, "com.williamrijksen.onesignal OSNotificationOpenResult could not be converted to JSON");
@@ -169,12 +214,15 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		public void notificationReceived(OSNotification notification)
 		{
 			Log.d(LCAT, "com.williamrijksen.onesignal Notification received handler");
-			if (getModuleInstance() != null) {
+			if (TiApplication.getAppCurrentActivity() != null && getModuleInstance() != null) {
 				try {
-					OSNotificationPayload payload = notification.payload;
+					if(notification.payload != null) {
+						JSONObject payload = notification.payload.toJSONObject();
+						payload.put("foreground", notification.isAppInFocus);
 
-					if (getModuleInstance().hasListeners("notificationReceived") && payload != null) {
-						getModuleInstance().fireEvent("notificationReceived", payload.toJSONObject());
+						if (getModuleInstance().hasListeners("notificationReceived")) {
+							getModuleInstance().fireEvent("notificationReceived", payload);
+						}
 					}
 				} catch (Throwable t) {
 					Log.d(LCAT, "com.williamrijksen.onesignal OSNotification could not be converted to JSON");
