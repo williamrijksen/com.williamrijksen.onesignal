@@ -11,7 +11,7 @@ build
 Plafile.yml
 build.properties
 libs
-*/dist/modules
+dist
 *.xcuserdatad
 node_modules
 java-sources.txt
