@@ -14,3 +14,4 @@ libs
 */dist/modules
 *.xcuserdatad
 node_modules
+java-sources.txt
