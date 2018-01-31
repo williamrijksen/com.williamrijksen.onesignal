@@ -69,15 +69,27 @@ static OneSignalManager* _oneSignalManager = nil;
 
 - (void)_listenerAdded:(NSString*)type count:(int)count
 {
-    NSLog(@"[DEBUG] com.williamrijksen.onesignal add listener %@", type);
-    if (count == 1 && [type isEqual:TiNotificationOpened]) {
-        NSDictionary* userInfo = [[[TiApp app] launchOptions] objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-        if (userInfo) {
-            OneSignalPayload *payload = [[OneSignalPayload alloc] initWithRawMessage:userInfo];
-            NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE cold boot TiNotificationOpened");
-            [self fireEvent:TiNotificationOpened withObject:[payload toDictionary]];
-        }
-    }
+    NSLog(@"[DEBUG] com.williamrijksen.onesignal add listener %@ count %i", type, count);
+
+    if (count == 1) {
+				if ([type isEqual:TiNotificationOpened]) {
+					NSLog(@"Notification opened handler added");
+					NSDictionary* userInfo = [[[TiApp app] launchOptions] objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+	        if (userInfo) {
+	            OneSignalPayload *payload = [[OneSignalPayload alloc] initWithRawMessage:userInfo];
+	            NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE cold boot TiNotificationOpened");
+	            [self fireEvent:TiNotificationOpened withObject:[payload toDictionary]];
+	        }
+		    } else if ([type isEqual:TiNotificationReceived]) {
+						NSLog(@"Notification received handler added");
+						NSDictionary* userInfo = [[[TiApp app] launchOptions] objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+		        if (userInfo) {
+		            OneSignalPayload *payload = [[OneSignalPayload alloc] initWithRawMessage:userInfo];
+		            NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE TiNotificationReceived");
+		            [self fireEvent:TiNotificationReceived withObject:[payload toDictionary]];
+		        }
+		    }
+		}
 }
 
 -(void)notificationOpened:(NSDictionary*)info
@@ -94,7 +106,7 @@ static OneSignalManager* _oneSignalManager = nil;
 {
     OneSignalPayload *payload = [[OneSignalPayload alloc] initWithRawMessage:info];
 
-    if ([self _hasListeners:TiNotificationReceived]) {
+		if ([self _hasListeners:TiNotificationReceived]) {
         NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE TiNotificationReceived");
         [self fireEvent:TiNotificationReceived withObject:[payload toDictionary]];
     }
@@ -120,6 +132,14 @@ static OneSignalManager* _oneSignalManager = nil;
             [self fireCallback:@"callback" withArg:event withSource:self];
         }
     }];
+}
+
+- (void)setSubscription:(id)arguments
+{
+    id args = arguments;
+    ENSURE_UI_THREAD_1_ARG(args);
+		ENSURE_SINGLE_ARG(args, NSNumber);
+		[OneSignal setSubscription:[TiUtils boolValue:args]];
 }
 
 - (void)sendTag:(id)arguments
