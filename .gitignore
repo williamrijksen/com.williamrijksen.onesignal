@@ -15,3 +15,4 @@ dist
 *.xcuserdatad
 node_modules
 java-sources.txt
+com.williamrijksen.onesignal-*.zip
