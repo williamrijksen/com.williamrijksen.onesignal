@@ -154,14 +154,18 @@ Cheers!
 If you already have Titanium installed, skip the first 2 steps, if not let's install Titanium locally.
 
 1. `brew install yarn --without-node` to install yarn without relying on a specific Node version
-1. In the ios directory execute `yarn install`
+1. In the root directory execute `yarn install`
+1. Step into the ios directory
 1. Alter the `titanium.xcconfig` to build with the preferred SDK
-1. To build the module execute `rm -rf build && ./node_modules/.bin/ti build -p ios --build-only`
+1. To build the module execute `rm -rf build && ../node_modules/.bin/ti build -p ios --build-only`
 
 ### Android
 
+1. `brew install yarn --without-node` to install yarn without relying on a specific Node version
+1. In the root directory execute `yarn install`
+1. Step into the android directory
 1. Copy `build.properties.dist` to `build.properties` and edit to match your environment
-1. To build the module execute `rm -rf build && mkdir -p build/docs && ant`
+1. To build the module execute `rm -rf build && mkdir -p build/docs && ../node_modules/.bin/ti build -p android --build-only`
 
 #### Google Play Services
 
