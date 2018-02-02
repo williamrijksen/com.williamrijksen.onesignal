@@ -18,4 +18,3 @@ moduleid: com.williamrijksen.onesignal
 guid: 67065763-fd5e-4069-a877-6c7fd328f877
 platform: android
 minsdk: 7.0.2
-#respackage: com.google.android.gms

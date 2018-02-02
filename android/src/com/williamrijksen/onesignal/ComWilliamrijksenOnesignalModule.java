@@ -63,8 +63,6 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 				.unsubscribeWhenNotificationsAreDisabled(true)
 				.inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
 				.init();
-
-		// OneSignal.setLogLevel(LOG_LEVEL_VERBOSE, LOG_LEVEL_VERBOSE);
 	}
 
 	public void listenerAdded(String type, int count, KrollProxy proxy)
@@ -129,15 +127,15 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		OneSignal.LOG_LEVEL visualLevel = LOG_LEVEL_NONE;
 
 		Object level = args.get("logLevel");
-		if(level instanceof OneSignal.LOG_LEVEL) {
+		if (level instanceof OneSignal.LOG_LEVEL) {
 			logLevel = (OneSignal.LOG_LEVEL) level;
 		}
 
 		level = args.get("visualLevel");
-		if(level instanceof OneSignal.LOG_LEVEL) {
+		if (level instanceof OneSignal.LOG_LEVEL) {
 			visualLevel = (OneSignal.LOG_LEVEL) level;
 		}
-    OneSignal.setLogLevel(logLevel, visualLevel);
+        OneSignal.setLogLevel(logLevel, visualLevel);
 	}
 
 	private class GetTagsHandler implements OneSignal.GetTagsHandler
@@ -216,7 +214,7 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 			Log.d(LCAT, "com.williamrijksen.onesignal Notification received handler");
 			if (TiApplication.getAppCurrentActivity() != null && getModuleInstance() != null) {
 				try {
-					if(notification.payload != null) {
+					if (notification.payload != null) {
 						JSONObject payload = notification.payload.toJSONObject();
 						payload.put("foreground", notification.isAppInFocus);
 

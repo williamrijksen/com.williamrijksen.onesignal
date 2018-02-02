@@ -169,7 +169,9 @@ If you already have Titanium installed, skip the first 2 steps, if not let's ins
 
 #### Google Play Services
 
-If for some reason you need to change the used Google Play Services version, execute the following actions:
+Since Titanium 7.x this module relies on [https://github.com/appcelerator-modules/ti.playservices](ti.playservices)
+
+If you still need to support Titanium 6.x and you need to change the used Google Play Services version, execute the following actions:
 1. Install the Google Play Services on your system:
 
    ```bash
