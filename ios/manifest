@@ -8,11 +8,11 @@ architectures: armv7 arm64 i386 x86_64
 description: com.williamrijksen.onesignal
 author: William Rijksen
 license: Specify your license
-copyright: Copyright (c) 2017 by Enrise
+copyright: Copyright (c) 2018 by Enrise
 
 # these should not be edited
 name: com.williamrijksen.onesignal
 moduleid: com.williamrijksen.onesignal
 guid: 67065763-fd5e-4069-a877-6c7fd328f877
 platform: iphone
-minsdk: 7.0.0.v20171130091945
+minsdk: 7.0.1.GA

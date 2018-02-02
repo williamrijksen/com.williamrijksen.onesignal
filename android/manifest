@@ -10,11 +10,11 @@ architectures: arm64-v8a armeabi-v7a x86
 description: com.williamrijksen.onesignal
 author: William Rijksen
 license: Specify your license
-copyright: Copyright (c) 2017 by William Rijksen
+copyright: Copyright (c) 2018 by William Rijksen
 
 # these should not be edited
 name: com.williamrijksen.onesignal
 moduleid: com.williamrijksen.onesignal
 guid: 67065763-fd5e-4069-a877-6c7fd328f877
 platform: android
-minsdk: 7.0.2
+minsdk: 7.0.1.GA
