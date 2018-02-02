@@ -139,7 +139,7 @@ static OneSignalManager* _oneSignalManager = nil;
     id args = arguments;
     ENSURE_UI_THREAD_1_ARG(args);
     ENSURE_SINGLE_ARG(args, NSNumber);
-    OneSignal setSubscription:[TiUtils boolValue:args]];
+    [OneSignal setSubscription:[TiUtils boolValue:args]];
 }
 
 - (void)sendTag:(id)arguments
