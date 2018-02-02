@@ -72,24 +72,24 @@ static OneSignalManager* _oneSignalManager = nil;
     NSLog(@"[DEBUG] com.williamrijksen.onesignal add listener %@ count %i", type, count);
 
     if (count == 1) {
-				if ([type isEqual:TiNotificationOpened]) {
-					NSLog(@"Notification opened handler added");
-					NSDictionary* userInfo = [[[TiApp app] launchOptions] objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        if ([type isEqual:TiNotificationOpened]) {
+            NSLog(@"Notification opened handler added");
+            NSDictionary* userInfo = [[[TiApp app] launchOptions] objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
 	        if (userInfo) {
 	            OneSignalPayload *payload = [[OneSignalPayload alloc] initWithRawMessage:userInfo];
 	            NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE cold boot TiNotificationOpened");
 	            [self fireEvent:TiNotificationOpened withObject:[payload toDictionary]];
 	        }
-		    } else if ([type isEqual:TiNotificationReceived]) {
-						NSLog(@"Notification received handler added");
-						NSDictionary* userInfo = [[[TiApp app] launchOptions] objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-		        if (userInfo) {
-		            OneSignalPayload *payload = [[OneSignalPayload alloc] initWithRawMessage:userInfo];
-		            NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE TiNotificationReceived");
-		            [self fireEvent:TiNotificationReceived withObject:[payload toDictionary]];
-		        }
-		    }
-		}
+        } else if ([type isEqual:TiNotificationReceived]) {
+            NSLog(@"Notification received handler added");
+            NSDictionary* userInfo = [[[TiApp app] launchOptions] objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+            if (userInfo) {
+                OneSignalPayload *payload = [[OneSignalPayload alloc] initWithRawMessage:userInfo];
+                NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE TiNotificationReceived");
+                [self fireEvent:TiNotificationReceived withObject:[payload toDictionary]];
+            }
+        }
+    }
 }
 
 -(void)notificationOpened:(NSDictionary*)info
@@ -138,8 +138,8 @@ static OneSignalManager* _oneSignalManager = nil;
 {
     id args = arguments;
     ENSURE_UI_THREAD_1_ARG(args);
-		ENSURE_SINGLE_ARG(args, NSNumber);
-		[OneSignal setSubscription:[TiUtils boolValue:args]];
+    ENSURE_SINGLE_ARG(args, NSNumber);
+    OneSignal setSubscription:[TiUtils boolValue:args]];
 }
 
 - (void)sendTag:(id)arguments
