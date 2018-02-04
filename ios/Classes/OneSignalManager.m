@@ -37,7 +37,7 @@
             [self actionHandler:result.notification.payload.rawPayload];
         };
 
-        id onesignalInitSettings = @{kOSSettingsKeyAutoPrompt : @NO};
+        id onesignalInitSettings = @{kOSSettingsKeyAutoPrompt : @NO, kOSSettingsKeyInFocusDisplayOption : @(OSNotificationDisplayTypeNone)};
 
         NSDictionary *userInfo = [notification userInfo];
         NSDictionary *launchOptions =

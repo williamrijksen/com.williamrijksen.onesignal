@@ -17,8 +17,8 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
 
     ```xml
     <modules>
-      <module platform="iphone" version="1.7.1">com.williamrijksen.onesignal</module>
-      <module platform="android" version="1.7.1">com.williamrijksen.onesignal</module>
+      <module platform="iphone" version="2.0.0">com.williamrijksen.onesignal</module>
+      <module platform="android" version="2.0.0">com.williamrijksen.onesignal</module>
     </modules>
     ```
 1. Configure your app into the App Settings panel for the right Platform (Android and/or iOS).
@@ -154,18 +154,24 @@ Cheers!
 If you already have Titanium installed, skip the first 2 steps, if not let's install Titanium locally.
 
 1. `brew install yarn --without-node` to install yarn without relying on a specific Node version
-1. In the ios directory execute `yarn install`
+1. In the root directory execute `yarn install`
+1. Step into the ios directory
 1. Alter the `titanium.xcconfig` to build with the preferred SDK
-1. To build the module execute `rm -rf build && ./node_modules/.bin/ti build -p ios --build-only`
+1. To build the module execute `rm -rf build && ../node_modules/.bin/ti build -p ios --build-only`
 
 ### Android
 
+1. `brew install yarn --without-node` to install yarn without relying on a specific Node version
+1. In the root directory execute `yarn install`
+1. Step into the android directory
 1. Copy `build.properties.dist` to `build.properties` and edit to match your environment
-1. To build the module execute `rm -rf build && mkdir -p build/docs && ant`
+1. To build the module execute `rm -rf build && mkdir -p build/docs && ../node_modules/.bin/ti build -p android --build-only`
 
 #### Google Play Services
 
-If for some reason you need to change the used Google Play Services version, execute the following actions:
+Since Titanium 7.x this module relies on [https://github.com/appcelerator-modules/ti.playservices](ti.playservices)
+
+If you still need to support Titanium 6.x and you need to change the used Google Play Services version, execute the following actions:
 1. Install the Google Play Services on your system:
 
    ```bash

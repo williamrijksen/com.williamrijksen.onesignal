@@ -2,18 +2,19 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 1.7.1
-apiversion: 3
-architectures: armeabi-v7a x86
+ #
+
+version: 2.0.0
+apiversion: 4
+architectures: arm64-v8a armeabi-v7a x86
 description: com.williamrijksen.onesignal
 author: William Rijksen
 license: Specify your license
-copyright: Copyright (c) 2017 by William Rijksen
+copyright: Copyright (c) 2018 by William Rijksen
 
 # these should not be edited
 name: com.williamrijksen.onesignal
 moduleid: com.williamrijksen.onesignal
 guid: 67065763-fd5e-4069-a877-6c7fd328f877
 platform: android
-minsdk: 6.0.0.GA
-respackage: com.google.android.gms
+minsdk: 7.0.1.GA

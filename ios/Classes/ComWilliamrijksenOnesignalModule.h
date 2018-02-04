@@ -15,6 +15,7 @@ typedef void(^TagsResultHandler)(NSDictionary*, NSError*);
 
 - (void)promptForPushNotificationsWithUserResponse:(id)args;
 - (void)sendTag:(id)args;
+- (void)setSubscription:(id)args;
 - (void)deleteTag:(id)args;
 - (void)getTags:(id)value;
 - (void)setLogLevel:(id)args;

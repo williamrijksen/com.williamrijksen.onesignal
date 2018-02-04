@@ -1,9 +1,9 @@
 titanium.sdk=<YOUR_HOMEPATH>/Library/Application\ Support/Titanium/
 titanium.os=osx
-titanium.version=6.1.2.GA
-android.sdk=/usr/local/share/android-sdk
-android.ndk=/usr/local/share/android-sdk/ndk-bundle
+titanium.version=7.0.2.v20180124150631
+android.sdk=<YOUR_HOMEPATH>/android-sdk
+android.ndk=<YOUR_HOMEPATH>/android-sdk/ndk-bundle
 
 titanium.platform=${titanium.sdk}/mobilesdk/${titanium.os}/${titanium.version}/android
-android.platform=${android.sdk}/platforms/android-23
-google.apis=${android.sdk}/add-ons/addon-google_apis-google-23
+android.platform=${android.sdk}/platforms/android-25
+google.apis=${android.sdk}/add-ons/addon-google_apis-google-25
