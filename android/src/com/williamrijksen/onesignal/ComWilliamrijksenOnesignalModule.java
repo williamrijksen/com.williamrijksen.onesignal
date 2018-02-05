@@ -116,14 +116,6 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		OneSignal.getTags(new GetTagsHandler());
 	}
 
-	/* DEPRECATED, USE getPermissionSubscriptionState instead */
-	@Kroll.method
-	public void idsAvailable(KrollFunction handler)
-	{
-		Log.d("DEPRECATED", "idsAvailable deprecated USE getPermissionSubscriptionState instead");
-		handler.call(getKrollObject(), getPermissionSubscriptionState());
-	}
-
 	@Kroll.method
 	public HashMap getPermissionSubscriptionState()
 	{
