@@ -19,7 +19,7 @@ typedef void(^TagsResultHandler)(NSDictionary*, NSError*);
 - (void)deleteTag:(id)args;
 - (void)getTags:(id)value;
 - (void)setLogLevel:(id)args;
-- (void)idsAvailable:(id)args;
 - (void)postNotification:(id)arguments;
+- (NSDictionary*)getPermissionSubscriptionState:(id)args;
 
 @end

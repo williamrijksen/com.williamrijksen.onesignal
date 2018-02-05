@@ -7,6 +7,7 @@ import com.onesignal.OSNotification;
 import com.onesignal.OSNotificationAction;
 import com.onesignal.OSNotificationOpenResult;
 import com.onesignal.OSNotificationPayload;
+import com.onesignal.OSPermissionSubscriptionState;
 
 import java.util.HashMap;
 
@@ -115,11 +116,31 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		OneSignal.getTags(new GetTagsHandler());
 	}
 
+	/* DEPRECATED, USE getPermissionSubscriptionState instead */
 	@Kroll.method
 	public void idsAvailable(KrollFunction handler)
 	{
-		idsAvailableCallback = handler;
-		OneSignal.idsAvailable(new IdsAvailableHandler());
+		Log.d("DEPRECATED", "idsAvailable deprecated USE getPermissionSubscriptionState instead");
+		handler.call(getKrollObject(), getPermissionSubscriptionState());
+	}
+
+	@Kroll.method
+	public HashMap getPermissionSubscriptionState()
+	{
+		OSPermissionSubscriptionState status = OneSignal.getPermissionSubscriptionState();
+		HashMap dict = new HashMap();
+
+		try {
+			dict.put("enabled", status.getPermissionStatus().getEnabled());
+			dict.put("subscribed", status.getSubscriptionStatus().getSubscribed());
+			dict.put("userId", status.getSubscriptionStatus().getUserId());
+			dict.put("pushToken", status.getSubscriptionStatus().getPushToken());
+		} catch (Exception e) {
+			Log.d("Error", "Could not fetch OneSignal permissionStatus");
+		}
+
+		Log.d("Subscription state", dict.toString());
+		return dict;
 	}
 
 	@Kroll.method
