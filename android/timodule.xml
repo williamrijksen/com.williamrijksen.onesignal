@@ -6,53 +6,96 @@
 	-->
     <iphone></iphone>
     <android xmlns:android="http://schemas.android.com/apk/res/android">
-        <manifest>
-            <!-- ##START## OneSignal Permissions -->
-            <!-- INTERNET and c2dm RECEIVE are basic requirements for push messages from Google. -->
+        <manifest
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            package="com.onesignal">
+
+            <!-- OneSignal SDK has runtime checks Android version. -->
+            <!--<uses-sdk tools:overrideLibrary="android.support.customtabs"/>-->
+
+            <!-- INTERNET and c2dm RECEIVE are basic requirements for push messages through Google's GCM. -->
             <uses-permission android:name="android.permission.INTERNET" />
             <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
             <!-- Required, makes sure notifications are delivered on time. -->
             <uses-permission android:name="android.permission.WAKE_LOCK" />
+
             <!-- Required so the device vibrates on receiving a push notification.
-		    Vibration settings of the device still apply. -->
+                 Vibration settings of the device still apply. -->
             <uses-permission android:name="android.permission.VIBRATE" />
+
             <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+            <!-- Use to restore notifications the user hasn't interacted with.
+                 They could be missed notifications if the user reboots their device if this isn't in place.
+            -->
             <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
             <!-- START: ShortcutBadger -->
             <!-- Samsung -->
-            <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
-            <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" />
+            <uses-permission android:name="com.sec.android.provider.badge.permission.READ"/>
+            <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE"/>
+
             <!-- HTC -->
-            <uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS" />
-            <uses-permission android:name="com.htc.launcher.permission.UPDATE_SHORTCUT" />
+            <uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS"/>
+            <uses-permission android:name="com.htc.launcher.permission.UPDATE_SHORTCUT"/>
+
             <!-- Sony -->
-            <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE" />
-            <uses-permission android:name="com.sonymobile.home.permission.PROVIDER_INSERT_BADGE" />
+            <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE"/>
+            <uses-permission android:name="com.sonymobile.home.permission.PROVIDER_INSERT_BADGE"/>
+
             <!-- Apex -->
-            <uses-permission android:name="com.anddoes.launcher.permission.UPDATE_COUNT" />
+            <uses-permission android:name="com.anddoes.launcher.permission.UPDATE_COUNT"/>
+
             <!-- Solid -->
-            <uses-permission android:name="com.majeur.launcher.permission.UPDATE_BADGE" />
+            <uses-permission android:name="com.majeur.launcher.permission.UPDATE_BADGE"/>
+
             <!-- Huawei -->
             <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
             <uses-permission android:name="com.huawei.android.launcher.permission.READ_SETTINGS" />
             <uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS" />
-            <uses-permission android:name="${tiapp.properties['id']}.permission.MAPS_RECEIVE"/>
-            <permission android:name="${tiapp.properties['id']}.permission.MAPS_RECEIVE" android:protectionLevel="signature"/>
-            <permission android:name="${tiapp.properties['id']}.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-            <uses-permission android:name="${tiapp.properties['id']}.permission.C2D_MESSAGE" />
+
+            <!-- ZUK -->
+            <uses-permission android:name="android.permission.READ_APP_BADGE"/>
+
+            <!-- OPPO -->
+            <uses-permission android:name="com.oppo.launcher.permission.READ_SETTINGS"/>
+            <uses-permission android:name="com.oppo.launcher.permission.WRITE_SETTINGS"/>
+
+            <!-- EvMe -->
+            <uses-permission android:name="me.everything.badger.permission.BADGE_COUNT_READ"/>
+            <uses-permission android:name="me.everything.badger.permission.BADGE_COUNT_WRITE"/>
+
             <!-- End: ShortcutBadger -->
-            <!-- ##END## OneSignal Permissions -->
+
             <application>
-                <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
-                <!-- Application tag requirements below for OneSignal -->
-                <!-- ##START## OneSignal -->
                 <receiver android:name="com.onesignal.NotificationOpenedReceiver" />
                 <service android:name="com.onesignal.GcmIntentService" />
-                <service android:name="com.onesignal.SyncService" android:stopWithTask="false" />
-                <activity android:name="com.onesignal.PermissionsActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+                <!-- For Android O -->
+                <service android:name="com.onesignal.GcmIntentJobService"
+                         android:permission="android.permission.BIND_JOB_SERVICE" />
+
+                <service android:name="com.onesignal.SyncJobService"
+                         android:permission="android.permission.BIND_JOB_SERVICE" />
+
+                <service android:name="com.onesignal.RestoreJobService"
+                    android:permission="android.permission.BIND_JOB_SERVICE" />
+
+                <service android:name="com.onesignal.RestoreKickoffJobService"
+                    android:permission="android.permission.BIND_JOB_SERVICE" />
+                <!-- END - For Android O -->
+
+                <service android:name="com.onesignal.SyncService" />
+                <activity android:name="com.onesignal.PermissionsActivity"
+                          android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
                 <service android:name="com.onesignal.NotificationRestoreService" />
+
                 <receiver android:name="com.onesignal.BootUpReceiver">
                     <intent-filter>
+                        <action android:name="android.intent.action.ACTION_BOOT_COMPLETED" />
                         <action android:name="android.intent.action.BOOT_COMPLETED" />
                         <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                     </intent-filter>
@@ -65,13 +108,15 @@
                 <receiver
                         android:name="com.onesignal.GcmBroadcastReceiver"
                         android:permission="com.google.android.c2dm.permission.SEND" >
-                  <intent-filter>
-                    <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                    <category android:name="${tiapp.properties['id']}" />
-                  </intent-filter>
+                    <intent-filter>
+                        <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                        <category android:name="${tiapp.properties['id']}" />
+                    </intent-filter>
                 </receiver>
-                <!-- ##END## OneSignal -->
             </application>
+
+            <!-- NOTE: See release version for tags with placeholders -->
+
         </manifest>
     </android>
     <mobileweb></mobileweb>
