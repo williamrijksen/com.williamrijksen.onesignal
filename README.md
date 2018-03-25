@@ -49,7 +49,7 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
    ```
 1. On iOS you'll need to request permission to use notifications:
    ```js
-       oneSignal.promptForPushNotificationsWithUserResponse(function(obj) {
+       onesignal.promptForPushNotificationsWithUserResponse(function(obj) {
            alert(JSON.stringify(obj));
        });
    ```
