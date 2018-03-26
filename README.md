@@ -17,8 +17,8 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
 
     ```xml
     <modules>
-      <module platform="iphone" version="2.0.0">com.williamrijksen.onesignal</module>
-      <module platform="android" version="2.0.0">com.williamrijksen.onesignal</module>
+      <module platform="iphone" version="2.0.1">com.williamrijksen.onesignal</module>
+      <module platform="android" version="2.0.1">com.williamrijksen.onesignal</module>
     </modules>
     ```
 1. Configure your app into the App Settings panel for the right Platform (Android and/or iOS).
@@ -49,7 +49,7 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
    ```
 1. On iOS you'll need to request permission to use notifications:
    ```js
-       oneSignal.promptForPushNotificationsWithUserResponse(function(obj) {
+       onesignal.promptForPushNotificationsWithUserResponse(function(obj) {
            alert(JSON.stringify(obj));
        });
    ```
