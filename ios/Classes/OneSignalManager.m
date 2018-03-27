@@ -7,48 +7,50 @@
 //
 
 #import "OneSignalManager.h"
+#import "OneSignalHelper.h"
 #import "TiApp.h"
 
 @implementation OneSignalManager {}
 
-- (void) receivedHandler:(NSDictionary *)rawPayload {
-    NSLog(@"[DEBUG] com.williamrijksen.onesignal Result notification data %@", rawPayload);
+- (void) receivedHandler:(OSNotificationPayload *)payload {
+    NSLog(@"[DEBUG] com.williamrijksen.onesignal Result notification data %@", payload);
 
-    [self.delegate notificationReceived:rawPayload];
+    [self.delegate notificationReceived:[OneSignalHelper toDictionary:payload]];
 }
 
-- (void) actionHandler:(NSDictionary *)rawPayload {
-    NSLog(@"[DEBUG] com.williamrijksen.onesignal Open notification data %@", rawPayload);
+- (void) actionHandler:(OSNotificationPayload *)payload {
+    NSLog(@"[DEBUG] com.williamrijksen.onesignal Open notification data %@", payload);
 
-    [self.delegate notificationOpened:rawPayload];
+    [self.delegate notificationOpened:[OneSignalHelper toDictionary:payload]];
 }
 
 - (OneSignalManager*)initWithNSNotification:(NSNotification *)notification
 {
     self = [super init];
-    if (self) {
-        NSLog(@"[DEBUG] com.williamrijksen.onesignal initWithLaunchOptions");
+    NSLog(@"[DEBUG] com.williamrijksen.onesignal initWithLaunchOptions");
 
-        id notificationReceiverBlock = ^(OSNotification *notification) {
-            [self receivedHandler:notification.payload.rawPayload];
-        };
+    id receiverBlock = ^(OSNotification *notification) {
+        [self receivedHandler:notification.payload];
+    };
 
-        id notificationOpenedBlock = ^(OSNotificationOpenedResult *result) {
-            [self actionHandler:result.notification.payload.rawPayload];
-        };
+    id openedBlock = ^(OSNotificationOpenedResult *result) {
+        [self actionHandler:result.notification.payload];
+    };
 
-        id onesignalInitSettings = @{kOSSettingsKeyAutoPrompt : @NO, kOSSettingsKeyInFocusDisplayOption : @(OSNotificationDisplayTypeNone)};
+    id settings = @{
+        kOSSettingsKeyAutoPrompt : @NO,
+        kOSSettingsKeyInFocusDisplayOption : @(OSNotificationDisplayTypeNone)
+    };
 
-        NSDictionary *userInfo = [notification userInfo];
-        NSDictionary *launchOptions =
-            [userInfo valueForKey:@"UIApplicationLaunchOptionsRemoteNotificationKey"];
-        NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
-        [OneSignal initWithLaunchOptions:launchOptions
-                                   appId:OneSignalAppID
-              handleNotificationReceived:notificationReceiverBlock
-                handleNotificationAction:notificationOpenedBlock
-                                settings:onesignalInitSettings];
-    }
+    NSDictionary *userInfo = [notification userInfo];
+    NSDictionary *launchOptions =
+        [userInfo valueForKey:@"UIApplicationLaunchOptionsRemoteNotificationKey"];
+    NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
+    [OneSignal initWithLaunchOptions:launchOptions
+                               appId:OneSignalAppID
+          handleNotificationReceived:receiverBlock
+            handleNotificationAction:openedBlock
+                            settings:settings];
     return self;
 }
 
