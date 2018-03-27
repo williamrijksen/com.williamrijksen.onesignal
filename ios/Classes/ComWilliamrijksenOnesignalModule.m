@@ -6,7 +6,6 @@
  */
 
 #import "ComWilliamrijksenOnesignalModule.h"
-#import "OneSignalPayload.h"
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
@@ -74,41 +73,35 @@ static OneSignalManager* _oneSignalManager = nil;
     if (count == 1) {
         if ([type isEqual:TiNotificationOpened]) {
             NSLog(@"Notification opened handler added");
-            NSDictionary* userInfo = [[[TiApp app] launchOptions] objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-	        if (userInfo) {
-	            OneSignalPayload *payload = [[OneSignalPayload alloc] initWithRawMessage:userInfo];
+            NSDictionary* payload = [[[TiApp app] launchOptions] objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+	        if (payload) {
 	            NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE cold boot TiNotificationOpened");
-	            [self fireEvent:TiNotificationOpened withObject:[payload toDictionary]];
+	            [self fireEvent:TiNotificationOpened withObject:payload];
 	        }
         } else if ([type isEqual:TiNotificationReceived]) {
             NSLog(@"Notification received handler added");
-            NSDictionary* userInfo = [[[TiApp app] launchOptions] objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-            if (userInfo) {
-                OneSignalPayload *payload = [[OneSignalPayload alloc] initWithRawMessage:userInfo];
+            NSDictionary* payload = [[[TiApp app] launchOptions] objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+            if (payload) {
                 NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE TiNotificationReceived");
-                [self fireEvent:TiNotificationReceived withObject:[payload toDictionary]];
+                [self fireEvent:TiNotificationReceived withObject:payload];
             }
         }
     }
 }
 
--(void)notificationOpened:(NSDictionary*)info
+-(void)notificationOpened:(NSDictionary*)payload
 {
-    OneSignalPayload *payload = [[OneSignalPayload alloc] initWithRawMessage:info];
-
     if ([self _hasListeners:TiNotificationOpened]) {
         NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE TiNotificationOpened");
-        [self fireEvent:TiNotificationOpened withObject:[payload toDictionary]];
+        [self fireEvent:TiNotificationOpened withObject:payload];
     }
 }
 
--(void)notificationReceived:(NSDictionary*)info
+-(void)notificationReceived:(NSDictionary*)payload
 {
-    OneSignalPayload *payload = [[OneSignalPayload alloc] initWithRawMessage:info];
-
-		if ([self _hasListeners:TiNotificationReceived]) {
+    if ([self _hasListeners:TiNotificationReceived]) {
         NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE TiNotificationReceived");
-        [self fireEvent:TiNotificationReceived withObject:[payload toDictionary]];
+        [self fireEvent:TiNotificationReceived withObject:payload];
     }
 }
 

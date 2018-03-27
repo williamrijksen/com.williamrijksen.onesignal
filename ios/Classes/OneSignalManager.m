@@ -7,20 +7,21 @@
 //
 
 #import "OneSignalManager.h"
+#import "OneSignalHelper.h"
 #import "TiApp.h"
 
 @implementation OneSignalManager {}
 
-- (void) receivedHandler:(NSDictionary *)rawPayload {
-    NSLog(@"[DEBUG] com.williamrijksen.onesignal Result notification data %@", rawPayload);
+- (void) receivedHandler:(OSNotificationPayload *)payload {
+    NSLog(@"[DEBUG] com.williamrijksen.onesignal Result notification data %@", payload);
 
-    [self.delegate notificationReceived:rawPayload];
+    [self.delegate notificationReceived:[OneSignalHelper toDictionary:payload]];
 }
 
-- (void) actionHandler:(NSDictionary *)rawPayload {
-    NSLog(@"[DEBUG] com.williamrijksen.onesignal Open notification data %@", rawPayload);
+- (void) actionHandler:(OSNotificationPayload *)payload {
+    NSLog(@"[DEBUG] com.williamrijksen.onesignal Open notification data %@", payload);
 
-    [self.delegate notificationOpened:rawPayload];
+    [self.delegate notificationOpened:[OneSignalHelper toDictionary:payload]];
 }
 
 - (OneSignalManager*)initWithNSNotification:(NSNotification *)notification
@@ -30,11 +31,11 @@
         NSLog(@"[DEBUG] com.williamrijksen.onesignal initWithLaunchOptions");
 
         id notificationReceiverBlock = ^(OSNotification *notification) {
-            [self receivedHandler:notification.payload.rawPayload];
+            [self receivedHandler:notification.payload];
         };
 
         id notificationOpenedBlock = ^(OSNotificationOpenedResult *result) {
-            [self actionHandler:result.notification.payload.rawPayload];
+            [self actionHandler:result.notification.payload];
         };
 
         id onesignalInitSettings = @{kOSSettingsKeyAutoPrompt : @NO, kOSSettingsKeyInFocusDisplayOption : @(OSNotificationDisplayTypeNone)};
