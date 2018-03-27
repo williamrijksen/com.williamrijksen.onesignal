@@ -6,7 +6,11 @@
  */
 
 #import "TiModule.h"
+#if __has_include(<OneSignal/OneSignal.h>)
 #import <OneSignal/OneSignal.h>
+#else
+#import "OneSignal.h"
+#endif
 #import "OneSignalManager.h"
 
 @interface ComWilliamrijksenOnesignalModule : TiModule<OneSignalDelegate> {}
