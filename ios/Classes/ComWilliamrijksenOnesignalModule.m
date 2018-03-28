@@ -13,8 +13,8 @@
 
 @implementation ComWilliamrijksenOnesignalModule
 
-NSString * const TiNotificationReceived = @"notificationReceived";
-NSString * const TiNotificationOpened = @"notificationOpened";
+NSString * const NotificationReceived = @"notificationReceived";
+NSString * const NotificationOpened = @"notificationOpened";
 
 static OneSignalManager* _oneSignalManager = nil;
 
@@ -60,8 +60,10 @@ static OneSignalManager* _oneSignalManager = nil;
 + (void)load
 {
     NSLog(@"[DEBUG] com.williamrijksen.onesignal load");
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initOneSignal:)
-                                                 name:@"UIApplicationDidFinishLaunchingNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(initOneSignal:)
+                                                 name:@"UIApplicationDidFinishLaunchingNotification"
+                                               object:nil];
 }
 
 #pragma mark Listeners
@@ -71,19 +73,21 @@ static OneSignalManager* _oneSignalManager = nil;
     NSLog(@"[DEBUG] com.williamrijksen.onesignal add listener %@ count %i", type, count);
 
     if (count == 1) {
-        if ([type isEqual:TiNotificationOpened]) {
+        if ([type isEqual:NotificationOpened]) {
             NSLog(@"Notification opened handler added");
-            NSDictionary* payload = [[[TiApp app] launchOptions] objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+            NSDictionary* payload = [[[TiApp app] launchOptions]
+                                     objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
 	        if (payload) {
-	            NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE cold boot TiNotificationOpened");
-	            [self fireEvent:TiNotificationOpened withObject:payload];
+	            NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE cold boot NotificationOpened");
+	            [self fireEvent:NotificationOpened withObject:payload];
 	        }
-        } else if ([type isEqual:TiNotificationReceived]) {
+        } else if ([type isEqual:NotificationReceived]) {
             NSLog(@"Notification received handler added");
-            NSDictionary* payload = [[[TiApp app] launchOptions] objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+            NSDictionary* payload = [[[TiApp app] launchOptions]
+                                     objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
             if (payload) {
                 NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE TiNotificationReceived");
-                [self fireEvent:TiNotificationReceived withObject:payload];
+                [self fireEvent:NotificationReceived withObject:payload];
             }
         }
     }
@@ -91,17 +95,17 @@ static OneSignalManager* _oneSignalManager = nil;
 
 -(void)notificationOpened:(NSDictionary*)payload
 {
-    if ([self _hasListeners:TiNotificationOpened]) {
+    if ([self _hasListeners:NotificationOpened]) {
         NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE TiNotificationOpened");
-        [self fireEvent:TiNotificationOpened withObject:payload];
+        [self fireEvent:NotificationOpened withObject:payload];
     }
 }
 
 -(void)notificationReceived:(NSDictionary*)payload
 {
-    if ([self _hasListeners:TiNotificationReceived]) {
+    if ([self _hasListeners:NotificationReceived]) {
         NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE TiNotificationReceived");
-        [self fireEvent:TiNotificationReceived withObject:payload];
+        [self fireEvent:NotificationReceived withObject:payload];
     }
 }
 
@@ -195,7 +199,8 @@ static OneSignalManager* _oneSignalManager = nil;
     ENSURE_SINGLE_ARG(value, KrollCallback);
 
     OSPermissionSubscriptionState* status = [OneSignal getPermissionSubscriptionState];
-    NSMutableDictionary *idsDict = [NSMutableDictionary dictionaryWithDictionary:[status toDictionary]];
+    NSMutableDictionary *idsDict = [NSMutableDictionary
+                                    dictionaryWithDictionary:[status toDictionary]];
     NSArray *invocationArray = [[NSArray alloc] initWithObjects:&idsDict count:1];
     [value call:invocationArray thisObject:self];
     [invocationArray release];

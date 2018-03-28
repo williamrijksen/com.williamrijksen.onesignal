@@ -27,29 +27,30 @@
 - (OneSignalManager*)initWithNSNotification:(NSNotification *)notification
 {
     self = [super init];
-    if (self) {
-        NSLog(@"[DEBUG] com.williamrijksen.onesignal initWithLaunchOptions");
+    NSLog(@"[DEBUG] com.williamrijksen.onesignal initWithLaunchOptions");
 
-        id notificationReceiverBlock = ^(OSNotification *notification) {
-            [self receivedHandler:notification.payload];
-        };
+    id receiverBlock = ^(OSNotification *notification) {
+        [self receivedHandler:notification.payload];
+    };
 
-        id notificationOpenedBlock = ^(OSNotificationOpenedResult *result) {
-            [self actionHandler:result.notification.payload];
-        };
+    id openedBlock = ^(OSNotificationOpenedResult *result) {
+        [self actionHandler:result.notification.payload];
+    };
 
-        id onesignalInitSettings = @{kOSSettingsKeyAutoPrompt : @NO, kOSSettingsKeyInFocusDisplayOption : @(OSNotificationDisplayTypeNone)};
+    id settings = @{
+        kOSSettingsKeyAutoPrompt : @NO,
+        kOSSettingsKeyInFocusDisplayOption : @(OSNotificationDisplayTypeNone)
+    };
 
-        NSDictionary *userInfo = [notification userInfo];
-        NSDictionary *launchOptions =
-            [userInfo valueForKey:@"UIApplicationLaunchOptionsRemoteNotificationKey"];
-        NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
-        [OneSignal initWithLaunchOptions:launchOptions
-                                   appId:OneSignalAppID
-              handleNotificationReceived:notificationReceiverBlock
-                handleNotificationAction:notificationOpenedBlock
-                                settings:onesignalInitSettings];
-    }
+    NSDictionary *userInfo = [notification userInfo];
+    NSDictionary *launchOptions =
+        [userInfo valueForKey:@"UIApplicationLaunchOptionsRemoteNotificationKey"];
+    NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
+    [OneSignal initWithLaunchOptions:launchOptions
+                               appId:OneSignalAppID
+          handleNotificationReceived:receiverBlock
+            handleNotificationAction:openedBlock
+                            settings:settings];
     return self;
 }
 
