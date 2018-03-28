@@ -23,7 +23,11 @@
              @"title": payload.title,
              @"subtitle": payload.subtitle,
              @"body": payload.body,
-             @"launchURL": payload.launchURL
+             @"launchURL": payload.launchURL,
+             @"additionalData": payload.additionalData,
+             @"attachments": payload.attachments,
+             @"actionButtons": payload.actionButtons,
+             @"rawPayload": payload.rawPayload
     };
 }
 
