@@ -30,8 +30,8 @@
 		24DD6CFA1134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m */; };
 		AA747D9F0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
-		E7850D06206AC00900AE46E9 /* OneSignalHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = E7850D04206AC00900AE46E9 /* OneSignalHelper.h */; };
-		E7850D07206AC00900AE46E9 /* OneSignalHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E7850D05206AC00900AE46E9 /* OneSignalHelper.m */; };
+		E7850D06206AC00900AE46E9 /* OneSignalModuleHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = E7850D04206AC00900AE46E9 /* OneSignalModuleHelper.h */; };
+		E7850D07206AC00900AE46E9 /* OneSignalModuleHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E7850D05206AC00900AE46E9 /* OneSignalModuleHelper.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,8 +55,8 @@
 		AA747D9E0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComWilliamrijksenOnesignal_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libComWilliamrijksenOnesignal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComWilliamrijksenOnesignal.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		E7850D04206AC00900AE46E9 /* OneSignalHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OneSignalHelper.h; path = Classes/OneSignalHelper.h; sourceTree = "<group>"; };
-		E7850D05206AC00900AE46E9 /* OneSignalHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = OneSignalHelper.m; path = Classes/OneSignalHelper.m; sourceTree = "<group>"; };
+		E7850D04206AC00900AE46E9 /* OneSignalModuleHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OneSignalModuleHelper.h; path = Classes/OneSignalModuleHelper.h; sourceTree = "<group>"; };
+		E7850D05206AC00900AE46E9 /* OneSignalModuleHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = OneSignalModuleHelper.m; path = Classes/OneSignalModuleHelper.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,8 +108,8 @@
 				1FF036F71F3499B4005DDE77 /* OneSignalDelegate.h */,
 				1FF036F81F3499B4005DDE77 /* OneSignalManager.h */,
 				1FF036F91F3499B4005DDE77 /* OneSignalManager.m */,
-				E7850D04206AC00900AE46E9 /* OneSignalHelper.h */,
-				E7850D05206AC00900AE46E9 /* OneSignalHelper.m */,
+				E7850D04206AC00900AE46E9 /* OneSignalModuleHelper.h */,
+				E7850D05206AC00900AE46E9 /* OneSignalModuleHelper.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -134,7 +134,7 @@
 				24DD6CF91134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h in Headers */,
 				1FF036FA1F3499B4005DDE77 /* OneSignalDelegate.h in Headers */,
 				1FF036FB1F3499B4005DDE77 /* OneSignalManager.h in Headers */,
-				E7850D06206AC00900AE46E9 /* OneSignalHelper.h in Headers */,
+				E7850D06206AC00900AE46E9 /* OneSignalModuleHelper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,7 +209,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FF036FC1F3499B4005DDE77 /* OneSignalManager.m in Sources */,
-				E7850D07206AC00900AE46E9 /* OneSignalHelper.m in Sources */,
+				E7850D07206AC00900AE46E9 /* OneSignalModuleHelper.m in Sources */,
 				24DD6CFA1134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

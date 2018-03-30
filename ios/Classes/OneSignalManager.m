@@ -7,7 +7,7 @@
 //
 
 #import "OneSignalManager.h"
-#import "OneSignalHelper.h"
+#import "OneSignalModuleHelper.h"
 #import "TiApp.h"
 
 @implementation OneSignalManager {}
@@ -15,13 +15,13 @@
 - (void) receivedHandler:(OSNotificationPayload *)payload {
     NSLog(@"[DEBUG] com.williamrijksen.onesignal Result notification data %@", payload);
 
-    [self.delegate notificationReceived:[OneSignalHelper toDictionary:payload]];
+    [self.delegate notificationReceived:[OneSignalModuleHelper toDictionary:payload]];
 }
 
 - (void) actionHandler:(OSNotificationPayload *)payload {
     NSLog(@"[DEBUG] com.williamrijksen.onesignal Open notification data %@", payload);
 
-    [self.delegate notificationOpened:[OneSignalHelper toDictionary:payload]];
+    [self.delegate notificationOpened:[OneSignalModuleHelper toDictionary:payload]];
 }
 
 - (OneSignalManager*)initWithNSNotification:(NSNotification *)notification

@@ -1,14 +1,14 @@
 //
-//  OneSignalHelper.m
+//  OneSignalModuleHelper.m
 //  com.williamrijksen.onesignal
 //
 //  Created by William Rijksen on 27-03-18.
 //
 
-#import "OneSignalHelper.h"
+#import "OneSignalModuleHelper.h"
 #import <objc/runtime.h>
 
-@implementation OneSignalHelper
+@implementation OneSignalModuleHelper
 
 + (NSDictionary *)toDictionary: (OSNotificationPayload *)payload
 {
