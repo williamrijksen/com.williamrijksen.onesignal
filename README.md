@@ -92,13 +92,24 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
             playerIds:["00000000-0000-0000-0000-000000000000"]
         });
     ```
-1. Set log level (iOS-only for now):
+1. Set subscription:
+
+    ```js
+        // You can call this method with false to opt users out of receiving all notifications through OneSignal. You can pass true later to opt users back into notifications.
+        onesignal.setSubscription(false);
+    ```
+1. Set log level:
 
     ```js
         onesignal.setLogLevel({
             logLevel: onesignal.LOG_LEVEL_DEBUG,
             visualLevel: onesignal.LOG_LEVEL_NONE
         });
+    ```
+1. clearOneSignalNotifications (android-only for now):
+
+    ```js
+        onesignal.clearOneSignalNotifications();
     ```
 1. Opened listener:
    The returned content is matching the available payload on OneSignal:

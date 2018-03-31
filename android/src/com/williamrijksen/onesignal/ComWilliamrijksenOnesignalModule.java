@@ -138,6 +138,12 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
         OneSignal.setLogLevel(logLevel, visualLevel);
 	}
 
+	@Kroll.method
+	public void clearOneSignalNotifications()
+	{
+		OneSignal.clearOneSignalNotifications();
+	}
+
 	private class GetTagsHandler implements OneSignal.GetTagsHandler
 	{
 		@Override
