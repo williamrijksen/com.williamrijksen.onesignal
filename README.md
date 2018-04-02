@@ -145,6 +145,17 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
    });
    ```
 
+1. Permission changed listener:
+
+   ```js
+   onesignal.addEventListener('permissionChanged', function(evt) {
+       // evt iOS
+       {"to":{"status":2,"hasPrompted":true},"from":{"status":1,"hasPrompted":true}}
+		// evt android
+		{"to":{"enabled":true},"from":{"enabled":false}}
+   });
+   ```
+
 Cheers!
 
 ## Build yourself

@@ -7,6 +7,8 @@ import com.onesignal.OSNotification;
 import com.onesignal.OSNotificationAction;
 import com.onesignal.OSNotificationOpenResult;
 import com.onesignal.OSNotificationPayload;
+import com.onesignal.OSPermissionObserver;
+import com.onesignal.OSPermissionStateChanges;
 
 import java.util.HashMap;
 
@@ -62,7 +64,7 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule implements OSP
 				.setNotificationOpenedHandler(new NotificationOpenedHandler())
 				.unsubscribeWhenNotificationsAreDisabled(true)
 				.inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
-				.addPermissionObserver(this)
+				.addPermissionObserver(TiApplication.getInstance())
 				.init();
 	}
 
