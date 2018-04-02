@@ -200,7 +200,10 @@ static OneSignalManager* _oneSignalManager = nil;
 
     OSPermissionSubscriptionState* status = [OneSignal getPermissionSubscriptionState];
     NSMutableDictionary *idsDict = [NSMutableDictionary
-                                    dictionaryWithDictionary:[status toDictionary]];
+                                    dictionaryWithDictionary:@{
+                                        @"userId" : status.subscriptionStatus.userId ?: @[],
+                                        @"pushToken" : status.subscriptionStatus.pushToken ?: @[],
+                                    }];
     NSArray *invocationArray = [[NSArray alloc] initWithObjects:&idsDict count:1];
     [value call:invocationArray thisObject:self];
     [invocationArray release];
