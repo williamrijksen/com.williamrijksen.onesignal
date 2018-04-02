@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <OneSignal/OneSignal.h>
 
 @protocol OneSignalDelegate <UIApplicationDelegate>
 

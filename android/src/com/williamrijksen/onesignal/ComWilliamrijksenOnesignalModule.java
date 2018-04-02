@@ -22,7 +22,7 @@ import org.appcelerator.titanium.util.TiConvert;
 import org.json.JSONObject;
 
 @Kroll.module(name="ComWilliamrijksenOnesignal", id="com.williamrijksen.onesignal")
-public class ComWilliamrijksenOnesignalModule extends KrollModule
+public class ComWilliamrijksenOnesignalModule extends KrollModule implements OSPermissionObserver
 {
 	private static final String LCAT = "ComWilliamrijksenOnesignalModule";
 	private static final boolean DBG = TiConfig.LOGD;
@@ -62,6 +62,7 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 				.setNotificationOpenedHandler(new NotificationOpenedHandler())
 				.unsubscribeWhenNotificationsAreDisabled(true)
 				.inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
+				.addPermissionObserver(this)
 				.init();
 	}
 
@@ -136,6 +137,14 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 			visualLevel = (OneSignal.LOG_LEVEL) level;
 		}
         OneSignal.setLogLevel(logLevel, visualLevel);
+	}
+
+	public void onOSPermissionChanged(OSPermissionStateChanges stateChanges) {
+		if (getModuleInstance().hasListeners("permissionChanged")) {
+			getModuleInstance().fireEvent("permissionChanged", stateChanges.toJSONObject());
+		}
+
+	    Log.i("Debug", "onOSPermissionChanged: " + stateChanges);
 	}
 
 	private class GetTagsHandler implements OneSignal.GetTagsHandler
