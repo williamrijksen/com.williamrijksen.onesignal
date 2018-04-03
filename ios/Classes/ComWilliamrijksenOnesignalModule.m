@@ -192,21 +192,13 @@ static OneSignalManager* _oneSignalManager = nil;
     }];
 }
 
-- (void)idsAvailable:(id)args
+- (NSDictionary *)getPermissionSubscriptionState:(id)args
 {
 	id value = args;
-    ENSURE_UI_THREAD(idsAvailable, value);
-    ENSURE_SINGLE_ARG(value, KrollCallback);
+    ENSURE_UI_THREAD(getPermissionSubscriptionState, value);
 
-    OSPermissionSubscriptionState* status = [OneSignal getPermissionSubscriptionState];
-    NSMutableDictionary *idsDict = [NSMutableDictionary
-                                    dictionaryWithDictionary:@{
-                                        @"userId" : status.subscriptionStatus.userId ?: @[],
-                                        @"pushToken" : status.subscriptionStatus.pushToken ?: @[],
-                                    }];
-    NSArray *invocationArray = [[NSArray alloc] initWithObjects:&idsDict count:1];
-    [value call:invocationArray thisObject:self];
-    [invocationArray release];
+    OSPermissionSubscriptionState* state = [OneSignal getPermissionSubscriptionState];
+    return [state toDictionary];
 }
 
 - (void)postNotification:(id)arguments

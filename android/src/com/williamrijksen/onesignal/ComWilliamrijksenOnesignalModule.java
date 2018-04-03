@@ -7,18 +7,20 @@ import com.onesignal.OSNotification;
 import com.onesignal.OSNotificationAction;
 import com.onesignal.OSNotificationOpenResult;
 import com.onesignal.OSNotificationPayload;
+import com.onesignal.OSPermissionSubscriptionState;
 
 import java.util.HashMap;
 
+import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.KrollFunction;
-import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.common.TiConfig;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.util.TiConvert;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 @Kroll.module(name="ComWilliamrijksenOnesignal", id="com.williamrijksen.onesignal")
@@ -49,7 +51,6 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 	}
 
 	private KrollFunction getTagsCallback = null;
-	private KrollFunction idsAvailableCallback = null;
 
 	@Kroll.onAppCreate
 	public static void onAppCreate(TiApplication app)
@@ -114,10 +115,11 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 	}
 
 	@Kroll.method
-	public void idsAvailable(KrollFunction handler)
+	public KrollDict getPermissionSubscriptionState() throws JSONException
 	{
-		idsAvailableCallback = handler;
-		OneSignal.idsAvailable(new IdsAvailableHandler());
+		OSPermissionSubscriptionState state = OneSignal.getPermissionSubscriptionState();
+		JSONObject jsonState = state.toJSONObject();
+		return new KrollDict(jsonState);
 	}
 
 	@Kroll.method
@@ -156,23 +158,6 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 			}
 
 			getTagsCallback.call(getKrollObject(), dict);
-		}
-	}
-
-	private class IdsAvailableHandler implements OneSignal.IdsAvailableHandler
-	{
-		@Override
-		public void idsAvailable(String userId, String registrationId)
-		{
-			HashMap<String, Object> dict = new HashMap<String, Object>();
-			try {
-				dict.put("userId", userId);
-				dict.put("pushToken", registrationId);
-			} catch (Exception e) {
-				Log.d("error:", e.toString());
-			}
-
-			idsAvailableCallback.call(getKrollObject(), dict);
 		}
 	}
 
