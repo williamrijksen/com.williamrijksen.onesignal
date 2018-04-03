@@ -42,6 +42,7 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule implements OSP
 	public ComWilliamrijksenOnesignalModule()
 	{
 		super();
+		OneSignal.addPermissionObserver(this);
 		module = this;
 	}
 
@@ -64,7 +65,6 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule implements OSP
 				.setNotificationOpenedHandler(new NotificationOpenedHandler())
 				.unsubscribeWhenNotificationsAreDisabled(true)
 				.inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
-				.addPermissionObserver(TiApplication.getInstance())
 				.init();
 	}
 
