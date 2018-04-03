@@ -63,10 +63,9 @@ var getIds = Ti.UI.createButton({
 });
 
 getIds.addEventListener('click',function(e){
-	onesignal.idsAvailable(function(e) {
-      //pushToken will be nil if the user did not accept push notifications
-		alert(e);
-   });
+	var state = onesignal.getPermissionSubscriptionState();
+  //pushToken will be nil if the user did not accept push notifications
+	alert(state);
 });
 scroll.add(getIds);
 

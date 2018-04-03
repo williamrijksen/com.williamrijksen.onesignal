@@ -75,13 +75,12 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
             Ti.API.info(Ti.Platform.osname === "iphone"? e.results : JSON.parse(e.results));
         });
     ```
-1. IdsAvailable:
+1. PermissionSubscriptionState:
 
     ```js
-        onesignal.idsAvailable(function(e) {
-            //pushToken will be nil if the user did not accept push notifications
-            alert(e);
-        });
+      var state = onesignal.getPermissionSubscriptionState();
+      //pushToken will be nil if the user did not accept push notifications
+      alert(state);
     ```
 1. postNotification (iOS-only for now):
 
