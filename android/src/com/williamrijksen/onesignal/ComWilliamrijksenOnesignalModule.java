@@ -7,6 +7,8 @@ import com.onesignal.OSNotification;
 import com.onesignal.OSNotificationAction;
 import com.onesignal.OSNotificationOpenResult;
 import com.onesignal.OSNotificationPayload;
+import com.onesignal.OSSubscriptionObserver;
+import com.onesignal.OSSubscriptionStateChanges;
 
 import java.util.HashMap;
 
@@ -22,7 +24,7 @@ import org.appcelerator.titanium.util.TiConvert;
 import org.json.JSONObject;
 
 @Kroll.module(name="ComWilliamrijksenOnesignal", id="com.williamrijksen.onesignal")
-public class ComWilliamrijksenOnesignalModule extends KrollModule
+public class ComWilliamrijksenOnesignalModule extends KrollModule implements OSSubscriptionObserver
 {
 	private static final String LCAT = "ComWilliamrijksenOnesignalModule";
 	private static final boolean DBG = TiConfig.LOGD;
@@ -40,6 +42,7 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 	public ComWilliamrijksenOnesignalModule()
 	{
 		super();
+		OneSignal.addSubscriptionObserver(this);
 		module = this;
 	}
 
@@ -136,6 +139,14 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 			visualLevel = (OneSignal.LOG_LEVEL) level;
 		}
         OneSignal.setLogLevel(logLevel, visualLevel);
+	}
+
+	public void onOSSubscriptionChanged(OSSubscriptionStateChanges stateChanges) {
+		if (getModuleInstance().hasListeners("subscriptionChanged")) {
+			getModuleInstance().fireEvent("subscriptionChanged", stateChanges.toJSONObject());
+		}
+
+	    Log.i("Debug", "onOSSubscriptionChanged: " + stateChanges);
 	}
 
 	private class GetTagsHandler implements OneSignal.GetTagsHandler

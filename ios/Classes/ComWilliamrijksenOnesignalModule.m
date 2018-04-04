@@ -15,6 +15,7 @@
 
 NSString * const NotificationReceived = @"notificationReceived";
 NSString * const NotificationOpened = @"notificationOpened";
+NSString * const SubscriptionChanged = @"subscriptionChanged";
 
 static OneSignalManager* _oneSignalManager = nil;
 
@@ -39,6 +40,7 @@ static OneSignalManager* _oneSignalManager = nil;
     [super startup];
 
     [_oneSignalManager setDelegate:self];
+    [OneSignal addSubscriptionObserver:self];
     NSLog(@"[INFO] started %@", self);
 }
 
@@ -106,6 +108,13 @@ static OneSignalManager* _oneSignalManager = nil;
     if ([self _hasListeners:NotificationReceived]) {
         NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE TiNotificationReceived");
         [self fireEvent:NotificationReceived withObject:payload];
+    }
+}
+
+- (void)onOSSubscriptionChanged:(OSSubscriptionStateChanges *)stateChanges {
+    if ([self _hasListeners:SubscriptionChanged]) {
+        NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE OSSubscriptionChanged");
+        [self fireEvent:SubscriptionChanged withObject:[stateChanges toDictionary]];
     }
 }
 

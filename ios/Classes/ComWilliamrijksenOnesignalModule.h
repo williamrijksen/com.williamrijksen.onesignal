@@ -9,7 +9,7 @@
 #import <OneSignal/OneSignal.h>
 #import "OneSignalManager.h"
 
-@interface ComWilliamrijksenOnesignalModule : TiModule<OneSignalDelegate> {}
+@interface ComWilliamrijksenOnesignalModule : TiModule<OneSignalDelegate, OSSubscriptionObserver> {}
 
 typedef void(^TagsResultHandler)(NSDictionary*, NSError*);
 

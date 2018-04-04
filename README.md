@@ -145,6 +145,14 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
    });
    ```
 
+1. Subscription changed listener:
+
+   ```js
+   onesignal.addEventListener('subscriptionChanged', function(evt) {
+      console.log(evt);
+   });
+   ```
+
 Cheers!
 
 ## Build yourself
