@@ -16,3 +16,6 @@ dist
 node_modules
 java-sources.txt
 com.williamrijksen.onesignal-*.zip
+
+# dependency directories
+ios/Carthage/

@@ -10,7 +10,7 @@
 
 @protocol OneSignalDelegate <UIApplicationDelegate>
 
--(void)notificationReceived:(NSDictionary*)info;
--(void)notificationOpened:(NSDictionary*)info;
+-(void)notificationReceived:(NSDictionary*)payload;
+-(void)notificationOpened:(NSDictionary*)payload;
 
 @end
