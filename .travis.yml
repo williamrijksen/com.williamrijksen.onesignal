@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: xcode9.2
+osx_image: xcode10.1
 
 env:
   global:
@@ -17,9 +17,9 @@ before_install:
 - MODULE_ROOT=$PWD
 - brew update > /dev/null
 - brew install nvm
-- nvm install v6.12.3
+- nvm install --lts
 - npm config delete prefix
-- nvm use v6.12.3
+- nvm use --lts
 - brew cask uninstall oclint
 - brew tap oclint/formulae
 - brew install oclint
@@ -28,7 +28,7 @@ before_install:
 install:
 - cd $MODULE_ROOT
 - curl -o install.sh https://raw.githubusercontent.com/jvandijk/ci/master/travis/install.sh
-- source install.sh -s "--branch 7_0_X" -a 25
+- source install.sh -s "--branch 7_5_X" -a 26
 
 before_script:
 - curl -o script.sh https://raw.githubusercontent.com/hansemannn/ci/master/travis/script.sh
