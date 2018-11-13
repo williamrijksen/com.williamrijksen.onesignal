@@ -23,9 +23,6 @@
 
 /* Begin PBXBuildFile section */
 		1F9396FF1EAF8ADB0076FF5A /* OneSignal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F9396FE1EAF8ADB0076FF5A /* OneSignal.framework */; };
-		1FF036FA1F3499B4005DDE77 /* OneSignalDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF036F71F3499B4005DDE77 /* OneSignalDelegate.h */; };
-		1FF036FB1F3499B4005DDE77 /* OneSignalManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF036F81F3499B4005DDE77 /* OneSignalManager.h */; };
-		1FF036FC1F3499B4005DDE77 /* OneSignalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF036F91F3499B4005DDE77 /* OneSignalManager.m */; };
 		24DD6CF91134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DD6CF71134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h */; };
 		24DD6CFA1134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m */; };
 		4ACB5A1B218C674B00DB9BB6 /* OneSignalModuleHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ACB5A19218C674B00DB9BB6 /* OneSignalModuleHelper.m */; };
@@ -46,9 +43,6 @@
 
 /* Begin PBXFileReference section */
 		1F9396FE1EAF8ADB0076FF5A /* OneSignal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OneSignal.framework; path = platform/OneSignal.framework; sourceTree = "<group>"; };
-		1FF036F71F3499B4005DDE77 /* OneSignalDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OneSignalDelegate.h; path = Classes/OneSignalDelegate.h; sourceTree = "<group>"; };
-		1FF036F81F3499B4005DDE77 /* OneSignalManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OneSignalManager.h; path = Classes/OneSignalManager.h; sourceTree = "<group>"; };
-		1FF036F91F3499B4005DDE77 /* OneSignalManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OneSignalManager.m; path = Classes/OneSignalManager.m; sourceTree = "<group>"; };
 		24DD6CF71134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComWilliamrijksenOnesignalModule.h; path = Classes/ComWilliamrijksenOnesignalModule.h; sourceTree = "<group>"; };
 		24DD6CF81134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ComWilliamrijksenOnesignalModule.m; path = Classes/ComWilliamrijksenOnesignalModule.m; sourceTree = "<group>"; };
 		24DD6D1B1134B66800162E58 /* titanium.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = titanium.xcconfig; sourceTree = "<group>"; };
@@ -105,9 +99,6 @@
 			children = (
 				24DD6CF71134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h */,
 				24DD6CF81134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m */,
-				1FF036F71F3499B4005DDE77 /* OneSignalDelegate.h */,
-				1FF036F81F3499B4005DDE77 /* OneSignalManager.h */,
-				1FF036F91F3499B4005DDE77 /* OneSignalManager.m */,
 				4ACB5A1A218C674B00DB9BB6 /* OneSignalModuleHelper.h */,
 				4ACB5A19218C674B00DB9BB6 /* OneSignalModuleHelper.m */,
 			);
@@ -133,8 +124,6 @@
 				AA747D9F0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch in Headers */,
 				24DD6CF91134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h in Headers */,
 				4ACB5A1C218C674B00DB9BB6 /* OneSignalModuleHelper.h in Headers */,
-				1FF036FA1F3499B4005DDE77 /* OneSignalDelegate.h in Headers */,
-				1FF036FB1F3499B4005DDE77 /* OneSignalManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,7 +198,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4ACB5A1B218C674B00DB9BB6 /* OneSignalModuleHelper.m in Sources */,
-				1FF036FC1F3499B4005DDE77 /* OneSignalManager.m in Sources */,
 				24DD6CFA1134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
