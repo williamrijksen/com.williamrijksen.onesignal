@@ -22,7 +22,6 @@ matrix:
         - nvm use --lts
         - npm install -g titanium
         - brew update > /dev/null
-        - brew cask uninstall oclint
         - brew tap oclint/formulae
         - brew install oclint
         - oclint -version
