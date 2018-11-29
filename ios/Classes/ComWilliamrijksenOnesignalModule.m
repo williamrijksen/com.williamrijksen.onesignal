@@ -64,11 +64,13 @@ NSString * const NotificationOpened = @"notificationOpened";
     };
 
     NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
+    [OneSignal setLocationShared:NO];
     [OneSignal initWithLaunchOptions:launchOptions
                                appId:OneSignalAppID
           handleNotificationReceived:notificationReceivedBlock
             handleNotificationAction:notificationOpenedBlock
                             settings:onesignalInitSettings];
+    [OneSignal setLocationShared:YES];
 
     return YES;
 }
