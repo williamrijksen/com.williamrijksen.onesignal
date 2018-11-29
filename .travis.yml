@@ -1,52 +1,61 @@
-language: objective-c
-osx_image: xcode9.2
-
 env:
   global:
-  - MODULE_NAME=com.williamrijksen.onesignal
+    - MODULE_NAME=com.williamrijksen.onesignal
+    - TITANIUM_BRANCH=7_5_X
 
 cache:
   directories:
-  - node_modules
-  - $HOME/android-sdk
-  - $HOME/Library/Caches/Homebrew
-  - $HOME/Library/Application\ Support/Titanium
+    - node_modules
+    - $HOME/android-sdk
+    - $HOME/Library/Caches/Homebrew
+    - $HOME/Library/Application\ Support/Titanium
   timeout: 600
 
-before_install:
-- MODULE_ROOT=$PWD
-- brew update > /dev/null
-- brew install nvm
-- nvm install v6.12.3
-- npm config delete prefix
-- nvm use v6.12.3
-- brew cask uninstall oclint
-- brew tap oclint/formulae
-- brew install oclint
-- oclint -version
+matrix:
+  include:
+    - name: iOS
+      language: objective-c
+      osx_image: xcode10.1
+      env: PLATFORM_NAME=ios
+      before_install:
+        - nvm install --lts
+        - nvm use --lts
+        - npm install -g titanium
+        - brew update > /dev/null
+        - brew tap oclint/formulae
+        - brew install oclint
+        - oclint -version
+      before_script:
+        - cd ios
+        - sed -i ".bak" "s/^TITANIUM_SDK_VERSION.*/TITANIUM_SDK_VERSION=`ti sdk list -o json | node -e 'console.log(JSON.parse(require("fs").readFileSync("/dev/stdin")).activeSDK)'`/" titanium.xcconfig
+        - sh -c 'xcodebuild -UseModernBuildSystem=NO -dry-run | tee xcodebuild.log && oclint-xcodebuild && oclint-json-compilation-database'
+        - cd ..
 
-install:
-- cd $MODULE_ROOT
-- curl -o install.sh https://raw.githubusercontent.com/jvandijk/ci/master/travis/install.sh
-- source install.sh -s "--branch 7_0_X" -a 25
+    - name: Android
+      language: android
+      jdk: oraclejdk8
+      android:
+        components:
+          - android-28
+          - build-tools-28.0.3
+      env: PLATFORM_NAME=android
+      before_install:
+        - nvm install --lts
+        - nvm use --lts
+        - npm install -g titanium
+        - echo y | sdkmanager "ndk-bundle"
 
-before_script:
-- curl -o script.sh https://raw.githubusercontent.com/hansemannn/ci/master/travis/script.sh
-- chmod +x script.sh
-
-script:
-- MODULE_ROOT=$MODULE_ROOT bash script.sh
-- cd $MODULE_ROOT
-- sh -c 'cd ios && xcodebuild -dry-run | tee xcodebuild.log && oclint-xcodebuild && oclint-json-compilation-database'
-
+install: ti sdk install -b ${TITANIUM_BRANCH} -d --no-progress-bars
+script: sh -c 'cd ${PLATFORM_NAME} && ti build -p ${PLATFORM_NAME} -l trace -b'
+before_deploy:
+  - export RELEASE_ZIP_FILE=$MODULE_ROOT/${PLATFORM_NAME}/dist/${MODULE_NAME}-${PLATFORM_NAME}-${TRAVIS_TAG}.zip
+  - echo "deploying ${RELEASE_ZIP_FILE} to GitHub releases"
 deploy:
   skip_cleanup: true
   provider: releases
   api_key:
     secure: CR7C6WsEVoFF85tIZNm+4cfNKituRab0TtDMPP+n418O/WwE7ZVV19n9uELemdyQflw3sPPyzTdr/0hg7CnDL+dVMCscZPnqkTJszq8WnNYUOGPn1Mismx7SzzCF2KXIQBui0mObQrBh+ii/aTgoVYVjC80dNbsNkzOKShloZgr/51OfKY9rqkkeUW8uMY/A/5Tq2k4X7idz+F/Ndr78wP3d2Z3SGHoq51g7fvnKAsaWJ4CqSVWl23ne8Aqft0o8SfV3Uo3pjPMzs28jGk3jW7PNyHezNNxbvDJdex0E6QSndI6MR0JNJrBp4LskuzdhprsDiwSHnL7jhywwVULhobpRSVltJAwvnkv515rfKuogCuh9WZLhR34d63FZ/JX4q/1t+YBsaUbaTRgoM4/i0+S9YEeCWTo+B8DCZjordHEF3fg4Eevq/eMMijEO6/NCY5aHQJtNkUOJCS1JdYmxmBRkLTHIF+zwN0JvNVMrWOrpImz3V37EL9Fy5EAmJGRATtpn7r63p8jCQuxE5jW6zR8usFAzxJCposRt007KyrRvdQ5odKxgaMm2RORkiAcam1Y1PCmWR5wnTkJGB1D3uVtBZ8+e2eX4UkHAAg3dRMogg9v6tjCyTVkQvkabXxP98Ckdo9Jg1trBC+QVRy76ibb20Sr+ISploRwpwPPjyuY=
-  file:
-    - $MODULE_ROOT/android/dist/com.williamrijksen.onesignal-android-${TRAVIS_TAG}.zip
-    - $MODULE_ROOT/ios/com.williamrijksen.onesignal-iphone-${TRAVIS_TAG}.zip
+  file: "${RELEASE_ZIP_FILE}"
   on:
     repo: williamrijksen/com.williamrijksen.onesignal
     tags: true

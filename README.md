@@ -155,7 +155,10 @@ If you already have Titanium installed, skip the first 2 steps, if not let's ins
 
 1. `brew install yarn --without-node` to install yarn without relying on a specific Node version
 1. In the root directory execute `yarn install`
-1. Step into the ios directory
+1. Step into the `ios` directory
+1. If you want to update the OneSignal SDK:
+  - Run `carthage update`
+  - Drag and drop the `OneSignal.framework` from `Carthage/Build/iOS` to `platform`
 1. Alter the `titanium.xcconfig` to build with the preferred SDK
 1. To build the module execute `rm -rf build && ../node_modules/.bin/ti build -p ios --build-only`
 

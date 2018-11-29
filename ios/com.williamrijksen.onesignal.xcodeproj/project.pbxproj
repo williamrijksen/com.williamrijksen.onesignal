@@ -23,13 +23,10 @@
 
 /* Begin PBXBuildFile section */
 		1F9396FF1EAF8ADB0076FF5A /* OneSignal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F9396FE1EAF8ADB0076FF5A /* OneSignal.framework */; };
-		1FF036FA1F3499B4005DDE77 /* OneSignalDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF036F71F3499B4005DDE77 /* OneSignalDelegate.h */; };
-		1FF036FB1F3499B4005DDE77 /* OneSignalManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF036F81F3499B4005DDE77 /* OneSignalManager.h */; };
-		1FF036FC1F3499B4005DDE77 /* OneSignalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF036F91F3499B4005DDE77 /* OneSignalManager.m */; };
-		1FF036FF1F3999E0005DDE77 /* OneSignalPayload.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF036FE1F3999E0005DDE77 /* OneSignalPayload.m */; };
-		1FF037011F399A03005DDE77 /* OneSignalPayload.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF037001F399A03005DDE77 /* OneSignalPayload.h */; };
 		24DD6CF91134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DD6CF71134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h */; };
 		24DD6CFA1134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m */; };
+		4ACB5A1B218C674B00DB9BB6 /* OneSignalModuleHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ACB5A19218C674B00DB9BB6 /* OneSignalModuleHelper.m */; };
+		4ACB5A1C218C674B00DB9BB6 /* OneSignalModuleHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4ACB5A1A218C674B00DB9BB6 /* OneSignalModuleHelper.h */; };
 		AA747D9F0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -46,14 +43,11 @@
 
 /* Begin PBXFileReference section */
 		1F9396FE1EAF8ADB0076FF5A /* OneSignal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OneSignal.framework; path = platform/OneSignal.framework; sourceTree = "<group>"; };
-		1FF036F71F3499B4005DDE77 /* OneSignalDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OneSignalDelegate.h; path = Classes/OneSignalDelegate.h; sourceTree = "<group>"; };
-		1FF036F81F3499B4005DDE77 /* OneSignalManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OneSignalManager.h; path = Classes/OneSignalManager.h; sourceTree = "<group>"; };
-		1FF036F91F3499B4005DDE77 /* OneSignalManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OneSignalManager.m; path = Classes/OneSignalManager.m; sourceTree = "<group>"; };
-		1FF036FE1F3999E0005DDE77 /* OneSignalPayload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OneSignalPayload.m; path = Classes/OneSignalPayload.m; sourceTree = "<group>"; };
-		1FF037001F399A03005DDE77 /* OneSignalPayload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OneSignalPayload.h; path = Classes/OneSignalPayload.h; sourceTree = "<group>"; };
 		24DD6CF71134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComWilliamrijksenOnesignalModule.h; path = Classes/ComWilliamrijksenOnesignalModule.h; sourceTree = "<group>"; };
 		24DD6CF81134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ComWilliamrijksenOnesignalModule.m; path = Classes/ComWilliamrijksenOnesignalModule.m; sourceTree = "<group>"; };
 		24DD6D1B1134B66800162E58 /* titanium.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = titanium.xcconfig; sourceTree = "<group>"; };
+		4ACB5A19218C674B00DB9BB6 /* OneSignalModuleHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OneSignalModuleHelper.m; path = Classes/OneSignalModuleHelper.m; sourceTree = "<group>"; };
+		4ACB5A1A218C674B00DB9BB6 /* OneSignalModuleHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OneSignalModuleHelper.h; path = Classes/OneSignalModuleHelper.h; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComWilliamrijksenOnesignal_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libComWilliamrijksenOnesignal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComWilliamrijksenOnesignal.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -105,11 +99,8 @@
 			children = (
 				24DD6CF71134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h */,
 				24DD6CF81134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m */,
-				1FF036F71F3499B4005DDE77 /* OneSignalDelegate.h */,
-				1FF036F81F3499B4005DDE77 /* OneSignalManager.h */,
-				1FF036F91F3499B4005DDE77 /* OneSignalManager.m */,
-				1FF037001F399A03005DDE77 /* OneSignalPayload.h */,
-				1FF036FE1F3999E0005DDE77 /* OneSignalPayload.m */,
+				4ACB5A1A218C674B00DB9BB6 /* OneSignalModuleHelper.h */,
+				4ACB5A19218C674B00DB9BB6 /* OneSignalModuleHelper.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -131,10 +122,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA747D9F0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch in Headers */,
-				1FF037011F399A03005DDE77 /* OneSignalPayload.h in Headers */,
 				24DD6CF91134B3F500162E58 /* ComWilliamrijksenOnesignalModule.h in Headers */,
-				1FF036FA1F3499B4005DDE77 /* OneSignalDelegate.h in Headers */,
-				1FF036FB1F3499B4005DDE77 /* OneSignalManager.h in Headers */,
+				4ACB5A1C218C674B00DB9BB6 /* OneSignalModuleHelper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,8 +197,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FF036FF1F3999E0005DDE77 /* OneSignalPayload.m in Sources */,
-				1FF036FC1F3499B4005DDE77 /* OneSignalManager.m in Sources */,
+				4ACB5A1B218C674B00DB9BB6 /* OneSignalModuleHelper.m in Sources */,
 				24DD6CFA1134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

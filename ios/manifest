@@ -15,4 +15,4 @@ name: com.williamrijksen.onesignal
 moduleid: com.williamrijksen.onesignal
 guid: 67065763-fd5e-4069-a877-6c7fd328f877
 platform: iphone
-minsdk: 7.0.1.GA
+minsdk: 7.4.1.GA
