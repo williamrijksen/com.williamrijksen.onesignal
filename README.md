@@ -32,8 +32,6 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
     ```xml
     <meta-data android:name="onesignal_app_id"
                    android:value="[App-id]" />
-    <meta-data android:name="onesignal_google_project_number"
-                   android:value="str:[Google project id]" />
     ```
 1. To use rich notifications on iOS 10 you need to add an extension to your app.
    To do so see:
