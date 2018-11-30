@@ -11,6 +11,10 @@
             xmlns:tools="http://schemas.android.com/tools"
             package="com.onesignal">
 
+            <permission android:name="${tiapp.properties['id']}.permission.C2D_MESSAGE"
+                        android:protectionLevel="signature" />
+            <uses-permission android:name="${tiapp.properties['id']}.permission.C2D_MESSAGE" />
+
             <!-- OneSignal SDK has runtime checks Android version. -->
             <!--<uses-sdk tools:overrideLibrary="android.support.customtabs"/>-->
 
@@ -70,24 +74,24 @@
             <!-- End: ShortcutBadger -->
 
             <application>
-                <receiver android:name="com.onesignal.NotificationOpenedReceiver" />
-                <service android:name="com.onesignal.GcmIntentService" />
+                <meta-data android:name="onesignal_google_project_number" android:value="str:REMOTE"/>
 
-                <!-- For Android O -->
+                <receiver android:name="com.onesignal.NotificationOpenedReceiver" />
+
+                <service android:name="com.onesignal.GcmIntentService" />
                 <service android:name="com.onesignal.GcmIntentJobService"
                          android:permission="android.permission.BIND_JOB_SERVICE" />
 
+                <service android:name="com.onesignal.RestoreJobService"
+                         android:permission="android.permission.BIND_JOB_SERVICE" />
+
+                <service android:name="com.onesignal.RestoreKickoffJobService"
+                         android:permission="android.permission.BIND_JOB_SERVICE" />
+
+                <service android:name="com.onesignal.SyncService" android:stopWithTask="true" />
                 <service android:name="com.onesignal.SyncJobService"
                          android:permission="android.permission.BIND_JOB_SERVICE" />
 
-                <service android:name="com.onesignal.RestoreJobService"
-                    android:permission="android.permission.BIND_JOB_SERVICE" />
-
-                <service android:name="com.onesignal.RestoreKickoffJobService"
-                    android:permission="android.permission.BIND_JOB_SERVICE" />
-                <!-- END - For Android O -->
-
-                <service android:name="com.onesignal.SyncService" />
                 <activity android:name="com.onesignal.PermissionsActivity"
                           android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
@@ -105,10 +109,9 @@
                         <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
                     </intent-filter>
                 </receiver>
-                <receiver
-                        android:name="com.onesignal.GcmBroadcastReceiver"
-                        android:permission="com.google.android.c2dm.permission.SEND" >
-                    <intent-filter>
+                <receiver android:name="com.onesignal.GcmBroadcastReceiver"
+                          android:permission="com.google.android.c2dm.permission.SEND" >
+                    <intent-filter android:priority="999">
                         <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                         <category android:name="${tiapp.properties['id']}" />
                     </intent-filter>
