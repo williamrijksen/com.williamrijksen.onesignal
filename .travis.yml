@@ -19,6 +19,7 @@ matrix:
       osx_image: xcode10.1
       env:
         - PLATFORM_NAME=ios
+        - RELEASE_ZIP_FILE=${MODULE_ROOT}/${PLATFORM_NAME}/${MODULE_NAME}-iphone-${TRAVIS_TAG}.zip
       before_install:
         - nvm install --lts
         - nvm use --lts
@@ -42,6 +43,7 @@ matrix:
           - build-tools-28.0.3
       env:
         - PLATFORM_NAME=android
+        - RELEASE_ZIP_FILE=${MODULE_ROOT}/${PLATFORM_NAME}/dist/${MODULE_NAME}-${PLATFORM_NAME}-${TRAVIS_TAG}.zip
       before_install:
         - nvm install --lts
         - nvm use --lts
@@ -51,7 +53,6 @@ matrix:
 install: ti sdk install -b ${TITANIUM_BRANCH} -d --no-progress-bars
 script: sh -c 'cd ${PLATFORM_NAME} && ti build -p ${PLATFORM_NAME} -l trace -b'
 before_deploy:
-  - export RELEASE_ZIP_FILE=${MODULE_ROOT}/${PLATFORM_NAME}/dist/${MODULE_NAME}-${PLATFORM_NAME}-${TRAVIS_TAG}.zip
   - echo "deploying ${RELEASE_ZIP_FILE} to GitHub releases"
 deploy:
   skip_cleanup: true
