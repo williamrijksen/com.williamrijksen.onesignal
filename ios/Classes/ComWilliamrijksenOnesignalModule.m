@@ -7,6 +7,7 @@
 
 #import "ComWilliamrijksenOnesignalModule.h"
 #import "OneSignalModuleHelper.h"
+#import <OneSignal/OneSignal.h>
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
@@ -59,19 +60,17 @@ NSString * const NotificationOpened = @"notificationOpened";
     };
 
     id onesignalInitSettings = @{
-        kOSSettingsKeyAutoPrompt : @NO,
-        kOSSettingsKeyInFocusDisplayOption : @(OSNotificationDisplayTypeNone)
+        kOSSettingsKeyAutoPrompt : @false
     };
 
     NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
-    [OneSignal setLocationShared:NO];
     [OneSignal initWithLaunchOptions:launchOptions
                                appId:OneSignalAppID
           handleNotificationReceived:notificationReceivedBlock
             handleNotificationAction:notificationOpenedBlock
                             settings:onesignalInitSettings];
     [OneSignal setLocationShared:YES];
-
+    OneSignal.inFocusDisplayType = OSNotificationDisplayTypeNone;
     return YES;
 }
 
@@ -168,23 +167,6 @@ NSString * const NotificationOpened = @"notificationOpened";
     } onFailure:^(NSError *error) {
         resultsBlock(nil, error);
     }];
-}
-
-- (void)idsAvailable:(id)args
-{
-	id value = args;
-    ENSURE_UI_THREAD(idsAvailable, value);
-    ENSURE_SINGLE_ARG(value, KrollCallback);
-
-	[OneSignal IdsAvailable:^(NSString* userId, NSString* pushToken) {
-		NSMutableDictionary *idsDict = [NSMutableDictionary dictionaryWithDictionary:@{
-			@"userId" : userId ?: @[],
-         	@"pushToken" :pushToken ?: @[]
-     	}];
-		NSArray *invocationArray = [[NSArray alloc] initWithObjects:&idsDict count:1];
-        [value call:invocationArray thisObject:self];
-        [invocationArray release];
-	}];
 }
 
 - (void)postNotification:(id)arguments
