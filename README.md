@@ -2,6 +2,9 @@
 
 This module gives you the possibility to integrate OneSignal into you're Appcelerator Android or iOS-application. It's even possible to target people by registering tags.
 
+### Where to get it:
+Please check https://github.com/williamrijksen/com.williamrijksen.onesignal/releases to download latest releases of the module.
+
 ## Generate Credentials
 
 Before setting up the Titanium SDK, you must generate the appropriate credentials for the platform(s) you are releasing on:
