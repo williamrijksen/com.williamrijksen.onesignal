@@ -19,5 +19,6 @@ typedef void(^TagsResultHandler)(NSDictionary*, NSError*);
 - (void)getTags:(id)value;
 - (void)setLogLevel:(id)args;
 - (void)postNotification:(id)arguments;
-
+- (void)setExternalUserId:(id)externalUserId;
+- (void)removeExternalUserId;
 @end
