@@ -116,6 +116,26 @@ NSString * const NotificationOpened = @"notificationOpened";
     [OneSignal setSubscription:[TiUtils boolValue:args]];
 }
 
+- (void)setExternalUserId:(id)arguments
+{
+    id args = arguments;
+    ENSURE_UI_THREAD_1_ARG(args);
+    ENSURE_SINGLE_ARG(args, NSString);
+    
+    [OneSignal setExternalUserId:[TiUtils stringValue:args] withCompletion:^(NSDictionary *results) {
+        NSLog(@"Set external user id update complete with results: %@", results.description);
+    }];
+}
+
+- (void)removeExternalUserId:(id)arguments
+{
+    id args = arguments;
+    ENSURE_UI_THREAD_1_ARG(args); // not necessary but app was crashing without it
+    [OneSignal removeExternalUserId:^(NSDictionary *results) {
+        NSLog(@"Remove external user id  complete with results: %@", results.description);
+    }];
+}
+
 - (void)sendTag:(id)arguments
 {
     id args = arguments;
@@ -167,6 +187,16 @@ NSString * const NotificationOpened = @"notificationOpened";
     } onFailure:^(NSError *error) {
         resultsBlock(nil, error);
     }];
+}
+
+- (NSDictionary *)getPermissionSubscriptionState:(id)args
+{
+    // Maybe it should use OSDevice class instead in the future
+	id value = args;
+    ENSURE_UI_THREAD(getPermissionSubscriptionState, value);
+
+    OSPermissionSubscriptionState* state = [OneSignal getPermissionSubscriptionState];
+    return [state toDictionary];
 }
 
 - (void)postNotification:(id)arguments
