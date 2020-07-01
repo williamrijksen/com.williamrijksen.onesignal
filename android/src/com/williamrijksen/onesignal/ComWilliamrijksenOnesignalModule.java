@@ -101,6 +101,21 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 	}
 
 	@Kroll.method
+	public boolean retrieveSubscribed(){
+		return OneSignal.getPermissionSubscriptionState().getSubscriptionStatus().getSubscribed();
+	}
+
+	@Kroll.method
+	public String retrievePlayerId(){
+		return OneSignal.getPermissionSubscriptionState().getSubscriptionStatus().getUserId();
+	}
+
+	@Kroll.method
+	public String retrieveToken(){
+		return OneSignal.getPermissionSubscriptionState().getSubscriptionStatus().getPushToken();
+	}
+
+	@Kroll.method
 	public void setSubscription(boolean enable)
 	{
 		OneSignal.setSubscription(enable);
