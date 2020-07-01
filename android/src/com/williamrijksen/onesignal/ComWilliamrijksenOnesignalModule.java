@@ -116,6 +116,28 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 	}
 
 	@Kroll.method
+	public void setExternalUserId(String id)
+	{
+		OneSignal.setExternalUserId(id, new OneSignal.OSExternalUserIdUpdateCompletionHandler() {
+			@Override
+			public void onComplete(JSONObject results) {
+				Log.d(LCAT, "com.williamrijksen.onesignal Set external user id done with results: " + results.toString());
+			}
+		});
+	}
+
+	@Kroll.method
+	public void removeExternalUserId()
+	{
+		OneSignal.removeExternalUserId(new OneSignal.OSExternalUserIdUpdateCompletionHandler() {
+			@Override
+			public void onComplete(JSONObject results) {
+				Log.d(LCAT, "com.williamrijksen.onesignal Remove external user id done with results: " + results.toString());
+			}
+		});
+	}
+
+	@Kroll.method
 	public void setSubscription(boolean enable)
 	{
 		OneSignal.setSubscription(enable);
@@ -126,13 +148,6 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 	{
 		getTagsCallback = handler;
 		OneSignal.getTags(new GetTagsHandler());
-	}
-
-	@Kroll.method
-	public void idsAvailable(KrollFunction handler)
-	{
-		idsAvailableCallback = handler;
-		OneSignal.idsAvailable(new IdsAvailableHandler());
 	}
 
 	@Kroll.method

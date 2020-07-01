@@ -76,18 +76,32 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
             Ti.API.info(Ti.Platform.osname === "iphone"? e.results : JSON.parse(e.results));
         });
     ```
-1. Set External User ID (iOS-only for now):
+1. Set External User ID:
 
     ```js
         onesignal.setExternalUserId('your_db_user_id');
     ```
-1. Remove External User ID (iOS-only for now):
+1. Remove External User ID:
 
     ```js
         onesignal.removeExternalUserId();
     ```
-1. Get Permission Subscription State (iOS-only for now):   
-    Useful to get user's playerId
+1. Get if user is subscribed (Boolean):
+
+    ```js
+        var subscribed = onesignal.retrieveSubscribed();
+    ```
+1. Get One Signal Player ID (String):
+
+    ```js
+        var res = onesignal.retrievePlayerId();
+    ```
+1. Get One Signal Token (String):
+
+    ```js
+        var token = onesignal.retrieveToken();
+    ```
+1. Get Permission Subscription State (iOS-only for now):
 
     ```js
         var res = onesignal.getPermissionSubscriptionState();
