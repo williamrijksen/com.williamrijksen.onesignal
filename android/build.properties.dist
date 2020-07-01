@@ -1,6 +1,6 @@
 titanium.sdk=<YOUR_HOMEPATH>/Library/Application\ Support/Titanium/
 titanium.os=osx
-titanium.version=7.5.0.GA
+titanium.version=8.3.1.GA
 android.sdk=<YOUR_HOMEPATH>/android-sdk
 android.ndk=<YOUR_HOMEPATH>/android-sdk/ndk-bundle
 

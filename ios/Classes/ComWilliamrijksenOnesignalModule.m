@@ -88,6 +88,21 @@ NSString * const NotificationOpened = @"notificationOpened";
 
 #pragma mark Public API's
 
+- (bool)retrieveSubscribed:(id)args
+{
+    return [OneSignal getPermissionSubscriptionState].subscriptionStatus.subscribed;
+}
+
+- (NSString *)retrievePlayerId:(id)args
+{
+    return [OneSignal getPermissionSubscriptionState].subscriptionStatus.userId;
+}
+
+- (NSString *)retrieveToken:(id)args
+{
+    return [OneSignal getPermissionSubscriptionState].subscriptionStatus.pushToken;
+}
+
 - (void)promptForPushNotificationsWithUserResponse:(id)args
 {
     ENSURE_UI_THREAD(promptForPushNotificationsWithUserResponse, args);
