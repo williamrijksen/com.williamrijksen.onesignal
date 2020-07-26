@@ -1,0 +1,4 @@
+
+dependencies {
+    implementation 'com.onesignal:OneSignal:[3.15.0, 3.99.99]'
+}
