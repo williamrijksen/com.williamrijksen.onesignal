@@ -18,7 +18,11 @@ import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.common.TiConfig;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiProperties;
 import org.appcelerator.titanium.util.TiConvert;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 @Kroll.module(name="ComWilliamrijksenOnesignal", id="com.williamrijksen.onesignal")
@@ -229,21 +233,44 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 		@Override
 		public void notificationReceived(OSNotification notification)
 		{
-			Log.d(LCAT, "com.williamrijksen.onesignal Notification received handler");
-			if (TiApplication.getAppCurrentActivity() != null && getModuleInstance() != null) {
-				try {
-					if (notification.payload != null) {
-						JSONObject payload = notification.payload.toJSONObject();
-						payload.put("foreground", notification.isAppInFocus);
+            Log.d(LCAT, "com.williamrijksen.onesignal Notification received handler vw");
 
+			try {
+				if (notification.payload != null) {
+                    Log.i(LCAT, "com.williamrijksen.onesignal Notificationreceived payload != null");
+					JSONObject payload = notification.payload.toJSONObject();
+					payload.put("foreground", notification.isAppInFocus);
+
+                    TiProperties props = TiApplication.getInstance().getAppProperties();
+
+                    String EMA_ONESIGNAL_PROPERTY = "onesignal.notificationReceived.payload";
+
+                    String onesignal_payload = props.getString(EMA_ONESIGNAL_PROPERTY, "[]");
+                    JSONArray json_ary = new JSONArray();
+
+                    Log.i(LCAT, "notificationReceived saving json payload to onesignal.notificationReceived.payload");
+
+                    try{
+                        json_ary = new JSONArray(onesignal_payload);
+                        json_ary.put(payload);
+
+                        props.setString(EMA_ONESIGNAL_PROPERTY, json_ary.toString());
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (TiApplication.getAppCurrentActivity() != null && getModuleInstance() != null) {
 						if (getModuleInstance().hasListeners("notificationReceived")) {
 							getModuleInstance().fireEvent("notificationReceived", payload);
 						}
-					}
-				} catch (Throwable t) {
-					Log.d(LCAT, "com.williamrijksen.onesignal OSNotification could not be converted to JSON");
+                    }
 				}
+			} catch (Throwable t) {
+				Log.w(LCAT, "com.williamrijksen.onesignal OSNotification could not be converted to JSON");
 			}
+
+            Log.i(LCAT, "com.williamrijksen.onesignal Notification received handler end");
 		}
 	}
 }
