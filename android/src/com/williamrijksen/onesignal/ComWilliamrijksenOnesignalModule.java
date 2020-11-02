@@ -260,11 +260,11 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
                         e.printStackTrace();
                     }
 
-                    if (TiApplication.getAppCurrentActivity() != null && getModuleInstance() != null) {
+                    /*if (TiApplication.getAppCurrentActivity() != null && getModuleInstance() != null) {
 						if (getModuleInstance().hasListeners("notificationReceived")) {
 							getModuleInstance().fireEvent("notificationReceived", payload);
 						}
-                    }
+                    }*/
 				}
 			} catch (Throwable t) {
 				Log.w(LCAT, "com.williamrijksen.onesignal OSNotification could not be converted to JSON");
