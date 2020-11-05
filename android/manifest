@@ -17,4 +17,4 @@ name: com.williamrijksen.onesignal
 moduleid: com.williamrijksen.onesignal
 guid: 67065763-fd5e-4069-a877-6c7fd328f877
 platform: android
-minsdk: 7.5.0.GA
+minsdk: 9.0.0.GA
