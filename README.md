@@ -76,13 +76,54 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
             Ti.API.info(Ti.Platform.osname === "iphone"? e.results : JSON.parse(e.results));
         });
     ```
-1. IdsAvailable:
+1. Set External User ID:
 
     ```js
-        onesignal.idsAvailable(function(e) {
-            //pushToken will be nil if the user did not accept push notifications
-            alert(e);
-        });
+        onesignal.setExternalUserId('your_db_user_id');
+    ```
+1. Remove External User ID:
+
+    ```js
+        onesignal.removeExternalUserId();
+    ```
+1. Get if user is subscribed (Boolean):
+
+    ```js
+        var subscribed = onesignal.retrieveSubscribed();
+    ```
+1. Get One Signal Player ID (String):
+
+    ```js
+        var res = onesignal.retrievePlayerId();
+    ```
+1. Get One Signal Token (String):
+
+    ```js
+        var token = onesignal.retrieveToken();
+    ```
+1. Get Permission Subscription State (iOS-only for now):
+
+    ```js
+        var res = onesignal.getPermissionSubscriptionState();
+        /* res example:
+            {
+                "subscriptionStatus": {
+                    "userSubscriptionSetting": true,
+                    "subscribed": false,
+                    "userId": "123-123-123-123-123456789",
+                    "pushToken": null
+                },
+                "permissionStatus": {
+                    "status": 2,
+                    "provisional": false,
+                    "hasPrompted": true
+                },
+                "emailSubscriptionStatus": {
+                    "emailAddress": null,
+                    "emailUserId": null
+                }
+            }
+        */
     ```
 1. postNotification (iOS-only for now):
 
@@ -101,7 +142,7 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
             visualLevel: onesignal.LOG_LEVEL_NONE
         });
     ```
-1. Opened listener:
+1. Opened listener:   
    The returned content is matching the available payload on OneSignal:
    - [iOS](https://documentation.onesignal.com/docs/ios-native-sdk#section--osnotificationpayload-)
    - [Android](https://documentation.onesignal.com/docs/android-native-sdk#section--osnotificationpayload-)

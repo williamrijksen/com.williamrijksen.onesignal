@@ -13,10 +13,16 @@
 typedef void(^TagsResultHandler)(NSDictionary*, NSError*);
 
 - (void)promptForPushNotificationsWithUserResponse:(id)args;
-- (void)sendTag:(id)args;
+- (bool)retrieveSubscribed:(id)args;
+- (NSString *)retrievePlayerId:(id)args;
+- (NSString *)retrieveToken:(id)args;
 - (void)setSubscription:(id)args;
+- (void)setExternalUserId:(id)args;
+- (void)removeExternalUserId:(id)args;
+- (void)sendTag:(id)args;
 - (void)deleteTag:(id)args;
 - (void)getTags:(id)value;
+- (NSDictionary *)getPermissionSubscriptionState:(id)args;
 - (void)setLogLevel:(id)args;
 - (void)postNotification:(id)arguments;
 - (void)setExternalUserId:(id)externalUserId;

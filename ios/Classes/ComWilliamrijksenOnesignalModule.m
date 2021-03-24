@@ -88,6 +88,21 @@ NSString * const NotificationOpened = @"notificationOpened";
 
 #pragma mark Public API's
 
+- (bool)retrieveSubscribed:(id)args
+{
+    return [OneSignal getPermissionSubscriptionState].subscriptionStatus.subscribed;
+}
+
+- (NSString *)retrievePlayerId:(id)args
+{
+    return [OneSignal getPermissionSubscriptionState].subscriptionStatus.userId;
+}
+
+- (NSString *)retrieveToken:(id)args
+{
+    return [OneSignal getPermissionSubscriptionState].subscriptionStatus.pushToken;
+}
+
 - (void)promptForPushNotificationsWithUserResponse:(id)args
 {
     ENSURE_UI_THREAD(promptForPushNotificationsWithUserResponse, args);
@@ -114,6 +129,26 @@ NSString * const NotificationOpened = @"notificationOpened";
     ENSURE_UI_THREAD_1_ARG(args);
     ENSURE_SINGLE_ARG(args, NSNumber);
     [OneSignal setSubscription:[TiUtils boolValue:args]];
+}
+
+- (void)setExternalUserId:(id)arguments
+{
+    id args = arguments;
+    ENSURE_UI_THREAD_1_ARG(args);
+    ENSURE_SINGLE_ARG(args, NSString);
+    
+    [OneSignal setExternalUserId:[TiUtils stringValue:args] withCompletion:^(NSDictionary *results) {
+        NSLog(@"Set external user id update complete with results: %@", results.description);
+    }];
+}
+
+- (void)removeExternalUserId:(id)arguments
+{
+    id args = arguments;
+    ENSURE_UI_THREAD_1_ARG(args); // not necessary but app was crashing without it
+    [OneSignal removeExternalUserId:^(NSDictionary *results) {
+        NSLog(@"Remove external user id  complete with results: %@", results.description);
+    }];
 }
 
 - (void)sendTag:(id)arguments
@@ -177,6 +212,17 @@ NSString * const NotificationOpened = @"notificationOpened";
  {
      [OneSignal removeExternalUserId];
  }
+
+- (NSDictionary *)getPermissionSubscriptionState:(id)args
+{
+    // Maybe it should use OSDevice class instead in the future
+	id value = args;
+    ENSURE_UI_THREAD(getPermissionSubscriptionState, value);
+
+    OSPermissionSubscriptionState* state = [OneSignal getPermissionSubscriptionState];
+    return [state toDictionary];
+}
+
 - (void)postNotification:(id)arguments
 {
 	id args = arguments;
