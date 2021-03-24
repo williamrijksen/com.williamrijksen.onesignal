@@ -153,21 +153,21 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule
 	// EXTERNAL USER ID
 	// ==================================================================
 
-	@Kroll.method
-	public void setExternalUserId(String id) {
-		if (id.isEmpty()) {
-			Log.e(LCAT, "ti.android.onesignal id cannot be null");
-			return;
-		}
-		Log.i(LCAT, "ti.android.onesignal setting user external id");
-		OneSignal.setExternalUserId(id);
-	}
+	// @Kroll.method
+	// public void setExternalUserId(String id) {
+	// 	if (id.isEmpty()) {
+	// 		Log.e(LCAT, "ti.android.onesignal id cannot be null");
+	// 		return;
+	// 	}
+	// 	Log.i(LCAT, "ti.android.onesignal setting user external id");
+	// 	OneSignal.setExternalUserId(id);
+	// }
 
-	@Kroll.method
-	public void removeExternalUserId() {
-		Log.i(LCAT, "ti.android.onesignal removing user external id");
-		OneSignal.removeExternalUserId();
-	}
+	// @Kroll.method
+	// public void removeExternalUserId() {
+	// 	Log.i(LCAT, "ti.android.onesignal removing user external id");
+	// 	OneSignal.removeExternalUserId();
+	// }
 	@Kroll.method
 	public void setLogLevel(HashMap args)
 	{
