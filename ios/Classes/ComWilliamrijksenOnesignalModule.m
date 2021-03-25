@@ -203,6 +203,15 @@ NSString * const NotificationOpened = @"notificationOpened";
         resultsBlock(nil, error);
     }];
 }
+ - (void)setExternalUserId:(id)externalUserId
+ {
+      ENSURE_TYPE(externalUserId, NSString);
+     [OneSignal setExternalUserId:externalUserId];
+ }
+ - (void)removeExternalUserId
+ {
+     [OneSignal removeExternalUserId];
+ }
 
 - (NSDictionary *)getPermissionSubscriptionState:(id)args
 {
