@@ -9,7 +9,6 @@ build
 *~
 .DS_Store
 Plafile.yml
-build.properties
 libs
 dist
 *.xcuserdatad
