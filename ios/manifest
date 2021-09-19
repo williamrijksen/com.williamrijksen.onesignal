@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 2.2.2
+version: 3.0.0
 apiversion: 2
 architectures: armv7 arm64 i386 x86_64
 description: com.williamrijksen.onesignal
@@ -15,4 +15,5 @@ name: com.williamrijksen.onesignal
 moduleid: com.williamrijksen.onesignal
 guid: 67065763-fd5e-4069-a877-6c7fd328f877
 platform: iphone
-minsdk: 8.3.1.GA
+minsdk: 9.3.2.GA
+mac: false
