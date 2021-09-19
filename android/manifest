@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
- #
+#
 
 version: 3.0.0
 apiversion: 4
