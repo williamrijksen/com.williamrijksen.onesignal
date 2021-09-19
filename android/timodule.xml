@@ -76,6 +76,8 @@
             <application>
                 <meta-data android:name="onesignal_google_project_number" android:value="str:REMOTE"/>
 
+                <meta-data android:name="com.onesignal.NotificationServiceExtension" android:value="com.williamrijksen.onesignal.NotificationReceivedHandler" />
+
                 <receiver android:name="com.onesignal.NotificationOpenedReceiver" />
 
                 <service android:name="com.onesignal.GcmIntentService" />
