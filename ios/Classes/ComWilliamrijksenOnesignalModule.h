@@ -22,7 +22,7 @@ typedef void(^TagsResultHandler)(NSDictionary*, NSError*);
 - (void)sendTag:(id)args;
 - (void)deleteTag:(id)args;
 - (void)getTags:(id)value;
-- (NSDictionary *)getPermissionSubscriptionState:(id)args;
+- (NSDictionary *)getDeviceState:(id)args;
 - (void)setLogLevel:(id)args;
 - (void)postNotification:(id)arguments;
 
