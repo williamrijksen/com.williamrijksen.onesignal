@@ -19,3 +19,6 @@ com.williamrijksen.onesignal-*.zip
 
 # dependency directories
 ios/Carthage/
+
+# now constructed from template
+manifest

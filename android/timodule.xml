@@ -76,7 +76,7 @@
             <application>
                 <meta-data android:name="onesignal_google_project_number" android:value="str:REMOTE"/>
 
-                <receiver android:name="com.onesignal.NotificationOpenedReceiver" />
+                <receiver android:name="com.onesignal.NotificationOpenedReceiver" android:exported="false" />
 
                 <service android:name="com.onesignal.GcmIntentService" />
                 <service android:name="com.onesignal.GcmIntentJobService"
@@ -103,13 +103,14 @@
                         <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                     </intent-filter>
                 </receiver>
-                <receiver android:name="com.onesignal.UpgradeReceiver">
+                <receiver android:name="com.onesignal.UpgradeReceiver" android:exported="false" >
                     <intent-filter>
                         <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
                     </intent-filter>
                 </receiver>
                 <receiver android:name="com.onesignal.GcmBroadcastReceiver"
-                          android:permission="com.google.android.c2dm.permission.SEND" >
+                          android:permission="com.google.android.c2dm.permission.SEND"
+                          android:exported="false" >
                     <intent-filter android:priority="999">
                         <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                         <category android:name="${tiapp.properties['id']}" />
