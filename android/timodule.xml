@@ -79,7 +79,7 @@
                 <meta-data android:name="com.onesignal.NotificationServiceExtension"
                            android:value="com.williamrijksen.onesignal.NotificationReceivedHandler"/>
 
-                <receiver android:name="com.onesignal.NotificationOpenedReceiver"/>
+                <receiver android:name="com.onesignal.NotificationOpenedReceiver" android:exported="true"/>
 
                 <service android:name="com.onesignal.GcmIntentService"/>
                 <service android:name="com.onesignal.GcmIntentJobService"
@@ -119,13 +119,13 @@
 
                 <service android:name="com.onesignal.NotificationRestoreService"/>
 
-                <receiver android:name="com.onesignal.BootUpReceiver">
+                <receiver android:name="com.onesignal.BootUpReceiver" android:exported="true">
                     <intent-filter>
                         <action android:name="android.intent.action.BOOT_COMPLETED"/>
                         <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
                     </intent-filter>
                 </receiver>
-                <receiver android:name="com.onesignal.UpgradeReceiver">
+                <receiver android:name="com.onesignal.UpgradeReceiver" android:exported="true">
                     <intent-filter>
                         <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
                     </intent-filter>
