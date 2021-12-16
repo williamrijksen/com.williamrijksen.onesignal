@@ -20,8 +20,8 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
 
     ```xml
     <modules>
-      <module platform="iphone" version="2.1.1">com.williamrijksen.onesignal</module>
-      <module platform="android" version="2.1.1">com.williamrijksen.onesignal</module>
+      <module platform="iphone">com.williamrijksen.onesignal</module>
+      <module platform="android">com.williamrijksen.onesignal</module>
     </modules>
     ```
 1. Configure your app into the App Settings panel for the right Platform (Android and/or iOS).
@@ -40,6 +40,10 @@ Before setting up the Titanium SDK, you must generate the appropriate credential
    To do so see:
    - [https://documentation.onesignal.com/docs/ios-sdk-setup#section-1-add-notification-service-extension](https://documentation.onesignal.com/docs/ios-sdk-setup#section-1-add-notification-service-extension)
    - [http://docs.appcelerator.com/platform/latest/#!/guide/Creating_iOS_Extensions_-_Siri_Intents](http://docs.appcelerator.com/platform/latest/#!/guide/Creating_iOS_Extensions_-_Siri_Intents)
+
+#### Android
+
+If you have some build errors about Google Play service dependencies you will need to add `googleServices {disableVersionCheck = true}` to your build.gradle file.
 
 ### Usage
 1. Register device for Push Notifications
