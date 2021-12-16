@@ -9,10 +9,10 @@
 
 @implementation OneSignalModuleHelper
 
-+ (NSDictionary *)toDictionary: (OSNotificationPayload *)payload
++ (NSDictionary *)toDictionary: (OSNotification *)payload
 {
-    return @{@"notificationID": payload.notificationID ?: [NSNull null],
-             @"templateID": payload.templateID ?: [NSNull null],
+    return @{@"notificationID": payload.notificationId ?: [NSNull null],
+             @"templateID": payload.templateId ?: [NSNull null],
              @"templateName": payload.templateName ?: [NSNull null],
              @"contentAvailable": @(payload.contentAvailable),
              @"mutableContent": @(payload.mutableContent),

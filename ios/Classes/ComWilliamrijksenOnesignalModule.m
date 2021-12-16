@@ -48,29 +48,28 @@ NSString * const NotificationOpened = @"notificationOpened";
     NSLog(@"[DEBUG] com.williamrijksen.onesignal didFinishLaunchingWithOptions");
 
     id notificationReceivedBlock = ^(OSNotification *notification) {
-        OSNotificationPayload* payload = notification.payload;
-        NSLog(@"[DEBUG] com.williamrijksen.onesignal notification received %@", payload);
-        [self fireEvent:NotificationReceived withObject:[OneSignalModuleHelper toDictionary:payload]];
+        NSLog(@"[DEBUG] com.williamrijksen.onesignal notification received %@", notification);
+        [self fireEvent:NotificationReceived withObject:[OneSignalModuleHelper toDictionary:notification]];
     };
 
     id notificationOpenedBlock = ^(OSNotificationOpenedResult *result) {
-        OSNotificationPayload* payload = result.notification.payload;
+        OSNotification* payload = result.notification;
         NSLog(@"[DEBUG] com.williamrijksen.onesignal notification opened %@", payload);
         [self fireEvent:NotificationOpened withObject:[OneSignalModuleHelper toDictionary:payload]];
     };
 
     id onesignalInitSettings = @{
-        kOSSettingsKeyAutoPrompt : @false
+        //kOSSettingsKeyAutoPrompt : @false
     };
 
     NSString *OneSignalAppID = [[TiApp tiAppProperties] objectForKey:@"OneSignal_AppID"];
-    [OneSignal initWithLaunchOptions:launchOptions
-                               appId:OneSignalAppID
-          handleNotificationReceived:notificationReceivedBlock
-            handleNotificationAction:notificationOpenedBlock
-                            settings:onesignalInitSettings];
+    
+    
+    [OneSignal initWithLaunchOptions:launchOptions];
+    [OneSignal setAppId:OneSignalAppID];
+
+    
     [OneSignal setLocationShared:YES];
-    OneSignal.inFocusDisplayType = OSNotificationDisplayTypeNone;
     return YES;
 }
 
@@ -80,7 +79,7 @@ NSString * const NotificationOpened = @"notificationOpened";
 {
     if (count == 1 && [type isEqual:NotificationOpened]) {
         NSDictionary *initialNotificationPayload = [TiApp.app.launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-        OSNotificationPayload *oneSignalPayload = [OSNotificationPayload parseWithApns:initialNotificationPayload];
+        OSNotification *oneSignalPayload = [OSNotification parseWithApns:initialNotificationPayload];
         NSLog(@"[DEBUG] com.williamrijksen.onesignal FIRE cold boot NotificationOpened");
         [self fireEvent:NotificationOpened withObject:[OneSignalModuleHelper toDictionary:oneSignalPayload]];
     }
@@ -90,17 +89,17 @@ NSString * const NotificationOpened = @"notificationOpened";
 
 - (bool)retrieveSubscribed:(id)args
 {
-    return [OneSignal getPermissionSubscriptionState].subscriptionStatus.subscribed;
+    return [OneSignal getDeviceState].isSubscribed;
 }
 
 - (NSString *)retrievePlayerId:(id)args
 {
-    return [OneSignal getPermissionSubscriptionState].subscriptionStatus.userId;
+    return [OneSignal getDeviceState].userId;
 }
 
 - (NSString *)retrieveToken:(id)args
 {
-    return [OneSignal getPermissionSubscriptionState].subscriptionStatus.pushToken;
+    return [OneSignal getDeviceState].pushToken;
 }
 
 - (void)promptForPushNotificationsWithUserResponse:(id)args
@@ -128,7 +127,7 @@ NSString * const NotificationOpened = @"notificationOpened";
     id args = arguments;
     ENSURE_UI_THREAD_1_ARG(args);
     ENSURE_SINGLE_ARG(args, NSNumber);
-    [OneSignal setSubscription:[TiUtils boolValue:args]];
+    [OneSignal disablePush:[TiUtils boolValue:args]];
 }
 
 - (void)setExternalUserId:(id)arguments
@@ -137,8 +136,10 @@ NSString * const NotificationOpened = @"notificationOpened";
     ENSURE_UI_THREAD_1_ARG(args);
     ENSURE_SINGLE_ARG(args, NSString);
     
-    [OneSignal setExternalUserId:[TiUtils stringValue:args] withCompletion:^(NSDictionary *results) {
+    [OneSignal setExternalUserId:[TiUtils stringValue:args] withSuccess:^(NSDictionary *results) {
         NSLog(@"Set external user id update complete with results: %@", results.description);
+    }  withFailure:^(NSError *error) {
+        
     }];
 }
 
@@ -146,9 +147,7 @@ NSString * const NotificationOpened = @"notificationOpened";
 {
     id args = arguments;
     ENSURE_UI_THREAD_1_ARG(args); // not necessary but app was crashing without it
-    [OneSignal removeExternalUserId:^(NSDictionary *results) {
-        NSLog(@"Remove external user id  complete with results: %@", results.description);
-    }];
+    [OneSignal removeExternalUserId];
 }
 
 - (void)sendTag:(id)arguments
@@ -204,14 +203,14 @@ NSString * const NotificationOpened = @"notificationOpened";
     }];
 }
 
-- (NSDictionary *)getPermissionSubscriptionState:(id)args
+- (NSDictionary *)getDeviceState:(id)args
 {
     // Maybe it should use OSDevice class instead in the future
 	id value = args;
-    ENSURE_UI_THREAD(getPermissionSubscriptionState, value);
+    ENSURE_UI_THREAD(getDeviceState, value);
 
-    OSPermissionSubscriptionState* state = [OneSignal getPermissionSubscriptionState];
-    return [state toDictionary];
+    OSDeviceState* state = [OneSignal getDeviceState];
+    return state.jsonRepresentation;
 }
 
 - (void)postNotification:(id)arguments
@@ -231,6 +230,11 @@ NSString * const NotificationOpened = @"notificationOpened";
 	}
 }
 
+- (bool)isRooted
+{
+    return [self isJailbroken];
+}
+
 - (void)setLogLevel:(id)arguments
 {
     id args = arguments;
@@ -244,6 +248,79 @@ NSString * const NotificationOpened = @"notificationOpened";
     ENSURE_TYPE(visualLevel, NSNumber);
 
     [OneSignal setLogLevel:[TiUtils intValue:logLevel] visualLevel:[TiUtils intValue:visualLevel]];
+}
+
+- (BOOL)isJailbroken {
+    
+#if !(TARGET_IPHONE_SIMULATOR)
+    
+    FILE *file = fopen("/Applications/Cydia.app", "r");
+    if (file) {
+        fclose(file);
+        return YES;
+    }
+    file = fopen("/Library/MobileSubstrate/MobileSubstrate.dylib", "r");
+    if (file) {
+        fclose(file);
+        return YES;
+    }
+
+    file = fopen("/bin/bash", "r");
+    if (file) {
+        fclose(file);
+        return YES;
+    }
+    file = fopen("/usr/sbin/sshd", "r");
+    if (file) {
+        fclose(file);
+        return YES;
+    }
+    file = fopen("/etc/apt", "r");
+    if (file) {
+        fclose(file);
+        return YES;
+    }
+    file = fopen("/usr/bin/ssh", "r");
+    if (file) {
+        fclose(file);
+        return YES;
+    }
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    if ([fileManager fileExistsAtPath:@"/Applications/Cydia.app"])
+        return YES;
+    else if ([fileManager fileExistsAtPath:@"/Library/MobileSubstrate/MobileSubstrate.dylib"])
+        return YES;
+    else if ([fileManager fileExistsAtPath:@"/bin/bash"])
+        return YES;
+    else if ([fileManager fileExistsAtPath:@"/usr/sbin/sshd"])
+        return YES;
+    else if ([fileManager fileExistsAtPath:@"/etc/apt"])
+        return YES;
+    else if ([fileManager fileExistsAtPath:@"/usr/bin/ssh"])
+        return YES;
+    
+    // Omit logic below since they show warnings in the device log on iOS 9 devices.
+    if (NSFoundationVersionNumber > 1144.17) // NSFoundationVersionNumber_iOS_8_4
+        return NO;
+    
+    // Check if the app can access outside of its sandbox
+    NSError *error = nil;
+    NSString *string = @".";
+    [string writeToFile:@"/private/jailbreak.txt" atomically:YES encoding:NSUTF8StringEncoding error:&error];
+    if (!error)
+        return YES;
+    else
+        [fileManager removeItemAtPath:@"/private/jailbreak.txt" error:nil];
+    
+    // Check if the app can open a Cydia's URL scheme
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"cydia://package/com.example.package"]])
+        return YES;
+    
+#endif
+    
+    return NO;
 }
 
 MAKE_SYSTEM_PROP(LOG_LEVEL_NONE, ONE_S_LL_NONE);
