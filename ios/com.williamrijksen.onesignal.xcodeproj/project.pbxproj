@@ -26,6 +26,8 @@
 		24DD6CFA1134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* ComWilliamrijksenOnesignalModule.m */; };
 		4ACB5A1B218C674B00DB9BB6 /* OneSignalModuleHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ACB5A19218C674B00DB9BB6 /* OneSignalModuleHelper.m */; };
 		4ACB5A1C218C674B00DB9BB6 /* OneSignalModuleHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4ACB5A1A218C674B00DB9BB6 /* OneSignalModuleHelper.h */; };
+		4EED96D328DCF33E000B09D7 /* OneSignalCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EED96D228DCF33E000B09D7 /* OneSignalCore.xcframework */; };
+		4EED96D528DCF3B8000B09D7 /* OneSignalOutcomes.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EED96D428DCF3B8000B09D7 /* OneSignalOutcomes.xcframework */; };
 		5DDFD6DD26FB43F000402F0D /* OneSignal.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DDFD6DC26FB43F000402F0D /* OneSignal.xcframework */; };
 		AA747D9F0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
@@ -47,6 +49,8 @@
 		24DD6D1B1134B66800162E58 /* titanium.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = titanium.xcconfig; sourceTree = "<group>"; };
 		4ACB5A19218C674B00DB9BB6 /* OneSignalModuleHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OneSignalModuleHelper.m; path = Classes/OneSignalModuleHelper.m; sourceTree = "<group>"; };
 		4ACB5A1A218C674B00DB9BB6 /* OneSignalModuleHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OneSignalModuleHelper.h; path = Classes/OneSignalModuleHelper.h; sourceTree = "<group>"; };
+		4EED96D228DCF33E000B09D7 /* OneSignalCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OneSignalCore.xcframework; path = platform/OneSignalCore.xcframework; sourceTree = "<group>"; };
+		4EED96D428DCF3B8000B09D7 /* OneSignalOutcomes.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OneSignalOutcomes.xcframework; path = platform/OneSignalOutcomes.xcframework; sourceTree = "<group>"; };
 		5DDFD6DC26FB43F000402F0D /* OneSignal.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OneSignal.xcframework; path = platform/OneSignal.xcframework; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* ComWilliamrijksenOnesignal_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComWilliamrijksenOnesignal_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -59,7 +63,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				5DDFD6DD26FB43F000402F0D /* OneSignal.xcframework in Frameworks */,
+				4EED96D328DCF33E000B09D7 /* OneSignalCore.xcframework in Frameworks */,
 				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
+				4EED96D528DCF3B8000B09D7 /* OneSignalOutcomes.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,6 +94,8 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4EED96D428DCF3B8000B09D7 /* OneSignalOutcomes.xcframework */,
+				4EED96D228DCF33E000B09D7 /* OneSignalCore.xcframework */,
 				5DDFD6DC26FB43F000402F0D /* OneSignal.xcframework */,
 				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
 			);
