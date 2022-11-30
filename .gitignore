@@ -19,3 +19,4 @@ com.williamrijksen.onesignal-*.zip
 
 # dependency directories
 ios/Carthage/
+ios/dist/
