@@ -1,39 +1,25 @@
 package com.williamrijksen.onesignal;
 
-import android.app.Activity;
-import android.content.Context;
-
-
-import com.onesignal.OneSignal;
-import com.onesignal.OSNotification;
-import com.onesignal.OSNotificationReceivedEvent;
-import com.onesignal.OSNotificationOpenedResult;
-import com.onesignal.OSNotificationAction;
-
-import java.util.HashMap;
-
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
+import com.onesignal.OSNotificationOpenedResult;
+import com.onesignal.OneSignal;
+
+import org.appcelerator.kroll.KrollDict;
+import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
-import org.appcelerator.kroll.KrollFunction;
-import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.common.TiConfig;
 import org.appcelerator.titanium.TiApplication;
-import org.appcelerator.titanium.util.TiConvert;
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 @Kroll.module(name = "ComWilliamrijksenOnesignal", id = "com.williamrijksen.onesignal")
 public class ComWilliamrijksenOnesignalModule extends KrollModule {
-    private static final String LCAT = "ComWilliamrijksenOnesignalModule";
-    private static final boolean DBG = TiConfig.LOGD;
-    private static ComWilliamrijksenOnesignalModule module;
-    private static OSNotificationOpenedResult openNotification;
-
-
     public static final OneSignal.LOG_LEVEL LOG_LEVEL_NONE = OneSignal.LOG_LEVEL.NONE;
     public static final OneSignal.LOG_LEVEL LOG_LEVEL_DEBUG = OneSignal.LOG_LEVEL.DEBUG;
     public static final OneSignal.LOG_LEVEL LOG_LEVEL_INFO = OneSignal.LOG_LEVEL.INFO;
@@ -41,6 +27,12 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule {
     public static final OneSignal.LOG_LEVEL LOG_LEVEL_ERROR = OneSignal.LOG_LEVEL.ERROR;
     public static final OneSignal.LOG_LEVEL LOG_LEVEL_FATAL = OneSignal.LOG_LEVEL.FATAL;
     public static final OneSignal.LOG_LEVEL LOG_LEVEL_VERBOSE = OneSignal.LOG_LEVEL.VERBOSE;
+    private static final String LCAT = "ComWilliamrijksenOnesignalModule";
+    private static final boolean DBG = TiConfig.LOGD;
+    private static ComWilliamrijksenOnesignalModule module;
+    private static OSNotificationOpenedResult openNotification;
+    private final KrollFunction idsAvailableCallback = null;
+    private KrollFunction getTagsCallback = null;
 
     public ComWilliamrijksenOnesignalModule() {
         super();
@@ -51,32 +43,13 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule {
         return module;
     }
 
-    private KrollFunction getTagsCallback = null;
-    private KrollFunction idsAvailableCallback = null;
-
     @Kroll.onAppCreate
     public static void onAppCreate(TiApplication app) {
-        Log.d(LCAT, "com.williamrijksen.onesignal inside onAppCreate");
+        Log.d(LCAT, "inside onAppCreate");
 
         OneSignal.initWithContext(TiApplication.getInstance());
         OneSignal.setAppId(getAppId());
         OneSignal.setNotificationOpenedHandler(new NotificationOpenedHandler());
-    }
-
-    public void listenerAdded(String type, int count, KrollProxy proxy) {
-        Log.d(LCAT, "com.williamrijksen.onesignal added listener " + type);
-        if (type.equals("notificationOpened") && count == 1 && openNotification instanceof OSNotificationOpenedResult) {
-            Log.d(LCAT, "com.williamrijksen.onesignal fire delayed event");
-            try {
-                if (openNotification.getNotification().getRawPayload() != null) {
-                    JSONObject payload = openNotification.getNotification().toJSONObject();
-                    proxy.fireEvent("notificationOpened", payload);
-                }
-            } catch (Throwable t) {
-                Log.d(LCAT, "com.williamrijksen.onesignal OSNotificationOpenResult could not be converted to JSON");
-            }
-            openNotification = null;
-        }
     }
 
     private static String getAppId() {
@@ -88,8 +61,24 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule {
         }
     }
 
+    public void listenerAdded(String type, int count, KrollProxy proxy) {
+        Log.d(LCAT, "added listener " + type);
+        if (type.equals("notificationOpened") && count == 1 && openNotification instanceof OSNotificationOpenedResult) {
+            Log.d(LCAT, "fire delayed event");
+            try {
+                if (openNotification.getNotification().getRawPayload() != null) {
+                    JSONObject payload = openNotification.getNotification().toJSONObject();
+                    proxy.fireEvent("notificationOpened", payload);
+                }
+            } catch (Throwable t) {
+                Log.d(LCAT, "OSNotificationOpenResult could not be converted to JSON");
+            }
+            openNotification = null;
+        }
+    }
+
     @Kroll.method
-    public boolean isRooted(){
+    public boolean isRooted() {
         String[] places = {"/sbin/", "/system/bin/", "/system/xbin/",
                 "/data/local/xbin/", "/data/local/bin/",
                 "/system/sd/xbin/", "/system/bin/failsafe/",
@@ -108,15 +97,15 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule {
     }
 
     @Kroll.method
-    public void sendTag(HashMap<String, Object> dict) {
-        String key = TiConvert.toString(dict, "key");
-        String value = TiConvert.toString(dict, "value");
+    public void sendTag(KrollDict dict) {
+        String key = dict.getString("key");
+        String value = dict.getString("value");
         OneSignal.sendTag(key, value);
     }
 
     @Kroll.method
-    public void deleteTag(HashMap<String, Object> dict) {
-        String key = TiConvert.toString(dict, "key");
+    public void deleteTag(KrollDict dict) {
+        String key = dict.getString("key");
         OneSignal.deleteTag(key);
     }
 
@@ -140,7 +129,7 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule {
         OneSignal.setExternalUserId(id, new OneSignal.OSExternalUserIdUpdateCompletionHandler() {
             @Override
             public void onSuccess(JSONObject results) {
-                Log.d(LCAT, "com.williamrijksen.onesignal Remove external user id done with results: " + results.toString());
+                Log.d(LCAT, "Remove external user id done with results: " + results.toString());
             }
 
             @Override
@@ -155,7 +144,7 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule {
         OneSignal.removeExternalUserId(new OneSignal.OSExternalUserIdUpdateCompletionHandler() {
             @Override
             public void onSuccess(JSONObject results) {
-                Log.d(LCAT, "com.williamrijksen.onesignal Remove external user id done with results: " + results.toString());
+                Log.d(LCAT, "Remove external user id done with results: " + results.toString());
             }
 
             @Override
@@ -177,7 +166,7 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule {
     }
 
     @Kroll.method
-    public void setLogLevel(HashMap<String, Object> args) {
+    public void setLogLevel(KrollDict args) {
         OneSignal.LOG_LEVEL logLevel = LOG_LEVEL_NONE;
         OneSignal.LOG_LEVEL visualLevel = LOG_LEVEL_NONE;
 
@@ -191,6 +180,33 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule {
             visualLevel = (OneSignal.LOG_LEVEL) level;
         }
         OneSignal.setLogLevel(logLevel, visualLevel);
+    }
+
+    private static class NotificationOpenedHandler implements OneSignal.OSNotificationOpenedHandler {
+        // This fires when a notification is opened by tapping on it.
+        @Override
+        public void notificationOpened(OSNotificationOpenedResult result) {
+            Log.d(LCAT, "Notification opened handler");
+            if (TiApplication.getAppCurrentActivity() != null && getModuleInstance() != null) {
+                try {
+                    if (result.getNotification().getRawPayload() != null) {
+                        JSONObject payload = result.getNotification().toJSONObject();
+
+                        if (getModuleInstance().hasListeners("notificationOpened")) {
+                            getModuleInstance().fireEvent("notificationOpened", payload);
+                        } else {
+                            // save the notification for later processing
+                            openNotification = result;
+                        }
+                    }
+                } catch (Throwable t) {
+                    Log.d(LCAT, "OSNotificationOpenResult could not be converted to JSON");
+                }
+            } else {
+                // save the notification for later processing
+                openNotification = result;
+            }
+        }
     }
 
     private class GetTagsHandler implements OneSignal.OSGetTagsHandler {
@@ -209,33 +225,6 @@ public class ComWilliamrijksenOnesignalModule extends KrollModule {
             }
 
             getTagsCallback.call(getKrollObject(), dict);
-        }
-    }
-
-    private static class NotificationOpenedHandler implements OneSignal.OSNotificationOpenedHandler {
-        // This fires when a notification is opened by tapping on it.
-        @Override
-        public void notificationOpened(OSNotificationOpenedResult result) {
-            Log.d(LCAT, "com.williamrijksen.onesignal Notification opened handler");
-            if (TiApplication.getAppCurrentActivity() != null && getModuleInstance() != null) {
-                try {
-                    if (result.getNotification().getRawPayload() != null) {
-                        JSONObject payload = result.getNotification().toJSONObject();
-
-                        if (getModuleInstance().hasListeners("notificationOpened")) {
-                            getModuleInstance().fireEvent("notificationOpened", payload);
-                        } else {
-                            // save the notification for later processing
-                            openNotification = result;
-                        }
-                    }
-                } catch (Throwable t) {
-                    Log.d(LCAT, "com.williamrijksen.onesignal OSNotificationOpenResult could not be converted to JSON");
-                }
-            } else {
-                // save the notification for later processing
-                openNotification = result;
-            }
         }
     }
 
