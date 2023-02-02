@@ -1,0 +1,15 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.14.0, 0.99.99]'
+    }
+}
+
+dependencies {
+	// Add the module's library dependencies here.
+	// See:  https://developer.android.com/studio/build/dependencies
+    implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
+}

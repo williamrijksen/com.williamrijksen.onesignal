@@ -10,6 +10,6 @@
 
 @interface OneSignalModuleHelper : NSObject
 
-+ (NSDictionary *)toDictionary: (OSNotificationPayload *)payload;
++ (NSDictionary *)toDictionary: (OSNotification *)payload;
 
 @end
